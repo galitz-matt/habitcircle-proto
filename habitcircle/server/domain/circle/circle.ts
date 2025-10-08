@@ -1,4 +1,4 @@
-import { User } from "@server/domain/user/user"
+import { User } from "../user/user"
 
 export class Circle {
     private constructor(
