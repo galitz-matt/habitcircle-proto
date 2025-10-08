@@ -2,7 +2,7 @@ import { User } from "@server/domain/user/user"
 
 export class Circle {
     private constructor(
-        readonly circleId: string,
+        readonly id: string,
         readonly name: string,
         readonly users: User[],
         readonly createdAt: Date

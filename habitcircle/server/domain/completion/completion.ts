@@ -1,6 +1,6 @@
 export class Completion {
     private constructor(
-        readonly completionId: string,
+        readonly id: string,
         readonly userId: string,
         readonly habitId: string,
         readonly createdAt: Date
