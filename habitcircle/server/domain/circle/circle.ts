@@ -7,14 +7,14 @@ export class Circle {
         readonly createdAt: Date,
         readonly name: string,
         readonly owner: User,
-        readonly members: User[],
+        readonly members: User[], // owner is an element of members
         readonly habits: Habit[]
     ) {}
 
     static create(
         name: string, 
         owner: User, 
-        members: User[] = [], 
+        members: User[] = [owner], 
         habits: Habit[] = []
     ): Circle {
         if (!name.trim()) throw new Error("Name cannot be empty");
