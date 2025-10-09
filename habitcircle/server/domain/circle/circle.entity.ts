@@ -41,6 +41,18 @@ export class Circle {
         )
     }
 
+    static rehydrate(
+        id: string,
+        createdAt: Date,
+        name: string,
+        owner: User,
+        members: User[],
+        habits: Habit[]
+    ): Circle {
+        /* Used exclusively by repositories to reconstitue from persistence */
+        return new Circle(id, createdAt, name, owner, members, habits)
+    }
+
     addMember(user: User): Circle {
         if (this.members.some(u => u.id === user.id)) throw new Error("User is already member of this circle");
         return this.clone({ members: [...this.members, user] });

@@ -14,4 +14,14 @@ export class User {
 
         return new User(IdGenerator.new(), new Date(), name, password);
     }
+
+    static rehydrate(
+        id: string,
+        createdAt: Date,
+        name: string,
+        password: string,
+    ): User {
+        /* Used exclusively by repositories to reconstitue from persistence */
+        return new User(id, createdAt, name, password);
+    }
 }

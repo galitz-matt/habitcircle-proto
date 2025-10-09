@@ -13,4 +13,14 @@ export class Habit {
 
         return new Habit(IdGenerator.new(), new Date(), name, circleId);
     }
+
+    static rehydrate(
+        id: string,
+        createdAt: Date,
+        name: string,
+        circleId: string
+    ): Habit {
+        /* Used exclusively by repositories to reconstitue from persistence */
+        return new Habit(id, createdAt, name, circleId);
+    }
 }

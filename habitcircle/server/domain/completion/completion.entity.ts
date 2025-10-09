@@ -14,4 +14,14 @@ export class Completion {
 
         return new Completion(IdGenerator.new(), new Date(), userId, habitId);
     }
+
+    static rehydrate(
+        id: string,
+        createdAt: Date,
+        userId: string,
+        habitId: string,
+    ): Completion {
+        /* Used exclusively by repositories to reconstitue from persistence */
+        return new Completion(id, createdAt, userId, habitId)
+    }
 }
