@@ -1,6 +1,6 @@
 import { IdGenerator } from "@lib/utils";
-import { Habit } from "@server/domain/habit/habit";
-import { User } from "@server/domain/user/user"
+import { Habit } from "@server/domain/habit/habit.entity";
+import { User } from "@server/domain/user/user.entity"
 
 export class Circle {
     private constructor(

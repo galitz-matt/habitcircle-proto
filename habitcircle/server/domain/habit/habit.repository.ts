@@ -1,4 +1,4 @@
-import { Habit } from "./habit";
+import { Habit } from "./habit.entity";
 
 export interface HabitRepository {
     findById(id: string): Promise<Habit | null>;

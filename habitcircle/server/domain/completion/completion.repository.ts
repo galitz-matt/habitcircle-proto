@@ -1,4 +1,4 @@
-import { Completion } from "./completion";
+import { Completion } from "./completion.entity";
 
 export interface CompletionRepository {
     findByUserAndHabit(userId: string, habitId: string): Promise<Completion | null>
