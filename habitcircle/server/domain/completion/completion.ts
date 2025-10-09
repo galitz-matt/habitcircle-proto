@@ -1,3 +1,5 @@
+import { IdGenerator } from "@lib/utils";
+
 export class Completion {
     private constructor(
         readonly id: string,
@@ -10,7 +12,6 @@ export class Completion {
         if (!userId) throw new Error("UserID cannot be null");
         if (!habitId) throw new Error("HabitID cannot be null");
 
-        const completionId = crypto.randomUUID();
-        return new Completion(completionId, new Date(), userId, habitId);
+        return new Completion(IdGenerator.new(), new Date(), userId, habitId);
     }
 }

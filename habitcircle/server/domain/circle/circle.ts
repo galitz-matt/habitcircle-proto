@@ -1,5 +1,6 @@
-import { Habit } from "../habit/habit";
-import { User } from "../user/user"
+import { IdGenerator } from "@lib/utils";
+import { Habit } from "@server/domain/habit/habit";
+import { User } from "@server/domain/user/user"
 
 export class Circle {
     private constructor(
@@ -19,9 +20,8 @@ export class Circle {
     ): Circle {
         if (!name.trim()) throw new Error("Name cannot be empty");
 
-        const circleId = crypto.randomUUID();
         return new Circle(
-            circleId, 
+            IdGenerator.new(), 
             new Date(), 
             name, 
             owner, 

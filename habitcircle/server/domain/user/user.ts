@@ -1,3 +1,5 @@
+import { IdGenerator } from "@lib/utils";
+
 export class User {
     private constructor(
         readonly id: string,
@@ -10,7 +12,6 @@ export class User {
         if (!name.trim()) throw new Error("Username cannot be empty");
         if (!password.trim()) throw new Error("Password cannot be empty");
 
-        const userId = crypto.randomUUID();
-        return new User(userId, new Date(), name, password);
+        return new User(IdGenerator.new(), new Date(), name, password);
     }
 }
