@@ -31,10 +31,50 @@ export class Circle {
     }
 
     addMember(user: User): Circle {
-        if (!user) throw new Error("User cannot be null");
-        if (this.members.some(u => u.id === user.id)) throw new Error("User is already member of this group");
-        return new Circle(this.id, this.createdAt, this.name, this.owner, [...this.members, user], this.habits);
+        if (this.members.some(u => u.id === user.id)) throw new Error("User is already member of this circle");
+        return new Circle(
+            this.id, 
+            this.createdAt, 
+            this.name, 
+            this.owner, 
+            [...this.members, user], 
+            this.habits
+        );
     }
     
-    
+    addHabit(habit: Habit): Circle {
+        if (this.habits.some(h => h.id === habit.id)) throw new Error("Habit is already in this circle");
+        return new Circle(
+            this.id, 
+            this.createdAt, 
+            this.name, 
+            this.owner, 
+            this.members, 
+            [...this.habits, habit]
+        );
+    }
+
+    deleteMember(user: User): Circle {
+        if (!this.members.find(u => u.id === user.id)) throw new Error("User is not in circle");
+        return new Circle(
+            this.id, 
+            this.createdAt, 
+            this.name, 
+            this.owner, 
+            this.members.filter(u => u.id !== user.id), 
+            this.habits
+        );
+    }
+
+    deleteHabit(habit: Habit): Circle {
+        if (!this.habits.find(h => h.id === habit.id)) throw new Error("Habit is not in circle");
+        return new Circle(
+            this.id, 
+            this.createdAt, 
+            this.name, 
+            this.owner, 
+            this.members,
+            this.habits.filter(h => h.id !== habit.id)
+        );
+    }
 }
