@@ -15,29 +15,42 @@ datasource db {
 }
 
 model User {
-  id          String    @id 
-  createdAt   DateTime  @default(now())
-  name        String    @unique
+  id          String        @id 
+  createdAt   DateTime      @default(now())
+  name        String        @unique
   password    String
-  owned       Circle[]  @relation("CircleOwner")
-  circles     Circle[]  @relation("CircleMembers")
+  owned       Circle[]      @relation("CircleOwner")
+  circles     Circle[]      @relation("CircleMembers")
+  completions Completion[]  @relation("CompletionUser")
 }
 
 model Habit {
-  id          String    @id @default(cuid())
-  createdAt   DateTime  @default(now())
+  id          String        @id @default(cuid())
+  createdAt   DateTime      @default(now())
   name        String
-  circle      Circle    @relation("CircleHabits", fields: [circleId], references: [id])
+  circle      Circle        @relation("CircleHabits", fields: [circleId], references: [id])
   circleId    String
+  completions Completion[]  @relation("CompletionHabit")
 }
 
 model Circle {
-  id        String    @id
-  createdAt DateTime  @default(now())
-  name      String
-  owner     User      @relation("CircleOwner", fields: [ownerId], references: [id])
-  ownerId   String
-  members   User[]    @relation("CircleMembers")
-  habits    Habit[]   @relation("CircleHabits")
+  id          String        @id
+  createdAt   DateTime      @default(now())
+  name        String
+  owner       User          @relation("CircleOwner", fields: [ownerId], references: [id])
+  ownerId     String
+  members     User[]        @relation("CircleMembers")
+  habits      Habit[]       @relation("CircleHabits")
+}
+
+model Completion {
+  id          String        @id
+  createdAt   DateTime      @default(now())
+  user        User          @relation("CompletionUser", fields: [userId], references: [id])
+  userId      String
+  habit       Habit         @relation("CompletionHabit", fields: [habitId], references: [id])
+  habitId     String
+
+  @@unique([userId, habitId])
 }
 
