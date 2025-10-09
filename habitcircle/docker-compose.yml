@@ -1,0 +1,16 @@
+services:
+  postgres:
+    image: postgres:18
+    container_name: hc_local_postgres
+    environment:
+      POSTGRES_USER: hc_dev
+      POSTGRES_PASSWORD: devpass
+      POSTGRES_DB: hc_local
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    restart: unless-stopped
+
+volumes:
+  pgdata:
