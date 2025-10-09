@@ -13,3 +13,31 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model User {
+  id          String    @id @default(cuid())
+  createdAt   DateTime  @default(now())
+  name        String    @unique
+  password    String
+  owned       Circle[]  @relation("CircleOwner")
+  circles     Circle[]  @relation("CircleMembers")
+}
+
+model Habit {
+  id          String    @id @default(cuid())
+  createdAt   DateTime  @default(now())
+  name        String
+  circle      Circle    @relation("CircleHabits", fields: [circleId], references: [id])
+  circleId    String
+}
+
+model Circle {
+  id        String    @id
+  createdAt DateTime  @default(now())
+  name      String
+  owner     User      @relation("CircleOwner", fields: [ownerId], references: [id])
+  ownerId   String
+  members   User[]    @relation("CircleMembers")
+  habits    Habit[]   @relation("CircleHabits")
+}
+
