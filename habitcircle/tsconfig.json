@@ -23,7 +23,8 @@
       "@lib/*": ["lib/*"],
       "@server/*": ["server/*"],
       "@graphql/*": ["graphql/*"],
-      "@components/*": ["components/*"]
+      "@components/*": ["components/*"],
+      "@generated/*": ["generated/*"]
     }
   },
   "include": [
