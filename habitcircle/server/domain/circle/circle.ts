@@ -29,4 +29,12 @@ export class Circle {
             habits
         );
     }
+
+    addMember(user: User): Circle {
+        if (!user) throw new Error("User cannot be null");
+        if (this.members.some(u => u.id === user.id)) throw new Error("User is already member of this group");
+        return new Circle(this.id, this.createdAt, this.name, this.owner, [...this.members, user], this.habits);
+    }
+    
+    
 }
