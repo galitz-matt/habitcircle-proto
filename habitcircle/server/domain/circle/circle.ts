@@ -44,6 +44,7 @@ export class Circle {
     
     addHabit(habit: Habit): Circle {
         if (this.habits.some(h => h.id === habit.id)) throw new Error("Habit is already in this circle");
+        if (habit.circleId !== this.id) throw new Error("Habit does not belong to this circle")
         return new Circle(
             this.id, 
             this.createdAt, 
