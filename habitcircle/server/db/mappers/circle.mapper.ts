@@ -34,12 +34,11 @@ export class CircleMapper {
         );
     }
 
-    static toPrisma(circle: Circle): CircleRecord {
+    static toPrisma(circle: Circle): Omit<CircleRecord, "ownerId"> {
         return {
             id: circle.id,
             name: circle.name,
             createdAt: circle.createdAt,
-            ownerId: circle.owner.id
         };
     }
 }
