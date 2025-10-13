@@ -15,16 +15,16 @@ export class CirclePrismaRepository implements CircleRepository {
         return circleRecord ? CircleMapper.toDomain(circleRecord) : null;
     }
 
-    async findByName(name: string): Promise<Circle[] | null> {
+    async findByName(name: string): Promise<Circle[]> {
         const circleRecords = await this.prisma.circle.findMany({
             where: { name: name },
             include: { owner: true, members: true, habits: true }
         });
 
-        return circleRecords ? circleRecords.map(cr => CircleMapper.toDomain(cr)) : null;
+        return circleRecords?.map(cr => CircleMapper.toDomain(cr)) ?? [];
     }
 
-    async findByUserId(userId: string): Promise<Circle[] | null> {
+    async findByUserId(userId: string): Promise<Circle[]> {
         const userRecord = await this.prisma.user.findUnique({
             where: { id: userId },
             include: { 
@@ -34,7 +34,7 @@ export class CirclePrismaRepository implements CircleRepository {
             }
         });
 
-        return userRecord ? userRecord.circles.map(cr => CircleMapper.toDomain(cr)) : null;
+        return userRecord?.circles.map(cr => CircleMapper.toDomain(cr)) ?? [];
     }
 
     async save(circle: Circle): Promise<void> {

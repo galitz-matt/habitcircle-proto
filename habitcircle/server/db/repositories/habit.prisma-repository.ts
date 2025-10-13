@@ -14,13 +14,13 @@ export class HabitPrismaRepository implements HabitRepository {
         return habitRecord ? HabitMapper.toDomain(habitRecord) : null;
     }
 
-    async findByCircleId(circleId: string): Promise<Habit[] | null> {
+    async findByCircleId(circleId: string): Promise<Habit[]> {
         const circleRecord = await this.prisma.circle.findUnique({
             where: { id: circleId },
             include: { habits: true }
         });
 
-        return circleRecord ? circleRecord.habits.map(h => HabitMapper.toDomain(h)) : null;
+        return circleRecord?.habits.map(h => HabitMapper.toDomain(h)) ?? [];
     }
 
     async save(habit: Habit): Promise<void> {
