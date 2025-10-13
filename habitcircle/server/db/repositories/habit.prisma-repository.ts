@@ -32,8 +32,15 @@ export class HabitPrismaRepository implements HabitRepository {
 
         await this.prisma.habit.upsert({
             where: { id: habitRecord.id },
-            update: habitRecord,
-            create: habitRecord
+            create: {
+                name: habitRecord.name,
+                createdAt: habitRecord.createdAt,
+                circle: { connect: { id: habitRecord.circleId } }
+            },
+            update: {
+                name: habitRecord.name,
+                circle: { connect: { id: habit.circleId }}
+            },
         });
     }
 
