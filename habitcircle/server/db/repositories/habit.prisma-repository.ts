@@ -15,12 +15,11 @@ export class HabitPrismaRepository implements HabitRepository {
     }
 
     async findByCircleId(circleId: string): Promise<Habit[]> {
-        const circleRecord = await this.prisma.circle.findUnique({
-            where: { id: circleId },
-            include: { habits: true }
+        const habits = await this.prisma.habit.findMany({
+            where: { circleId: circleId }
         });
 
-        return circleRecord?.habits.map(h => HabitMapper.toDomain(h)) ?? [];
+        return habits.map(HabitMapper.toDomain)
     }
 
     async save(habit: Habit): Promise<void> {
