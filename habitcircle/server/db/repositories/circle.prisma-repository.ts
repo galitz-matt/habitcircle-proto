@@ -60,6 +60,8 @@ export class CirclePrismaRepository implements CircleRepository {
     async delete(id: string): Promise<void> {
         await this.prisma.circle.delete({
             where: { id: id }
+        }).catch((err) => {
+            if (err.code !== "P2025") throw err;
         });
     }
 }

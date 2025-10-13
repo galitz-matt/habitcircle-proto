@@ -35,6 +35,8 @@ export class HabitPrismaRepository implements HabitRepository {
     async delete(id: string): Promise<void> {
         await this.prisma.habit.delete({
             where: { id: id }
+        }).catch((err) => {
+            if (err.code !== "P2025") throw err;
         });
     }
 }
