@@ -24,7 +24,7 @@ export class CirclePrismaRepository implements CircleRepository {
         return circleRecords ? circleRecords.map(cr => CircleMapper.toDomain(cr)) : null;
     }
 
-    async findCirclesByUserId(userId: string): Promise<Circle[] | null> {
+    async findByUserId(userId: string): Promise<Circle[] | null> {
         const userRecord = await this.prisma.user.findUnique({
             where: { id: userId },
             include: { 
