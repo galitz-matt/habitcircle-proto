@@ -21,7 +21,7 @@ export class CirclePrismaRepository implements CircleRepository {
             include: { owner: true, members: true, habits: true }
         });
 
-        return circleRecords?.map(cr => CircleMapper.toDomain(cr)) ?? [];
+        return circleRecords?.map(CircleMapper.toDomain) ?? [];
     }
 
     async findByUserId(userId: string): Promise<Circle[]> {
@@ -34,7 +34,14 @@ export class CirclePrismaRepository implements CircleRepository {
             }
         });
 
-        return userRecord?.circles.map(cr => CircleMapper.toDomain(cr)) ?? [];
+        return userRecord?.circles.map(CircleMapper.toDomain) ?? [];
+    }
+
+    async findAll(): Promise<Circle[]> {
+        const circleRecords = await this.prisma.circle.findMany({
+            include: { owner: true, members: true, habits: true }
+        });
+        return circleRecords.map(CircleMapper.toDomain);
     }
 
     async save(circle: Circle): Promise<void> {
