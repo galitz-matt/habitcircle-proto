@@ -17,7 +17,7 @@ datasource db {
 model User {
   id          String        @id 
   createdAt   DateTime      @default(now())
-  name        String        @unique
+  name        String        @unique @db.Citext
   password    String
   owned       Circle[]      @relation("CircleOwner")
   circles     Circle[]      @relation("CircleMembers")
