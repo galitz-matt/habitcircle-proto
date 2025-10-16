@@ -17,7 +17,7 @@ export class UserMapper {
             id: user.id,
             createdAt: user.createdAt,
             name: user.name,
-            password: user.password
+            password: user.getPasswordHash()
         };
     }
 }

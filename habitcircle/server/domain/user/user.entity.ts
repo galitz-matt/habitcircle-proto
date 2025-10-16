@@ -1,18 +1,26 @@
 import { IdGenerator } from "@lib/utils";
+import { Password } from "./password.value-object";
 
 export class User {
     private constructor(
         readonly id: string,
         readonly createdAt: Date,
         readonly name: string,
-        readonly password: string
+        private readonly password: Password
     ) {}
 
-    static create(name: string, password: string): User {
-        if (!name.trim()) throw new Error("Username cannot be empty");
-        if (!password.trim()) throw new Error("Password cannot be empty");
+    static async create(name: string, plainPassword: string): Promise<User> {
+        const password = await Password.create(plainPassword);
 
         return new User(IdGenerator.new(), new Date(), name, password);
+    }
+
+    async verifyPassword(plain: string): Promise<boolean> {
+        return this.password.matches(plain);
+    }
+
+    getPasswordHash(): string {
+        return this.password.getHash();
     }
 
     static rehydrate(
@@ -22,6 +30,6 @@ export class User {
         password: string,
     ): User {
         /* Used exclusively by repositories to reconstitue from persistence */
-        return new User(id, createdAt, name, password);
+        return new User(id, createdAt, name, Password.fromHashed(password));
     }
 }
