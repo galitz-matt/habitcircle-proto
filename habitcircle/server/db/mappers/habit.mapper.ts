@@ -1,4 +1,4 @@
-import { Habit } from "@server/domain/habit/habit.entity";
+import { Habit } from "@server/domain/entities/habit.entity";
 import { Habit as HabitRecord } from "@generated/prisma";
 
 export class HabitMapper {

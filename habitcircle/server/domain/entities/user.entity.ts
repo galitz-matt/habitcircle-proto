@@ -1,5 +1,5 @@
 import { IdGenerator } from "@lib/utils";
-import { Password } from "./password.value-object";
+import { Password } from "../value-objects/password.value-object";
 
 export class User {
     private constructor(

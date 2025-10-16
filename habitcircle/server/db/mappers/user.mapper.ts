@@ -1,4 +1,4 @@
-import { User } from "@server/domain/user/user.entity";
+import { User } from "@server/domain/entities/user.entity";
 import type { User as UserRecord } from "@generated/prisma";
 
 

@@ -1,6 +1,6 @@
 import { PrismaClient } from "@generated/prisma";
-import { Completion } from "@server/domain/completion/completion.entity";
-import { CompletionRepository } from "@server/domain/completion/completion.repository";
+import { Completion } from "@server/domain/entities/completion.entity";
+import { CompletionRepository } from "@server/domain/repositories/completion.repository";
 import { CompletionMapper } from "../mappers/completion.mapper";
 
 export class CompletionPrismaRepository implements CompletionRepository {

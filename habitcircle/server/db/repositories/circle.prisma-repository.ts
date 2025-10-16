@@ -1,5 +1,5 @@
-import { Circle } from "@server/domain/circle/circle.entity";
-import { CircleRepository } from "@server/domain/circle/circle.repository";
+import { Circle } from "@server/domain/entities/circle.entity";
+import { CircleRepository } from "@server/domain/repositories/circle.repository";
 import { CircleMapper } from "../mappers/circle.mapper";
 import { PrismaClient } from "@generated/prisma";
 
