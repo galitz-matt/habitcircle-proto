@@ -30,6 +30,6 @@ export class User {
         password: string,
     ): User {
         /* Used exclusively by repositories to reconstitue from persistence */
-        return new User(id, createdAt, name, Password.fromHashed(password));
+        return new User(id, createdAt, name, Password.rehydrate(password));
     }
 }
