@@ -5,7 +5,6 @@ export class Password {
 
     private constructor(
         private readonly value: string, 
-        private readonly hashed: boolean,
     ) {}
 
     static async create(plain: string): Promise<Password> {
@@ -16,7 +15,7 @@ export class Password {
         if (!PasswordUtils.hasSpecial(plain)) throw new Error("Password must include nonalphanumeric character");
 
         const hash = await bcrypt.hash(plain, 10);
-        return new Password(hash, true);
+        return new Password(hash);
     }
 
     getHash(): string {
@@ -28,6 +27,6 @@ export class Password {
     }
 
     static rehydrate(hash: string): Password {
-        return new Password(hash, true);
+        return new Password(hash);
     }
 }
