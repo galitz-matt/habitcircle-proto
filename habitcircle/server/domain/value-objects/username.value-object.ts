@@ -1,7 +1,7 @@
 import { UsernameUtils } from "@lib/utils";
 
 export class Username {
-    constructor(
+    private constructor(
         readonly value: string,
     ) {}
 
