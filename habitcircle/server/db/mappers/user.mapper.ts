@@ -7,7 +7,7 @@ export class UserMapper {
         return User.rehydrate(
             record.id,
             record.createdAt,
-            record.name,
+            record.username,
             record.password
         );
     }
@@ -16,7 +16,7 @@ export class UserMapper {
         return {
             id: user.id,
             createdAt: user.createdAt,
-            name: user.name,
+            username: user.getUsername(),
             password: user.getPasswordHash()
         };
     }
