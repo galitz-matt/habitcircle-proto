@@ -10,8 +10,9 @@ export class Habit {
     ) {}
 
     static create(name: string, circleId: string): Habit {
-        if (!name.trim()) throw new Error("Habit name cannot be empty");
-        return new Habit(IdGenerator.new(), new Date(), name, circleId);
+        const habitName = HabitName.create(name); 
+        
+        return new Habit(IdGenerator.new(), new Date(), habitName, circleId);
     }
 
     static rehydrate(
