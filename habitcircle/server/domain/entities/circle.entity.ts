@@ -1,12 +1,13 @@
 import { IdGenerator } from "@lib/utils";
 import { Habit } from "@server/domain/entities/habit.entity";
 import { User } from "@server/domain/entities/user.entity"
+import { CircleName } from "../value-objects/circle-name.value-object";
 
 export class Circle {
     private constructor(
         readonly id: string,
         readonly createdAt: Date,
-        readonly name: string,
+        readonly name: CircleName,
         readonly owner: User,
         readonly members: User[], // owner is an element of members
         readonly habits: Habit[]
@@ -18,12 +19,12 @@ export class Circle {
         members: User[] = [owner], 
         habits: Habit[] = []
     ): Circle {
-        if (!name.trim()) throw new Error("Name cannot be empty");
+        const circleName = CircleName.create(name);
 
         return new Circle(
             IdGenerator.new(), 
             new Date(), 
-            name, 
+            circleName, 
             owner, 
             members, 
             habits
@@ -50,7 +51,7 @@ export class Circle {
         habits: Habit[]
     ): Circle {
         /* Used exclusively by repositories to reconstitue from persistence */
-        return new Circle(id, createdAt, name, owner, members, habits)
+        return new Circle(id, createdAt, CircleName.create(name), owner, members, habits)
     }
 
     addMember(user: User): Circle {
