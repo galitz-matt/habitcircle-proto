@@ -1,4 +1,4 @@
-import { PasswordUtils } from "@lib/utils";
+import { PasswordInvariants, StringUtils } from "@lib/utils";
 import bcrypt from "bcryptjs"
 
 export class Password {
@@ -8,11 +8,11 @@ export class Password {
     ) {}
 
     static async create(plain: string): Promise<Password> {
-        if (PasswordUtils.hasWhitespace(plain)) throw new Error("Password cannot include whitespace")
-        if (!PasswordUtils.isValidLength(plain)) throw new Error("Password must be between 12 and 999 characters");
-        if (!PasswordUtils.hasUppercase(plain)) throw new Error("Password must include uppercase letter");
-        if (!PasswordUtils.hasLowercase(plain)) throw new Error("Password must include lowercase letter");
-        if (!PasswordUtils.hasSpecial(plain)) throw new Error("Password must include nonalphanumeric character");
+        if (StringUtils.hasWhitespace(plain)) throw new Error("Password cannot include whitespace")
+        if (!PasswordInvariants.isValidLength(plain)) throw new Error("Password must be between 12 and 999 characters");
+        if (!StringUtils.hasUppercase(plain)) throw new Error("Password must include uppercase letter");
+        if (!StringUtils.hasLowercase(plain)) throw new Error("Password must include lowercase letter");
+        if (!StringUtils.hasSpecial(plain)) throw new Error("Password must include nonalphanumeric character");
 
         const hash = await bcrypt.hash(plain, 10);
         return new Password(hash);

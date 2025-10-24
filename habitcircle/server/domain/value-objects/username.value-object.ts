@@ -1,4 +1,4 @@
-import { UsernameUtils } from "@lib/utils";
+import { StringUtils, UsernameInvariants } from "@lib/utils";
 
 export class Username {
     private constructor(
@@ -6,12 +6,12 @@ export class Username {
     ) {}
 
     static create(value: string): Username {
-        const normalized = UsernameUtils.normalize(value);
+        const normalized = StringUtils.normalize(value);
 
-        if (!UsernameUtils.isValidLength(normalized)) throw new Error("Username must be between 3 and 40 characters");
-        if (UsernameUtils.isReserved(normalized)) throw new Error("Username is banned");
-        if (!UsernameUtils.isValidCharacterSet(normalized)) throw new Error("Username includes invalid characters");
-        if (UsernameUtils.hasWhitespace(normalized)) throw new Error("Username cannot contain whitespace");
+        if (!UsernameInvariants.isValidLength(normalized)) throw new Error("Username must be between 3 and 40 characters");
+        if (UsernameInvariants.isReserved(normalized)) throw new Error("Username is banned");
+        if (!StringUtils.isValidCharacterSet(normalized)) throw new Error("Username includes invalid characters");
+        if (StringUtils.hasWhitespace(normalized)) throw new Error("Username cannot contain whitespace");
 
         return new Username(normalized);
     }
