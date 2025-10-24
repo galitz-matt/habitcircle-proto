@@ -4,18 +4,24 @@ export const IdGenerator = {
     new: (): string => crypto.randomUUID()
 };
 
-export const UsernameUtils = {
+export const StringUtils = {
     normalize: (s: string): string => s.normalize("NFKC").trim(),
-    isValidLength: (s: string): boolean => 3 <= s.length && s.length < 40,
-    isValidCharacterSet: (s: string): boolean => VALID_USERNAME_CHARACTERS_PATTERN.test(s),
-    isReserved: (s: string): boolean => RESERVED_USERNAMES.has(s),
     hasWhitespace: (s: string): boolean => /\s/.test(s),
+    hasUppercase: (s: string): boolean => /\p{Lu}/u.test(s),
+    hasLowercase: (s: string): boolean => /\p{Ll}/u.test(s),
+    hasSpecial: (s: string): boolean => /[^\p{L}\p{N}]/u.test(s),
+    isValidCharacterSet: (s: string): boolean => VALID_USERNAME_CHARACTERS_PATTERN.test(s),
 }
 
-export const PasswordUtils = {
-    hasWhitespace: (s: string): boolean => /\s/.test(s),
+export const UsernameInvariants = {
+    isValidLength: (s: string): boolean => 3 <= s.length && s.length < 40,
+    isReserved: (s: string): boolean => RESERVED_USERNAMES.has(s),
+}
+
+export const PasswordInvariants = {
     isValidLength: (s: string): boolean => 12 <= s.length && s.length < 1000,
-    hasUppercase: (s: string): boolean => /\p{Lu}/u.test(s),
-    hasLowercase: (str: string): boolean => /\p{Ll}/u.test(str),
-    hasSpecial: (s: string): boolean => /[^\p{L}\p{N}]/u.test(s),
+}
+
+export const HabitNameInvariants = {
+    isValidLength: (s: string): boolean => 2 <= s.length && s.length < 50 
 }
