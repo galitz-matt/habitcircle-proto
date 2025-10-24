@@ -1,5 +1,6 @@
-import { PasswordInvariants, StringUtils } from "@lib/utils";
+import { StringUtils } from "@lib/utils";
 import bcrypt from "bcryptjs"
+import { PasswordInvariants } from "../invariants/password.invariant";
 
 export class Password {
 
