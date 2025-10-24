@@ -16,7 +16,7 @@ export class UserPrismaRepository implements UserRepository {
 
     async findByUsername(username: string): Promise<User | null> {
         const userRecord = await this.prisma.user.findUnique({
-            where: { name: username}
+            where: { username: username}
         })
 
         return userRecord ? UserMapper.toDomain(userRecord) : null;
@@ -34,12 +34,12 @@ export class UserPrismaRepository implements UserRepository {
             where: { id: userRecord.id },
             create: userRecord,
             update: {
-                name: userRecord.name,
+                username: userRecord.username,
                 password: userRecord.password
             },
         }).catch((err) => {
             if (err.code === "P2002") {
-                throw new Error(`Username ${userRecord.name} already exists`);
+                throw new Error(`Username ${userRecord.username} already exists`);
             }
             throw err;
         });
