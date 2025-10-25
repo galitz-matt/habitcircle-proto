@@ -15,6 +15,10 @@ export class Habit {
         return new Habit(IdGenerator.new(), new Date(), habitName, circleId);
     }
 
+    getName(): string {
+        return this.name.value;
+    }
+
     static rehydrate(
         id: string,
         createdAt: Date,

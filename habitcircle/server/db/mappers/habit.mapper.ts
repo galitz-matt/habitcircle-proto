@@ -15,7 +15,7 @@ export class HabitMapper {
         return {
             id: habit.id,
             createdAt: habit.createdAt,
-            name: habit.name,
+            name: habit.getName(),
             circleId: habit.circleId
         }
     }

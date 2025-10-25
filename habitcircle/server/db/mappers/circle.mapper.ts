@@ -12,12 +12,12 @@ export class CircleMapper {
         const owner = User.rehydrate(
             record.owner.id,
             record.owner.createdAt,
-            record.owner.name,
+            record.owner.username,
             record.owner.password
         );
 
         const members = record.members.map((m) =>
-            User.rehydrate(m.id, m.createdAt, m.name, m.password)
+            User.rehydrate(m.id, m.createdAt, m.username, m.password)
         );
 
         const habits = record.habits.map((h) =>
@@ -37,7 +37,7 @@ export class CircleMapper {
     static toPrisma(circle: Circle): Omit<CircleRecord, "ownerId"> {
         return {
             id: circle.id,
-            name: circle.name,
+            name: circle.getName(),
             createdAt: circle.createdAt,
         };
     }

@@ -46,23 +46,27 @@ export class Circle {
         )
     }
 
+    getName(): string {
+        return this.name.value;
+    }
+
     addMember(user: User): Circle {
-        const updatedMembers = this.members.addMember(user);
+        const updatedMembers = this.members.add(user);
         return this.clone({ members: updatedMembers });
     }
 
     removeMember(user: User): Circle {
-        const updatedMembers = this.members.removeMember(user);
+        const updatedMembers = this.members.remove(user);
         return this.clone({ members: updatedMembers });
     }
 
     addHabit(habit: Habit): Circle {
-        const updatedHabits = this.habits.addHabit(habit);
+        const updatedHabits = this.habits.add(habit);
         return this.clone({ habits: updatedHabits });
     }
 
     deleteHabit(habit: Habit): Circle {
-        const updatedHabits = this.habits.removeHabit(habit);
+        const updatedHabits = this.habits.remove(habit);
         return this.clone({ habits: updatedHabits });
     }
 

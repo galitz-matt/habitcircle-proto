@@ -52,14 +52,14 @@ export class CirclePrismaRepository implements CircleRepository {
             create: {
                 ...base,
                 owner: { connect: { id: circle.owner.id } },
-                members: { connect: circle.members.map(m => ({ id: m.id })) },
-                habits: { connect: circle.habits.map(h => ({ id: h.id })) }
+                members: { connect: circle.members.getAll().map(m => ({ id: m.id })) },
+                habits: { connect: circle.habits.getAll().map(h => ({ id: h.id })) }
             },
             update: {
                 ...base,
                 owner: { connect: { id: circle.owner.id }},
-                members: { set: circle.members.map(m => ({ id: m.id })) },
-                habits: { set: circle.habits.map(h => ({ id: h.id })) }
+                members: { set: circle.members.getAll().map(m => ({ id: m.id })) },
+                habits: { set: circle.habits.getAll().map(h => ({ id: h.id })) }
             }
         });
     }

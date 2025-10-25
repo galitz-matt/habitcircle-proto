@@ -13,13 +13,17 @@ export class CircleMembers extends ValueObject<CircleMembers> {
         return new CircleMembers(owner, members);
     }
 
-    addMember(user: User) {
+    getAll(): User[] {
+        return this.members;
+    }
+
+    add(user: User): CircleMembers {
         const updatedMembers = [...this.members, user];
         CircleMembersInvariants.enforce(this.owner, updatedMembers);
         return new CircleMembers(this.owner, updatedMembers);
     }
 
-    removeMember(user: User) {
+    remove(user: User): CircleMembers {
         const toRemoveId = user.id;
         const updatedMembers = this.members.filter(u => u.id == toRemoveId);
         CircleMembersInvariants.enforce(this.owner, updatedMembers);
