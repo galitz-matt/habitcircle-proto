@@ -1,0 +1,15 @@
+import { Habit } from "../entities/habit.entity";
+import { DomainError } from "../errors/domain-error";
+
+export class CircleHabitsInvariants {
+    static enforce(habits: Habit[]): void {
+        this.ensureNoDuplicates(habits);
+    }
+
+    static ensureNoDuplicates(habits: Habit[]): void {
+        const habitSet = new Set(habits);
+        if (habits.length !== habitSet.size) {
+            throw new DomainError("Found duplicate habits.")
+        }
+    }
+}

@@ -3,14 +3,16 @@ import { Habit } from "@server/domain/entities/habit.entity";
 import { User } from "@server/domain/entities/user.entity"
 import { CircleName } from "../value-objects/circle-name.value-object";
 import { CircleMembers } from "../value-objects/circle-members.value-object";
+import { CircleHabits } from "../value-objects/circle-habits.value-object";
 
 export class Circle {
     private constructor(
         readonly id: string,
         readonly createdAt: Date,
         readonly name: CircleName,
+        readonly owner: User,
         readonly members: CircleMembers, // owner is an element of members
-        readonly habits: Habit[]
+        readonly habits: CircleHabits
     ) {}
 
     static create(
@@ -21,13 +23,15 @@ export class Circle {
     ): Circle {
         const circleName = CircleName.create(name);
         const circleMembers = CircleMembers.create(owner, members)
+        const circleHabits = CircleHabits.create(habits);
 
         return new Circle(
             IdGenerator.new(), 
             new Date(), 
             circleName, 
+            owner,
             circleMembers, 
-            habits
+            circleHabits
         );
     }
 
@@ -36,6 +40,7 @@ export class Circle {
             changes.id ?? this.id,
             changes.createdAt ?? this.createdAt,
             changes.name ?? this.name,
+            changes.owner ?? this.owner,
             changes.members ?? this.members,
             changes.habits ?? this.habits,
         )
@@ -52,22 +57,38 @@ export class Circle {
     }
 
     addHabit(habit: Habit): Circle {
-        return this.clone({});
+        const updatedHabits = this.habits.addHabit(habit);
+        return this.clone({ habits: updatedHabits });
     }
 
     deleteHabit(habit: Habit): Circle {
-        return this.clone({});
+        const updatedHabits = this.habits.removeHabit(habit);
+        return this.clone({ habits: updatedHabits });
     }
 
     static rehydrate(
         id: string,
         createdAt: Date,
         name: string,
-        members: CircleMembers,
+        owner: User,
+        members: User[],
         habits: Habit[]
     ): Circle {
         /* Used exclusively by repositories to reconstitue from persistence */
-        return new Circle(id, createdAt, CircleName.create(name), members, habits)
+
+        const circleName = CircleName.rehydrate(name);
+        const circleMembers = CircleMembers.rehydrate(owner, members);
+        const circleHabits = CircleHabits.rehydrate(habits);
+
+
+        return new Circle(
+            id, 
+            createdAt, 
+            circleName, 
+            owner, 
+            circleMembers, 
+            circleHabits
+        )
     }
 
 }
