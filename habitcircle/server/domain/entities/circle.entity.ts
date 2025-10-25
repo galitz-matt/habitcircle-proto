@@ -35,15 +35,13 @@ export class Circle {
         );
     }
 
-    private clone(changes: Partial<Circle>): Circle {
-        return new Circle(
-            changes.id ?? this.id,
-            changes.createdAt ?? this.createdAt,
-            changes.name ?? this.name,
-            changes.owner ?? this.owner,
-            changes.members ?? this.members,
-            changes.habits ?? this.habits,
-        )
+    getOwner(): User {
+        return this.owner;
+    }
+
+    changeOwner(user: User): Circle {
+        const updatedMembers = this.members.changeOwner(user);
+        return this.clone({ owner: user, members: updatedMembers });
     }
 
     addMember(user: User): Circle {
@@ -64,6 +62,17 @@ export class Circle {
     deleteHabit(habit: Habit): Circle {
         const updatedHabits = this.habits.remove(habit);
         return this.clone({ habits: updatedHabits });
+    }
+
+    private clone(changes: Partial<Circle>): Circle {
+        return new Circle(
+            changes.id ?? this.id,
+            changes.createdAt ?? this.createdAt,
+            changes.name ?? this.name,
+            changes.owner ?? this.owner,
+            changes.members ?? this.members,
+            changes.habits ?? this.habits,
+        )
     }
 
     static rehydrate(
