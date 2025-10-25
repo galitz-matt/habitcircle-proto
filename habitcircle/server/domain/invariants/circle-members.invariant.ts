@@ -8,13 +8,13 @@ export class CircleMembersInvariants {
         this.ensureNoDuplicates(members);
     }
 
-    private static ensureOwnerIncluded(owner: User, members: User[]): void {
+    static ensureOwnerIncluded(owner: User, members: User[]): void {
         if (!members.includes(owner)) {
             throw new DomainError("Owner must be included in Circle members");
         }
     }
 
-    private static ensureNoDuplicates(members: User[]): void  {
+    static ensureNoDuplicates(members: User[]): void  {
         const membersSet = new Set(members.map(u => u.id));
         if (membersSet.size !== members.length) {
             throw new DomainError("Cannot contain duplicate members");
