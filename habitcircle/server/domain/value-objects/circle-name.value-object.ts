@@ -13,6 +13,10 @@ export class CircleName extends ValueObject<CircleName> {
         return new CircleName(normalized);
     }
 
+    get(): string {
+        return this.value;
+    }
+
     toString() {
         return this.value;
     }

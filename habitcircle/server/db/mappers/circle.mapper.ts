@@ -37,7 +37,7 @@ export class CircleMapper {
     static toPrisma(circle: Circle): Omit<CircleRecord, "ownerId"> {
         return {
             id: circle.id,
-            name: circle.getName(),
+            name: circle.name.get(),
             createdAt: circle.createdAt,
         };
     }

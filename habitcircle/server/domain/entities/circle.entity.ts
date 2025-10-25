@@ -46,10 +46,6 @@ export class Circle {
         )
     }
 
-    getName(): string {
-        return this.name.value;
-    }
-
     addMember(user: User): Circle {
         const updatedMembers = this.members.add(user);
         return this.clone({ members: updatedMembers });
