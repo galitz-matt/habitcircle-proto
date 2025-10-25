@@ -33,7 +33,7 @@ export class CircleMembers extends ValueObject<CircleMembers> {
         return this.members.some(m => m.id === user.id);
     }
 
-    changeOwner(user: User): CircleMembers {
+    setOwner(user: User): CircleMembers {
         if (user.id === this.owner.id) throw new Error("User is already owner.");
         if (!this.includes(user)) throw new Error("User is not in circle.");
         return new CircleMembers(user, this.members)

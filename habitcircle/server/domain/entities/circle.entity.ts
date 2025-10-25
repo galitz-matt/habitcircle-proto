@@ -39,8 +39,8 @@ export class Circle {
         return this.owner;
     }
 
-    changeOwner(user: User): Circle {
-        const updatedMembers = this.members.changeOwner(user);
+    setOwner(user: User): Circle {
+        const updatedMembers = this.members.setOwner(user);
         return this.clone({ owner: user, members: updatedMembers });
     }
 
