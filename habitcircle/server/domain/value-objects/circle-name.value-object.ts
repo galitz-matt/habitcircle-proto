@@ -1,15 +1,27 @@
 import { StringUtils } from "@lib/utils";
 import { CircleNameInvariants } from "../invariants/circle-name.invariant";
+import { ValueObject } from "./value-object.base";
 
-export class CircleName {
+export class CircleName extends ValueObject<CircleName> {
     private constructor(
         readonly value: string
-    ) {}
+    ) { super() }
 
     static create(value: string) {
         const normalized = StringUtils.normalize(value);
-        if (!CircleNameInvariants.isValidLength(normalized)) throw new Error("Circle name must be between 1 and 50 characters");
-
+        CircleNameInvariants.enforce(normalized);
         return new CircleName(normalized);
+    }
+
+    toString() {
+        return this.value;
+    }
+
+    equals(other: CircleName) {
+        return this.value === other.value;
+    }
+
+    static rehydrate(value: string) {
+        return new CircleName(value);
     }
 }

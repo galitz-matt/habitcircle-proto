@@ -1,16 +1,16 @@
 import { StringUtils } from "@lib/utils";
 import { HabitNameInvariants } from "../invariants/habit-name.invariant";
+import { ValueObject } from "./value-object.base";
 
-export class HabitName {
+export class HabitName extends ValueObject<HabitName> {
     private constructor(
         readonly value: string
-    ) {}
+    ) { super() }
 
     static create(value: string) {
         const normalized = StringUtils.normalize(value);
-        if (!HabitNameInvariants.isValidLength(normalized)) throw new Error("Habit name must be between 2 and 50 characters");
-
-        return new HabitName(value);
+        HabitNameInvariants.enforce(normalized);
+        return new HabitName(normalized);
     }
 
     toString(): string {

@@ -6,14 +6,13 @@ export class User {
     private constructor(
         readonly id: string,
         readonly createdAt: Date,
-        readonly username: Username,
+        private readonly username: Username,
         private readonly password: Password
     ) {}
 
-    static async create(plainUsername: string, plainPassword: string): Promise<User> {
-        const username = Username.create(plainUsername)
-        const password = await Password.create(plainPassword);
-
+    static async create(usernameValue: string, passwordValue: string): Promise<User> {
+        const username = Username.create(usernameValue)
+        const password = await Password.create(passwordValue);
         return new User(IdGenerator.new(), new Date(), username, password);
     }
 
@@ -26,7 +25,7 @@ export class User {
     }
 
     getPasswordHash(): string {
-        return this.password.getHash();
+        return this.password.toString();
     }
 
     static rehydrate(

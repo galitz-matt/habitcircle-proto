@@ -1,19 +1,15 @@
 import { StringUtils } from "@lib/utils";
 import { UsernameInvariants } from "../invariants/username.invariant";
+import { ValueObject } from "./value-object.base";
 
-export class Username {
+export class Username extends ValueObject<Username> {
     private constructor(
         readonly value: string,
-    ) {}
+    ) { super() }
 
     static create(value: string): Username {
         const normalized = StringUtils.normalize(value);
-
-        if (!UsernameInvariants.isValidLength(normalized)) throw new Error("Username must be between 3 and 40 characters");
-        if (UsernameInvariants.isReserved(normalized)) throw new Error("Username is banned");
-        if (!StringUtils.isValidCharacterSet(normalized)) throw new Error("Username includes invalid characters");
-        if (StringUtils.hasWhitespace(normalized)) throw new Error("Username cannot contain whitespace");
-
+        UsernameInvariants.enforce(normalized);
         return new Username(normalized);
     }
 
