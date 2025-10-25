@@ -10,7 +10,6 @@ export class Circle {
         readonly id: string,
         readonly createdAt: Date,
         readonly name: CircleName,
-        readonly owner: User,
         readonly members: CircleMembers, // owner is an element of members
         readonly habits: CircleHabits
     ) {}
@@ -29,19 +28,18 @@ export class Circle {
             IdGenerator.new(), 
             new Date(), 
             circleName, 
-            owner,
             circleMembers, 
             circleHabits
         );
     }
 
     getOwner(): User {
-        return this.owner;
+        return this.members.owner;
     }
 
     setOwner(user: User): Circle {
         const updatedMembers = this.members.setOwner(user);
-        return this.clone({ owner: user, members: updatedMembers });
+        return this.clone({ members: updatedMembers });
     }
 
     addMember(user: User): Circle {
@@ -69,7 +67,6 @@ export class Circle {
             changes.id ?? this.id,
             changes.createdAt ?? this.createdAt,
             changes.name ?? this.name,
-            changes.owner ?? this.owner,
             changes.members ?? this.members,
             changes.habits ?? this.habits,
         )
@@ -94,7 +91,6 @@ export class Circle {
             id, 
             createdAt, 
             circleName, 
-            owner, 
             circleMembers, 
             circleHabits
         )
