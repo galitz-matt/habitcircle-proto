@@ -1,5 +1,5 @@
 import { StringUtils } from "@lib/utils";
-import { DomainError } from "../errors/domain-error";
+import { DomainError } from "@lib/errors";
 
 export class PasswordInvariants {
     static enforce(password: string): void {

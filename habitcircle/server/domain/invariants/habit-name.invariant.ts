@@ -1,4 +1,4 @@
-import { DomainError } from "../errors/domain-error";
+import { DomainError } from "@lib/errors";
 
 export class HabitNameInvariants {
     static enforce(habitName: string): void {

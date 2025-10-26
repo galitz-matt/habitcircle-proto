@@ -1,5 +1,5 @@
 import { User } from "../entities/user.entity";
-import { DomainError } from "../errors/domain-error";
+import { DomainError } from "@lib/errors";
 
 export class CircleMembersInvariants {
     
