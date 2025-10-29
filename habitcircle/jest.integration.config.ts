@@ -15,7 +15,7 @@ const config = {
     "^@components/(.*)$": "<rootDir>/components/$1",
     "^@generated/(.*)$": "<rootDir>/generated/$1",
   },
-  roots: ["<rootDir>/tests"],
+  roots: ["<rootDir>/tests/integration"],
   setupFilesAfterEnv: ["<rootDir>/tests/integration/setup/jest.setup.ts"]
 };
 

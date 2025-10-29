@@ -7,7 +7,7 @@
     "build": "next build --turbopack",
     "start": "next start",
     "lint": "eslint",
-    "test:unit": "dotenv -e .env.test -- jest --runInBand --detectOpenHandles",
+    "test:unit": "dotenv -e .env.test -- jest --config jest.unit.config.ts",
     "test:integration": "bash scripts/test-with-db.sh",
     "test": "npm run test:unit && npm run test:integration"
   },
