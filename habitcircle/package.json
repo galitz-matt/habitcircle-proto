@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "eslint",
     "test:unit": "dotenv -e .env.test -- jest --runInBand --detectOpenHandles",
-    "test": "bash scripts/test-with-db.sh"
+    "test:integration": "bash scripts/test-with-db.sh",
+    "test": "npm run test:unit && npm run test:integration"
   },
   "dependencies": {
     "@prisma/client": "^6.16.3",
