@@ -9,6 +9,6 @@ export const StringUtils = {
     hasWhitespace: (s: string): boolean => /\s/.test(s),
     hasUppercase: (s: string): boolean => /\p{Lu}/u.test(s),
     hasLowercase: (s: string): boolean => /\p{Ll}/u.test(s),
-    hasSpecial: (s: string): boolean => /[^\p{L}\p{N}]/u.test(s),
+    hasSpecial: (s: string): boolean => /[^\p{L}\p{N}\s]/u.test(s),
     isValidCharacterSet: (s: string): boolean => VALID_USERNAME_CHARACTERS_PATTERN.test(s),
 }

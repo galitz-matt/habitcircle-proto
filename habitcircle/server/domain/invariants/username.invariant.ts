@@ -6,12 +6,13 @@ export class UsernameInvariants {
     static enforce(usernameValue: string): void {
         this.ensureValidLength(usernameValue);
         this.ensureNotReserved(usernameValue);
+        this.ensureNoWhitespace(usernameValue);
         this.ensureValidCharacters(usernameValue);
 
     }
 
     static ensureValidLength(usernameValue: string): void {
-        if (3 > usernameValue.length && usernameValue.length > 40) {
+        if (usernameValue.length < 3 || usernameValue.length > 40) {
             throw new DomainError("Username must be between 3 and 40 characters long.");
         }
     }
