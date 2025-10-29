@@ -8,7 +8,7 @@ export class CircleNameInvariants {
     }
 
     static ensureValidLength(circleName: string): void {
-        if (1 > circleName.length && circleName.length > 100) {
+        if (circleName.length < 1 || circleName.length > 100) {
             throw new DomainError("Circle name must be between 1 and 100 characters in length.");
         }
     }
