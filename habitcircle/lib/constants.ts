@@ -8,3 +8,4 @@ export const RESERVED_USERNAMES = new Set([
 ]);
 
 export const VALID_USERNAME_CHARACTERS_PATTERN = /^[\p{L}\p{M}\p{N}_.-]+$/u
+export const VALID_NAME_CHARACTERS_PATTERN = /^[\p{L}\p{M}\p{N}_.\-\s]+$/u;

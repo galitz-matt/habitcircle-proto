@@ -1,5 +1,5 @@
 import { StringUtils } from "@lib/utils";
-import { RESERVED_USERNAMES } from "@lib/constants"
+import { RESERVED_USERNAMES, VALID_USERNAME_CHARACTERS_PATTERN } from "@lib/constants"
 import { DomainError } from "@lib/errors";
 
 export class UsernameInvariants {
@@ -8,7 +8,6 @@ export class UsernameInvariants {
         this.ensureNotReserved(usernameValue);
         this.ensureNoWhitespace(usernameValue);
         this.ensureValidCharacters(usernameValue);
-
     }
 
     static ensureValidLength(usernameValue: string): void {
@@ -24,7 +23,7 @@ export class UsernameInvariants {
     }
 
     static ensureValidCharacters(usernameValue: string) {
-        if (!StringUtils.isValidCharacterSet(usernameValue)) {
+        if (!VALID_USERNAME_CHARACTERS_PATTERN.test(usernameValue)) {
             throw new DomainError("Username includes invalid characters.");
         }
     }
@@ -34,5 +33,4 @@ export class UsernameInvariants {
             throw new DomainError("Username cannot contain whitespace.")
         }
     }
-
 }
