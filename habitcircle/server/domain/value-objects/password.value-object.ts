@@ -18,8 +18,8 @@ export class Password extends ValueObject<Password> {
         return this.value;
     }
 
-    async equals(other: Password): Promise<boolean> {
-        return bcrypt.compare(other.toString(), this.value);
+    equals(other: Password): boolean {
+        return this.value === other.toString();
     }
 
     async matches(otherValue: string): Promise<boolean> {
