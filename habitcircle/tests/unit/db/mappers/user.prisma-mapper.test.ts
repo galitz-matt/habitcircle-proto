@@ -1,4 +1,4 @@
-import { UserMapper } from "@/server/db/mappers/user.mapper";
+import { UserPrismaMapper } from "@/server/db/mappers/user.prisma-mapper";
 import { User } from "@/server/domain/entities/user.entity";
 
 jest.mock("@/server/domain/entities/user.entity");
@@ -27,7 +27,7 @@ describe("UserMapper", () => {
       const rehydrated = { id: "user-1", domainType: "User" };
       (User.rehydrate as jest.Mock).mockReturnValue(rehydrated);
 
-      const result = UserMapper.toDomain(mockRecord);
+      const result = UserPrismaMapper.toDomain(mockRecord);
 
       expect(User.rehydrate).toHaveBeenCalledWith(
         mockRecord.id,
@@ -41,7 +41,7 @@ describe("UserMapper", () => {
 
   describe("toPrisma", () => {
     it("converts a User domain entity to a Prisma-compatible record", () => {
-      const result = UserMapper.toPrisma(mockUser);
+      const result = UserPrismaMapper.toPersistence(mockUser);
 
       expect(result).toEqual({
         id: "user-1",

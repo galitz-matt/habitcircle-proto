@@ -7,7 +7,7 @@ type CircleRecordWithRelations = Prisma.CircleGetPayload<{
     include: { owner: true; members: true; habits: true }
 }>
 
-export class CircleMapper {
+export class CirclePrismaMapper {
     static toDomain(record: CircleRecordWithRelations): Circle {
         const owner = User.rehydrate(
             record.owner.id,
@@ -34,7 +34,7 @@ export class CircleMapper {
         );
     }
 
-    static toPrisma(circle: Circle): Omit<CircleRecord, "ownerId"> {
+    static toPersistence(circle: Circle): Omit<CircleRecord, "ownerId"> {
         return {
             id: circle.id,
             name: circle.name.get(),

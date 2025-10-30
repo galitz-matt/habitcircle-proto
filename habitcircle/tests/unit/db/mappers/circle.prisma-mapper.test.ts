@@ -1,4 +1,4 @@
-import { CircleMapper } from "@/server/db/mappers/circle.mapper";
+import { CirclePrismaMapper } from "@/server/db/mappers/circle.prisma-mapper";
 import { Circle } from "@/server/domain/entities/circle.entity";
 import { User } from "@/server/domain/entities/user.entity";
 import { Habit } from "@/server/domain/entities/habit.entity";
@@ -54,7 +54,7 @@ describe("CircleMapper", () => {
       (Habit.rehydrate as jest.Mock).mockReturnValue(rehydratedHabit);
       (Circle.rehydrate as jest.Mock).mockReturnValue(rehydratedCircle);
 
-      const result = CircleMapper.toDomain(mockCircleRecord);
+      const result = CirclePrismaMapper.toDomain(mockCircleRecord);
 
       // Verify entity rehydrations
       expect(User.rehydrate).toHaveBeenCalledTimes(2); // owner + 1 member
@@ -88,7 +88,7 @@ describe("CircleMapper", () => {
 
   describe("toPrisma", () => {
     it("maps a Circle domain entity into a Prisma-compatible record", () => {
-      const result = CircleMapper.toPrisma(mockCircle);
+      const result = CirclePrismaMapper.toPersistence(mockCircle);
 
       expect(result).toEqual({
         id: "circle-1",

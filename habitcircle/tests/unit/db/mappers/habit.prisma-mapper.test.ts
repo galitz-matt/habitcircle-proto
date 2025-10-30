@@ -1,4 +1,4 @@
-import { HabitMapper } from "@/server/db/mappers/habit.mapper";
+import { HabitPrismaMapper } from "@/server/db/mappers/habit.prisma-mapper";
 import { Habit } from "@/server/domain/entities/habit.entity";
 
 jest.mock("@/server/domain/entities/habit.entity");
@@ -27,7 +27,7 @@ describe("HabitMapper", () => {
       const rehydratedHabit = { id: "habit-1", type: "Habit" };
       (Habit.rehydrate as jest.Mock).mockReturnValue(rehydratedHabit);
 
-      const result = HabitMapper.toDomain(mockRecord);
+      const result = HabitPrismaMapper.toDomain(mockRecord);
 
       expect(Habit.rehydrate).toHaveBeenCalledWith(
         mockRecord.id,
@@ -41,7 +41,7 @@ describe("HabitMapper", () => {
 
   describe("toPrisma", () => {
     it("converts a Habit domain entity to a Prisma-compatible record", () => {
-      const result = HabitMapper.toPrisma(mockHabit);
+      const result = HabitPrismaMapper.toPersistence(mockHabit);
 
       expect(result).toEqual({
         id: "habit-1",

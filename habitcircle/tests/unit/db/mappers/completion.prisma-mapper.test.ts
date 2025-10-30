@@ -1,4 +1,4 @@
-import { CompletionMapper } from "@/server/db/mappers/completion.mapper";
+import { CompletionPrismaMapper } from "@/server/db/mappers/completion.prisma-mapper";
 import { Completion } from "@/server/domain/entities/completion.entity";
 
 jest.mock("@/server/domain/entities/completion.entity");
@@ -27,7 +27,7 @@ describe("CompletionMapper", () => {
       const rehydrated = { id: "completion-1", type: "Completion" };
       (Completion.rehydrate as jest.Mock).mockReturnValue(rehydrated);
 
-      const result = CompletionMapper.toDomain(mockRecord);
+      const result = CompletionPrismaMapper.toDomain(mockRecord);
 
       expect(Completion.rehydrate).toHaveBeenCalledWith(
         mockRecord.id,
@@ -41,7 +41,7 @@ describe("CompletionMapper", () => {
 
   describe("toPrisma", () => {
     it("converts a Completion domain entity to a Prisma-compatible record", () => {
-      const result = CompletionMapper.toPrisma(mockCompletion);
+      const result = CompletionPrismaMapper.toPersistence(mockCompletion);
 
       expect(result).toEqual({
         id: "completion-1",

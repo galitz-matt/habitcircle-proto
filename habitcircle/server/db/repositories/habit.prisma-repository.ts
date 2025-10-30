@@ -1,6 +1,6 @@
 import { PrismaClient } from "@/generated/prisma";
 import { HabitRepository } from "@/server/domain/repositories/habit.repository";
-import { HabitMapper } from "@/server/db/mappers/habit.mapper";
+import { HabitPrismaMapper } from "@/server/db/mappers/habit.prisma-mapper";
 import { Habit } from "@/server/domain/entities/habit.entity";
 
 export class HabitPrismaRepository implements HabitRepository {
@@ -11,7 +11,7 @@ export class HabitPrismaRepository implements HabitRepository {
             where: { id: id },
         })
 
-        return habitRecord ? HabitMapper.toDomain(habitRecord) : null;
+        return habitRecord ? HabitPrismaMapper.toDomain(habitRecord) : null;
     }
 
     async findByCircleId(circleId: string): Promise<Habit[]> {
@@ -19,16 +19,16 @@ export class HabitPrismaRepository implements HabitRepository {
             where: { circleId: circleId }
         });
 
-        return habitRecords.map(HabitMapper.toDomain)
+        return habitRecords.map(HabitPrismaMapper.toDomain)
     }
 
     async findAll(): Promise<Habit[]> {
         const habitRecords = await this.prisma.habit.findMany();
-        return habitRecords.map(HabitMapper.toDomain);
+        return habitRecords.map(HabitPrismaMapper.toDomain);
     }
 
     async save(habit: Habit): Promise<void> {
-        const habitRecord = HabitMapper.toPrisma(habit);
+        const habitRecord = HabitPrismaMapper.toPersistence(habit);
 
         await this.prisma.habit.upsert({
             where: { id: habitRecord.id },

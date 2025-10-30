@@ -1,6 +1,6 @@
 import { PrismaClient } from "@/generated/prisma";
 import { UserRepository } from "@/server/domain/repositories/user.repository";
-import { UserMapper } from "@/server/db/mappers/user.mapper";
+import { UserPrismaMapper } from "@/server/db/mappers/user.prisma-mapper";
 import { User } from "@/server/domain/entities/user.entity";
 
 export class UserPrismaRepository implements UserRepository {
@@ -11,7 +11,7 @@ export class UserPrismaRepository implements UserRepository {
             where: { id: id }
         })
 
-        return userRecord ? UserMapper.toDomain(userRecord) : null;
+        return userRecord ? UserPrismaMapper.toDomain(userRecord) : null;
     }
 
     async findByUsername(username: string): Promise<User | null> {
@@ -19,16 +19,16 @@ export class UserPrismaRepository implements UserRepository {
             where: { username: username}
         })
 
-        return userRecord ? UserMapper.toDomain(userRecord) : null;
+        return userRecord ? UserPrismaMapper.toDomain(userRecord) : null;
     }
 
     async findAll(): Promise<User[]> {
         const userRecords = await this.prisma.user.findMany();
-        return userRecords.map(UserMapper.toDomain);
+        return userRecords.map(UserPrismaMapper.toDomain);
     }
 
     async save(user: User): Promise<void> {
-        const userRecord = UserMapper.toPrisma(user);
+        const userRecord = UserPrismaMapper.toPersistence(user);
 
         await this.prisma.user.upsert({
             where: { id: userRecord.id },

@@ -1,7 +1,7 @@
 import { Completion } from "@/server/domain/entities/completion.entity";
 import { Completion as CompletionRecord } from "@/generated/prisma";
 
-export class CompletionMapper {
+export class CompletionPrismaMapper {
     static toDomain(record: CompletionRecord) {
         return Completion.rehydrate(
             record.id,
@@ -11,7 +11,7 @@ export class CompletionMapper {
         );
     }
 
-    static toPrisma(completion: Completion) {
+    static toPersistence(completion: Completion) {
         return {
             id: completion.id,
             createdAt: completion.createdAt,

@@ -2,7 +2,7 @@ import { User } from "@/server/domain/entities/user.entity";
 import type { User as UserRecord } from "@/generated/prisma";
 
 
-export class UserMapper {
+export class UserPrismaMapper {
     static toDomain(record: UserRecord): User {
         return User.rehydrate(
             record.id,
@@ -12,7 +12,7 @@ export class UserMapper {
         );
     }
 
-    static toPrisma(user: User): UserRecord {
+    static toPersistence(user: User): UserRecord {
         return {
             id: user.id,
             createdAt: user.createdAt,

@@ -1,6 +1,6 @@
 import { Circle } from "@/server/domain/entities/circle.entity";
 import { CircleRepository } from "@/server/domain/repositories/circle.repository";
-import { CircleMapper } from "@/server/db/mappers/circle.mapper";
+import { CirclePrismaMapper } from "@/server/db/mappers/circle.prisma-mapper";
 import { PrismaClient } from "@/generated/prisma";
 
 export class CirclePrismaRepository implements CircleRepository {
@@ -12,7 +12,7 @@ export class CirclePrismaRepository implements CircleRepository {
             include: { owner: true, members: true, habits: true }
         });
 
-        return circleRecord ? CircleMapper.toDomain(circleRecord) : null;
+        return circleRecord ? CirclePrismaMapper.toDomain(circleRecord) : null;
     }
 
     async findByName(name: string): Promise<Circle[]> {
@@ -21,7 +21,7 @@ export class CirclePrismaRepository implements CircleRepository {
             include: { owner: true, members: true, habits: true }
         });
 
-        return circleRecords?.map(CircleMapper.toDomain) ?? [];
+        return circleRecords?.map(CirclePrismaMapper.toDomain) ?? [];
     }
 
     async findByUserId(userId: string): Promise<Circle[]> {
@@ -34,18 +34,18 @@ export class CirclePrismaRepository implements CircleRepository {
             }
         });
 
-        return userRecord?.circles.map(CircleMapper.toDomain) ?? [];
+        return userRecord?.circles.map(CirclePrismaMapper.toDomain) ?? [];
     }
 
     async findAll(): Promise<Circle[]> {
         const circleRecords = await this.prisma.circle.findMany({
             include: { owner: true, members: true, habits: true }
         });
-        return circleRecords.map(CircleMapper.toDomain);
+        return circleRecords.map(CirclePrismaMapper.toDomain);
     }
 
     async save(circle: Circle): Promise<void> {
-        const base = CircleMapper.toPrisma(circle);
+        const base = CirclePrismaMapper.toPersistence(circle);
 
         await this.prisma.circle.upsert({
             where: { id: circle.id },

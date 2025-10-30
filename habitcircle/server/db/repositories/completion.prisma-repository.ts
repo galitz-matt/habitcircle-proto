@@ -1,7 +1,7 @@
 import { PrismaClient } from "@/generated/prisma";
 import { Completion } from "@/server/domain/entities/completion.entity";
 import { CompletionRepository } from "@/server/domain/repositories/completion.repository";
-import { CompletionMapper } from "@/server/db/mappers/completion.mapper";
+import { CompletionPrismaMapper } from "@/server/db/mappers/completion.prisma-mapper";
 
 export class CompletionPrismaRepository implements CompletionRepository {
     constructor(private readonly prisma: PrismaClient) {}
@@ -11,7 +11,7 @@ export class CompletionPrismaRepository implements CompletionRepository {
             where: { userId_habitId: { userId: userId, habitId: habitId} }
         });
 
-        return completionRecord ? CompletionMapper.toDomain(completionRecord) : null;
+        return completionRecord ? CompletionPrismaMapper.toDomain(completionRecord) : null;
     }
 
     async findByUserId(userId: string): Promise<Completion[]> {
@@ -19,7 +19,7 @@ export class CompletionPrismaRepository implements CompletionRepository {
             where: { userId: userId }
         });
 
-        return completionRecords.map(CompletionMapper.toDomain);
+        return completionRecords.map(CompletionPrismaMapper.toDomain);
     }
 
     async findByHabitId(habitId: string): Promise<Completion[]> {
@@ -27,16 +27,16 @@ export class CompletionPrismaRepository implements CompletionRepository {
             where: { habitId: habitId }
         });
 
-        return completionRecords.map(CompletionMapper.toDomain)
+        return completionRecords.map(CompletionPrismaMapper.toDomain)
     }
 
     async findAll(): Promise<Completion[]> {
         const completionRecords = await this.prisma.completion.findMany();
-        return completionRecords.map(CompletionMapper.toDomain)
+        return completionRecords.map(CompletionPrismaMapper.toDomain)
     }
 
     async save(completion: Completion): Promise<void> {
-        const completionRecord = CompletionMapper.toPrisma(completion);
+        const completionRecord = CompletionPrismaMapper.toPersistence(completion);
 
         await this.prisma.completion.upsert({
             where: { id: completionRecord.id },
