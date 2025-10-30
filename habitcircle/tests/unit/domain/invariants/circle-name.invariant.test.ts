@@ -1,5 +1,5 @@
-import { DomainError } from "@lib/errors";
-import { CircleNameInvariants } from "@server/domain/invariants/circle-name.invariant";
+import { DomainError } from "@/lib/errors";
+import { CircleNameInvariants } from "@/server/domain/invariants/circle-name.invariant";
 
 describe("CircleNameInvariants", () => {
   it("allows a valid circle name", () => {

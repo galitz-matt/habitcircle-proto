@@ -1,5 +1,5 @@
-import { DomainError } from "@lib/errors";
-import { PasswordInvariants } from "@server/domain/invariants/password.invariant";
+import { DomainError } from "@/lib/errors";
+import { PasswordInvariants } from "@/server/domain/invariants/password.invariant";
 
 const basePassword = "ValidPass123!";
 

@@ -1,5 +1,5 @@
-import { DomainError } from "@lib/errors";
-import { UsernameInvariants } from "@server/domain/invariants/username.invariant";
+import { DomainError } from "@/lib/errors";
+import { UsernameInvariants } from "@/server/domain/invariants/username.invariant";
 
 describe("UsernameInvariants", () => {
   it("allows a valid username", () => {

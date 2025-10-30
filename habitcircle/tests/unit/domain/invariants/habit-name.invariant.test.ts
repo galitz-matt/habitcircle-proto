@@ -1,5 +1,5 @@
-import { DomainError } from "@lib/errors";
-import { HabitNameInvariants } from "@server/domain/invariants/habit-name.invariant";
+import { DomainError } from "@/lib/errors";
+import { HabitNameInvariants } from "@/server/domain/invariants/habit-name.invariant";
 
 describe("HabitNameInvariants", () => {
   it("allows a name between 2 and 50 characters", () => {

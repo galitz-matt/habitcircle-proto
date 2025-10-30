@@ -1,4 +1,4 @@
-import { User } from "@server/domain/entities/user.entity"
+import { User } from "@/server/domain/entities/user.entity"
 
 // Mock bcrypt or hashing logic if Password uses it
 // (optional if Password.create() already uses bcrypt)

@@ -1,6 +1,6 @@
-import { DomainError } from "@lib/errors";
-import { Habit } from "@server/domain/entities/habit.entity";
-import { CircleHabitsInvariants } from "@server/domain/invariants/circle-habits.invariant";
+import { DomainError } from "@/lib/errors";
+import { Habit } from "@/server/domain/entities/habit.entity";
+import { CircleHabitsInvariants } from "@/server/domain/invariants/circle-habits.invariant";
 
 const fixedDate = new Date("2024-01-01T00:00:00.000Z");
 

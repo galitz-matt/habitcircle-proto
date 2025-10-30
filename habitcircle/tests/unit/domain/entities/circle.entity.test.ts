@@ -1,7 +1,7 @@
-import { DomainError } from "@lib/errors";
-import { Circle } from "@server/domain/entities/circle.entity";
-import { Habit } from "@server/domain/entities/habit.entity";
-import { User } from "@server/domain/entities/user.entity";
+import { DomainError } from "@/lib/errors";
+import { Circle } from "@/server/domain/entities/circle.entity";
+import { Habit } from "@/server/domain/entities/habit.entity";
+import { User } from "@/server/domain/entities/user.entity";
 
 const fixedDate = new Date("2024-01-01T00:00:00.000Z");
 
