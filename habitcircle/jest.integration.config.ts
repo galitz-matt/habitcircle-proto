@@ -9,11 +9,12 @@ const config = {
     ...tsJestTransformCfg,
   },
   moduleNameMapper: {
-    "^@server/(.*)$": "<rootDir>/server/$1",
-    "^@lib/(.*)$": "<rootDir>/lib/$1",
-    "^@graphql/(.*)$": "<rootDir>/graphql/$1",
-    "^@components/(.*)$": "<rootDir>/components/$1",
-    "^@generated/(.*)$": "<rootDir>/generated/$1",
+    "^@/server/(.*)$": "<rootDir>/server/$1",
+    "^@/lib/(.*)$": "<rootDir>/lib/$1",
+    "^@/graphql/(.*)$": "<rootDir>/graphql/$1",
+    "^@/components/(.*)$": "<rootDir>/components/$1",
+    "^@/generated/(.*)$": "<rootDir>/generated/$1",
+    "^@/tests/(.*)$": "<rootDir>/tests/$1"
   },
   roots: ["<rootDir>/tests/integration"],
   setupFilesAfterEnv: ["<rootDir>/tests/integration/setup/jest.setup.ts"]

@@ -1,7 +1,7 @@
-import { PrismaClient } from "@/generated/prisma";
+import type { PrismaClient } from "@/generated/prisma";
 import { HabitRepository } from "@/server/domain/repositories/habit.repository";
 import { HabitPrismaMapper } from "@/server/db/mappers/habit.prisma-mapper";
-import { Habit } from "@/server/domain/entities/habit.entity";
+import type { Habit } from "@/server/domain/entities/habit.entity";
 
 export class HabitPrismaRepository implements HabitRepository {
     constructor(private readonly prisma: PrismaClient) {}

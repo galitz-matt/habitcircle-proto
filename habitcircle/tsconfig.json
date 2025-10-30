@@ -24,7 +24,8 @@
       "@/server/*": ["server/*"],
       "@/graphql/*": ["graphql/*"],
       "@/components/*": ["components/*"],
-      "@/generated/*": ["generated/*"]
+      "@/generated/*": ["generated/*"],
+      "@/tests/*": ["tests/*"]
     }
   },
   "include": [

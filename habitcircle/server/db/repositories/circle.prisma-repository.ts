@@ -1,7 +1,7 @@
-import { Circle } from "@/server/domain/entities/circle.entity";
+import type { Circle } from "@/server/domain/entities/circle.entity";
 import { CircleRepository } from "@/server/domain/repositories/circle.repository";
 import { CirclePrismaMapper } from "@/server/db/mappers/circle.prisma-mapper";
-import { PrismaClient } from "@/generated/prisma";
+import type { PrismaClient } from "@/generated/prisma";
 
 export class CirclePrismaRepository implements CircleRepository {
     constructor(private readonly prisma: PrismaClient) {}
@@ -65,6 +65,10 @@ export class CirclePrismaRepository implements CircleRepository {
     }
 
     async delete(id: string): Promise<void> {
+        await this.prisma.habit.deleteMany({
+            where: { circleId: id },
+        });
+        
         await this.prisma.circle.delete({
             where: { id: id }
         }).catch((err) => {
