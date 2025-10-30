@@ -6,12 +6,29 @@ import { CompletionPrismaMapper } from "@/server/db/mappers/completion.prisma-ma
 export class CompletionPrismaRepository implements CompletionRepository {
     constructor(private readonly prisma: PrismaClient) {}
 
-    async findByUserAndHabit(userId: string, habitId: string): Promise<Completion | null> {
+    async findByUserHabitAndDate(userId: string, habitId: string, completedAt: Date): Promise<Completion | null> {
         const completionRecord = await this.prisma.completion.findUnique({
-            where: { userId_habitId: { userId: userId, habitId: habitId} }
+            where: {
+                userId_habitId_completedAt: {
+                    userId: userId,
+                    habitId: habitId,
+                    completedAt: completedAt,
+                },
+            },
         });
 
         return completionRecord ? CompletionPrismaMapper.toDomain(completionRecord) : null;
+    }
+
+    async findByUserAndHabit(userId: string, habitId: string): Promise<Completion[]> {
+        const completionRecords = await this.prisma.completion.findMany({
+            where: { 
+                userId: userId, 
+                habitId: habitId
+            }
+        });
+
+        return completionRecords.map(CompletionPrismaMapper.toDomain);
     }
 
     async findByUserId(userId: string): Promise<Completion[]> {
@@ -39,7 +56,13 @@ export class CompletionPrismaRepository implements CompletionRepository {
         const completionRecord = CompletionPrismaMapper.toPersistence(completion);
 
         await this.prisma.completion.upsert({
-            where: { id: completionRecord.id },
+            where: { 
+                userId_habitId_completedAt: {
+                    userId: completionRecord.userId,
+                    habitId: completionRecord.habitId,
+                    completedAt: completionRecord.completedAt
+                } 
+            },
             create: completionRecord,
             update: {
                 createdAt: completionRecord.createdAt

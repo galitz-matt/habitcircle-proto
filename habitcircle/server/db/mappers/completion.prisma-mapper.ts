@@ -6,6 +6,7 @@ export class CompletionPrismaMapper {
         return Completion.rehydrate(
             record.id,
             record.createdAt,
+            record.completedAt,
             record.userId,
             record.habitId
         );
@@ -15,6 +16,7 @@ export class CompletionPrismaMapper {
         return {
             id: completion.id,
             createdAt: completion.createdAt,
+            completedAt: completion.completedAt,
             userId: completion.userId,
             habitId: completion.habitId
         }
