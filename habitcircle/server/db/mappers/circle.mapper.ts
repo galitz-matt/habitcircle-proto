@@ -1,7 +1,7 @@
-import { Circle } from "@server/domain/entities/circle.entity";
-import { User } from "@server/domain/entities/user.entity";
-import { Habit } from "@server/domain/entities/habit.entity";
-import type { Prisma, Circle as CircleRecord } from "@generated/prisma"
+import { Circle } from "@/server/domain/entities/circle.entity";
+import { User } from "@/server/domain/entities/user.entity";
+import { Habit } from "@/server/domain/entities/habit.entity";
+import type { Prisma, Circle as CircleRecord } from "@/generated/prisma"
 
 type CircleRecordWithRelations = Prisma.CircleGetPayload<{
     include: { owner: true; members: true; habits: true }

@@ -1,4 +1,4 @@
-import { StringUtils } from "@lib/utils";
+import { StringUtils } from "@/lib/utils";
 import { CircleNameInvariants } from "../invariants/circle-name.invariant";
 import { ValueObject } from "./value-object.base";
 

@@ -1,6 +1,6 @@
-import { IdGenerator } from "@lib/utils";
-import { Username } from "../value-objects/username.value-object";
-import { Password } from "../value-objects/password.value-object";
+import { IdGenerator } from "@/lib/utils";
+import { Username } from "@/server/domain/value-objects/username.value-object";
+import { Password } from "@/server/domain/value-objects/password.value-object";
 
 export class User {
     private constructor(

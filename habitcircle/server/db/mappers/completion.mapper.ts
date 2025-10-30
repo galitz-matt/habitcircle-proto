@@ -1,5 +1,5 @@
-import { Completion } from "@server/domain/entities/completion.entity";
-import { Completion as CompletionRecord } from "@generated/prisma";
+import { Completion } from "@/server/domain/entities/completion.entity";
+import { Completion as CompletionRecord } from "@/generated/prisma";
 
 export class CompletionMapper {
     static toDomain(record: CompletionRecord) {

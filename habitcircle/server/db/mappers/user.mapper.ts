@@ -1,5 +1,5 @@
-import { User } from "@server/domain/entities/user.entity";
-import type { User as UserRecord } from "@generated/prisma";
+import { User } from "@/server/domain/entities/user.entity";
+import type { User as UserRecord } from "@/generated/prisma";
 
 
 export class UserMapper {

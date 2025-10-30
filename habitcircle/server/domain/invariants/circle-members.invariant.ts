@@ -1,5 +1,5 @@
-import { User } from "../entities/user.entity";
-import { DomainError } from "@lib/errors";
+import { User } from "@/server/domain/entities/user.entity";
+import { DomainError } from "@/lib/errors";
 
 export class CircleMembersInvariants {
     

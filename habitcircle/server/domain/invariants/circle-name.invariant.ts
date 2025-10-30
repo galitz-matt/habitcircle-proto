@@ -1,5 +1,5 @@
-import { DomainError } from "@lib/errors";
-import { VALID_NAME_CHARACTERS_PATTERN } from "@lib/constants";
+import { DomainError } from "@/lib/errors";
+import { VALID_NAME_CHARACTERS_PATTERN } from "@/lib/constants";
 
 export class CircleNameInvariants {
     static enforce(circleName: string): void {

@@ -1,6 +1,6 @@
-import { DomainError } from "@lib/errors";
-import { Habit } from "@server/domain/entities/habit.entity";
-import { CircleHabits } from "@server/domain/value-objects/circle-habits.value-object";
+import { DomainError } from "@/lib/errors";
+import { Habit } from "@/server/domain/entities/habit.entity";
+import { CircleHabits } from "@/server/domain/value-objects/circle-habits.value-object";
 
 const fixedDate = new Date("2024-01-01T00:00:00.000Z");
 

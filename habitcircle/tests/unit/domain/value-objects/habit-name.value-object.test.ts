@@ -1,4 +1,4 @@
-import { HabitName } from "@server/domain/value-objects/habit-name.value-object";
+import { HabitName } from "@/server/domain/value-objects/habit-name.value-object";
 
 describe("HabitName Value Object", () => {
   it("creates a HabitName with normalized value", () => {

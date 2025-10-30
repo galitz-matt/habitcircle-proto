@@ -1,4 +1,4 @@
-import { Password } from "@server/domain/value-objects/password.value-object";
+import { Password } from "@/server/domain/value-objects/password.value-object";
 
 jest.setTimeout(10000); // allow bcrypt hashing
 

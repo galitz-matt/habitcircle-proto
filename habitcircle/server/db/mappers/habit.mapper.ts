@@ -1,5 +1,5 @@
-import { Habit } from "@server/domain/entities/habit.entity";
-import { Habit as HabitRecord } from "@generated/prisma";
+import { Habit } from "@/server/domain/entities/habit.entity";
+import { Habit as HabitRecord } from "@/generated/prisma";
 
 export class HabitMapper {
     static toDomain(record: HabitRecord): Habit {

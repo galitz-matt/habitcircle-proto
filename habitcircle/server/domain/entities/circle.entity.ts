@@ -1,9 +1,9 @@
-import { IdGenerator } from "@lib/utils";
-import { Habit } from "@server/domain/entities/habit.entity";
-import { User } from "@server/domain/entities/user.entity"
-import { CircleName } from "../value-objects/circle-name.value-object";
-import { CircleMembers } from "../value-objects/circle-members.value-object";
-import { CircleHabits } from "../value-objects/circle-habits.value-object";
+import { IdGenerator } from "@/lib/utils";
+import { Habit } from "@/server/domain/entities/habit.entity";
+import { User } from "@/server/domain/entities/user.entity"
+import { CircleName } from "@/server/domain/value-objects/circle-name.value-object";
+import { CircleMembers } from "@/server/domain/value-objects/circle-members.value-object";
+import { CircleHabits } from "@/server/domain/value-objects/circle-habits.value-object";
 
 export class Circle {
     private constructor(

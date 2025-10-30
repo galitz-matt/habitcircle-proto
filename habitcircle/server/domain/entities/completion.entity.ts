@@ -1,4 +1,4 @@
-import { IdGenerator } from "@lib/utils";
+import { IdGenerator } from "@/lib/utils";
 
 export class Completion {
     private constructor(

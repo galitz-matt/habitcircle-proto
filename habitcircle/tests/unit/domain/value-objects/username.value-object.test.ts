@@ -1,5 +1,5 @@
-import { DomainError } from "@lib/errors";
-import { Username } from "@server/domain/value-objects/username.value-object";
+import { DomainError } from "@/lib/errors";
+import { Username } from "@/server/domain/value-objects/username.value-object";
 
 describe("Username Value Object", () => {
   it("creates and normalizes the username value", () => {

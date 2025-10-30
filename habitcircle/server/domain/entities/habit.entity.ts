@@ -1,5 +1,5 @@
-import { IdGenerator } from "@lib/utils";
-import { HabitName } from "../value-objects/habit-name.value-object";
+import { IdGenerator } from "@/lib/utils";
+import { HabitName } from "@/server/domain/value-objects/habit-name.value-object";
 
 export class Habit {
     private constructor(

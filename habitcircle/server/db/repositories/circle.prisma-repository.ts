@@ -1,7 +1,7 @@
-import { Circle } from "@server/domain/entities/circle.entity";
-import { CircleRepository } from "@server/domain/repositories/circle.repository";
-import { CircleMapper } from "../mappers/circle.mapper";
-import { PrismaClient } from "@generated/prisma";
+import { Circle } from "@/server/domain/entities/circle.entity";
+import { CircleRepository } from "@/server/domain/repositories/circle.repository";
+import { CircleMapper } from "@/server/db/mappers/circle.mapper";
+import { PrismaClient } from "@/generated/prisma";
 
 export class CirclePrismaRepository implements CircleRepository {
     constructor(private readonly prisma: PrismaClient) {}

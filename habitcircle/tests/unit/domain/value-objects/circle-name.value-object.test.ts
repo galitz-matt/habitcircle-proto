@@ -1,4 +1,4 @@
-import { CircleName } from "@server/domain/value-objects/circle-name.value-object";
+import { CircleName } from "@/server/domain/value-objects/circle-name.value-object";
 
 describe("CircleName Value Object", () => {
   it("creates a CircleName with normalized value", () => {
