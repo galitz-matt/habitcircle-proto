@@ -1,5 +1,5 @@
 import { prisma } from "@/tests/integration/setup/jest.setup";
-import { UserPrismaRepository } from "@/server/db/repositories/user.prisma-repository";
+import { UserPrismaRepository } from "@/server/infrastructure/db/repositories/user.prisma-repository";
 import { User } from "@/server/domain/entities/user.entity";
 
 describe("UserPrismaRepository (integration)", () => {

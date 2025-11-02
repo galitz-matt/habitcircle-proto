@@ -1,6 +1,6 @@
 import type { PrismaClient } from "@/generated/prisma";
 import { UserRepository } from "@/server/domain/repositories/user.repository";
-import { UserPrismaMapper } from "@/server/db/mappers/user.prisma-mapper";
+import { UserPrismaMapper } from "@/server/infrastructure/db/mappers/user.prisma-mapper";
 import type { User } from "@/server/domain/entities/user.entity";
 
 export class UserPrismaRepository implements UserRepository {

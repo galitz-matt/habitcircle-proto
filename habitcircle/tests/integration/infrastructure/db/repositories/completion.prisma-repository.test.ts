@@ -1,6 +1,6 @@
 import { prisma } from "@/tests/integration/setup/jest.setup";
 import { Completion } from "@/server/domain/entities/completion.entity";
-import { CompletionPrismaRepository } from "@/server/db/repositories/completion.prisma-repository";
+import { CompletionPrismaRepository } from "@/server/infrastructure/db/repositories/completion.prisma-repository";
 import { Habit } from "@/server/domain/entities/habit.entity";
 import { User } from "@/server/domain/entities/user.entity";
 import { Circle } from "@/server/domain/entities/circle.entity";

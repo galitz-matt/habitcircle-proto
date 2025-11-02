@@ -1,4 +1,4 @@
-import { HabitPrismaMapper } from "@/server/db/mappers/habit.prisma-mapper";
+import { HabitPrismaMapper } from "@/server/infrastructure/db/mappers/habit.prisma-mapper";
 import { Habit } from "@/server/domain/entities/habit.entity";
 
 jest.mock("@/server/domain/entities/habit.entity");

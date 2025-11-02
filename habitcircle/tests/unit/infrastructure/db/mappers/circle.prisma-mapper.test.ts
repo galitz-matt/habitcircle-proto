@@ -1,4 +1,4 @@
-import { CirclePrismaMapper } from "@/server/db/mappers/circle.prisma-mapper";
+import { CirclePrismaMapper } from "@/server/infrastructure/db/mappers/circle.prisma-mapper";
 import { Circle } from "@/server/domain/entities/circle.entity";
 import { User } from "@/server/domain/entities/user.entity";
 import { Habit } from "@/server/domain/entities/habit.entity";

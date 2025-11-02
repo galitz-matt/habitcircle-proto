@@ -1,5 +1,5 @@
 import { prisma } from "@/tests/integration/setup/jest.setup";
-import { CirclePrismaRepository } from "@/server/db/repositories/circle.prisma-repository";
+import { CirclePrismaRepository } from "@/server/infrastructure/db/repositories/circle.prisma-repository";
 import { User } from "@/server/domain/entities/user.entity";
 import { Circle } from "@/server/domain/entities/circle.entity";
 import { Habit } from "@/server/domain/entities/habit.entity";

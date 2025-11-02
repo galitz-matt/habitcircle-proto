@@ -1,4 +1,4 @@
-import { CompletionPrismaMapper } from "@/server/db/mappers/completion.prisma-mapper";
+import { CompletionPrismaMapper } from "@/server/infrastructure/db/mappers/completion.prisma-mapper";
 import { Completion } from "@/server/domain/entities/completion.entity";
 
 jest.mock("@/server/domain/entities/completion.entity");

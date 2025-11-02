@@ -1,4 +1,4 @@
-import { UserPrismaMapper } from "@/server/db/mappers/user.prisma-mapper";
+import { UserPrismaMapper } from "@/server/infrastructure/db/mappers/user.prisma-mapper";
 import { User } from "@/server/domain/entities/user.entity";
 
 jest.mock("@/server/domain/entities/user.entity");
