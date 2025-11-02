@@ -7,6 +7,7 @@ describe("CompletionMapper", () => {
   const mockRecord = {
     id: "completion-1",
     createdAt: new Date("2025-04-01"),
+    completedAt: new Date("2025-04-01"),
     userId: "user-1",
     habitId: "habit-1",
   };
@@ -14,6 +15,7 @@ describe("CompletionMapper", () => {
   const mockCompletion = {
     id: "completion-1",
     createdAt: new Date("2025-04-01"),
+    completedAt: new Date("2025-04-01"),
     userId: "user-1",
     habitId: "habit-1",
   } as unknown as Completion;
@@ -32,6 +34,7 @@ describe("CompletionMapper", () => {
       expect(Completion.rehydrate).toHaveBeenCalledWith(
         mockRecord.id,
         mockRecord.createdAt,
+        mockRecord.completedAt,
         mockRecord.userId,
         mockRecord.habitId
       );
@@ -46,6 +49,7 @@ describe("CompletionMapper", () => {
       expect(result).toEqual({
         id: "completion-1",
         createdAt: new Date("2025-04-01"),
+        completedAt: new Date("2025-04-01"),
         userId: "user-1",
         habitId: "habit-1",
       });
