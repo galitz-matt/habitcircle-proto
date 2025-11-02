@@ -25,7 +25,7 @@ model User {
 }
 
 model Habit {
-  id          String        @id @default(cuid())
+  id          String        @id 
   createdAt   DateTime      @default(now())
   name        String
   circle      Circle        @relation("CircleHabits", fields: [circleId], references: [id])
