@@ -49,7 +49,7 @@ export class UserPrismaRepository implements UserRepository {
         await this.prisma.user.delete({
             where: { id: id }
         }).catch((err) => {
-            if (err.code !== "P2025") throw err;
+            if (err.code !== "P2025") throw new Error(`User with id ${id} not found`);
         });
     }
 }

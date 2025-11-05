@@ -72,7 +72,7 @@ export class CirclePrismaRepository implements CircleRepository {
         await this.prisma.circle.delete({
             where: { id: id }
         }).catch((err) => {
-            if (err.code !== "P2025") throw err;
+            if (err.code !== "P2025") throw new Error(`Circle with id ${id} not found`);
         });
     }
 }

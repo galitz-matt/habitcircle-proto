@@ -74,7 +74,7 @@ export class CompletionPrismaRepository implements CompletionRepository {
         await this.prisma.completion.delete({
             where: { id: id }
         }).catch((err) => {
-            if (err.code !== "P2025") throw err;
+            if (err.code !== "P2025") throw new Error(`Completion with id ${id} not found`);
         });
     }
 }

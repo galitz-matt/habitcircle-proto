@@ -49,7 +49,7 @@ export class HabitPrismaRepository implements HabitRepository {
         await this.prisma.habit.delete({
             where: { id: id }
         }).catch((err) => {
-            if (err.code !== "P2025") throw err;
+            if (err.code !== "P2025") throw Error(`Habit with id ${id} not found`);
         });
     }
 }
