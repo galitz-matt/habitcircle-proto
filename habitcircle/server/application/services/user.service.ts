@@ -19,6 +19,7 @@ export class UserService {
         if (request.requestingId !== request.targetUserId) {
             throw new PermissionError("Cannot delete another user");
         }
+        
         try {
             await this.userRepo.delete(request.targetUserId);
             return { result: true };
