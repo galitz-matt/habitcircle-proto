@@ -104,4 +104,10 @@ describe("CirclePrismaRepository (integration)", () => {
     const found = await prisma.circle.findUnique({ where: { id: circle.id } });
     expect(found).toBeNull();
   });
+
+  it ("delete() throws for missing circle (2025)", async () => {
+    await expect(repo.delete("nonexistent")).rejects.toThrow(
+      /Circle with id nonexistent not found/
+    );
+  })
 });

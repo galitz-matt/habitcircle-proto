@@ -39,7 +39,7 @@ export class UserPrismaRepository implements UserRepository {
             },
         }).catch((err) => {
             if (err.code === "P2002") {
-                throw new Error(`Username ${userRecord.username} already exists`);
+                throw new Error(`Username "${userRecord.username}" is taken`);
             }
             throw err;
         });
@@ -49,7 +49,8 @@ export class UserPrismaRepository implements UserRepository {
         await this.prisma.user.delete({
             where: { id: id }
         }).catch((err) => {
-            if (err.code !== "P2025") throw new Error(`User with id ${id} not found`);
+            if (err.code === "P2025") throw new Error(`User with id ${id} not found`);
+            throw err;
         });
     }
 }

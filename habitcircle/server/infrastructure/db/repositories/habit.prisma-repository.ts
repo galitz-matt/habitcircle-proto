@@ -42,6 +42,11 @@ export class HabitPrismaRepository implements HabitRepository {
                 name: habitRecord.name,
                 circle: { connect: { id: habit.circleId }}
             },
+        }).catch((err) => {
+            if (err.code === "P2002") {
+                throw new Error(`Habit w/ name, "${habitRecord.name}" already exists`);
+            }
+            throw err;
         });
     }
 
@@ -49,7 +54,8 @@ export class HabitPrismaRepository implements HabitRepository {
         await this.prisma.habit.delete({
             where: { id: id }
         }).catch((err) => {
-            if (err.code !== "P2025") throw Error(`Habit with id ${id} not found`);
+            if (err.code === "P2025") throw Error(`Habit with id ${id} not found`);
+            throw err;
         });
     }
 }

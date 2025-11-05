@@ -45,22 +45,27 @@ export class CirclePrismaRepository implements CircleRepository {
     }
 
     async save(circle: Circle): Promise<void> {
-        const base = CirclePrismaMapper.toPersistence(circle);
+        const circleRecord = CirclePrismaMapper.toPersistence(circle);
 
         await this.prisma.circle.upsert({
             where: { id: circle.id },
             create: {
-                ...base,
+                ...circleRecord,
                 owner: { connect: { id: circle.getOwner().id } },
                 members: { connect: circle.members.getAll().map(m => ({ id: m.id })) },
                 habits: { connect: circle.habits.getAll().map(h => ({ id: h.id })) }
             },
             update: {
-                ...base,
+                ...circleRecord,
                 owner: { connect: { id: circle.getOwner().id }},
                 members: { set: circle.members.getAll().map(m => ({ id: m.id })) },
                 habits: { set: circle.habits.getAll().map(h => ({ id: h.id })) }
             }
+        }).catch((err) => {
+            if (err.code === "P2002") {
+                throw new Error(`Circle w/ name "${circleRecord.name}" already exists`);
+            }
+            throw err;
         });
     }
 
@@ -72,7 +77,8 @@ export class CirclePrismaRepository implements CircleRepository {
         await this.prisma.circle.delete({
             where: { id: id }
         }).catch((err) => {
-            if (err.code !== "P2025") throw new Error(`Circle with id ${id} not found`);
+            if (err.code === "P2025") throw new Error(`Circle with id ${id} not found`);
+            throw err;
         });
     }
 }

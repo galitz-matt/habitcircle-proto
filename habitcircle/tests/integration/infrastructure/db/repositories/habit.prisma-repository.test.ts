@@ -88,7 +88,9 @@ describe("HabitPrismaRepository (integration)", () => {
     expect(found).toBeNull();
   });
 
-  it("delete() silently ignores missing habits (P2025)", async () => {
-    await expect(repo.delete("nonexistent")).resolves.not.toThrow();
+  it("delete() throws for missing habits (P2025)", async () => {
+    await expect(repo.delete("nonexistent")).rejects.toThrow(
+      /Habit with id nonexistent not found/
+    );
   });
 });

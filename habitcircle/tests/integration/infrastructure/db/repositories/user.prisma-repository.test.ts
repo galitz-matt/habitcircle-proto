@@ -73,7 +73,7 @@ describe("UserPrismaRepository (integration)", () => {
     const duplicate = User.rehydrate("u4", new Date(), "john_doe", "pw");
 
     await expect(repo.save(duplicate)).rejects.toThrow(
-      /Username john_doe already exists/
+      /Username "john_doe" is taken/
     );
   });
 
@@ -84,7 +84,9 @@ describe("UserPrismaRepository (integration)", () => {
     expect(found).toBeNull();
   });
 
-  it("delete() silently ignores missing users (P2025)", async () => {
-    await expect(repo.delete("nonexistent")).resolves.not.toThrow();
+  it("delete() throws for missing users (P2025)", async () => {
+    await expect(repo.delete("nonexistent")).rejects.toThrow(
+      /User with id nonexistent not found/
+    );
   });
 });

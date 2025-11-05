@@ -123,4 +123,10 @@ describe("CompletionPrismaRepository (integration)", () => {
     });
     expect(found).toBeNull();
   });
+
+  it("delete() throws for missing completion (2025)", async () => {
+    await expect(repo.delete("nonexistent")).rejects.toThrow(
+      /Completion with id nonexistent not found/
+    )
+  })
 });
