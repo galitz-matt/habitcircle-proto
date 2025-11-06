@@ -57,6 +57,11 @@ export class Circle {
         return this.clone({ habits: updatedHabits });
     }
 
+    addHabits(habits: Habit[]): Circle {
+        const updatedHabits = this.habits.addMany(habits);
+        return this.clone({ habits: updatedHabits });
+    }
+
     deleteHabit(habit: Habit): Circle {
         const updatedHabits = this.habits.remove(habit);
         return this.clone({ habits: updatedHabits });

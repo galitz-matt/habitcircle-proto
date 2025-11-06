@@ -5,11 +5,15 @@ import { Circle } from "@/server/domain/entities/circle.entity";
 import { UserRepository } from "@/server/domain/repositories/user.repository";
 import { Habit } from "@/server/domain/entities/habit.entity";
 import { DeleteCircleCommand, DeleteCircleResult } from "../dto/circle/delete-circle.dto";
+import { AddHabitCommand, AddHabitResult } from "../dto/circle/add-habit.dto";
+import { HabitRepository } from "@/server/domain/repositories/habit.repository";
+import { UNEXPECTED_ERROR } from "@/lib/constants";
 
 export class CircleService {
     constructor(
         private readonly circleRepo: CircleRepository,
-        private readonly userRepo: UserRepository
+        private readonly userRepo: UserRepository,
+        private readonly habitRepo: HabitRepository
     ) {}
 
     async register(cmd: RegisterCircleCommand): Promise<Result<RegisterCircleResult>> {
@@ -26,21 +30,42 @@ export class CircleService {
             const habits = cmd.habitTemplates.map(
                 template => Habit.create(template.name, circle.id)
             )
-            habits.forEach(habit => circle.addHabit(habit));
-            this.circleRepo.save(circle);
-            return { ok: true, value: {circleId: circle.id, name: circle.name.get() } }
+            const circleWithHabits = circle.addHabits(habits);
+
+            await this.circleRepo.save(circleWithHabits);
+            return { ok: true, value: { circleId: circle.id, name: circle.name.get() } }
+
         } catch (err) {
-            const message = err instanceof Error ? err.message : "Unexcepted error";
+            const message = err instanceof Error ? err.message : UNEXPECTED_ERROR;
             return { ok: false, error: message }
+        }
+    }
+
+    async addHabit(cmd: AddHabitCommand): Promise<Result<AddHabitResult>> {
+        try {
+            const habit = Habit.create(
+                cmd.habitTemplate.name,
+                cmd.circleId
+            )
+            const circle = await this.circleRepo.findById(cmd.circleId);
+            const circleWithHabit = circle.addHabit(habit);
+            
+            await this.habitRepo.save(habit);
+            await this.circleRepo.save(circleWithHabit);
+            
+            return { ok: true, value: { result: true } }
+        } catch (err) {
+            const message = err instanceof Error ? err.message : UNEXPECTED_ERROR;
+            return { ok: false, error: message };
         }
     }
 
     async delete(cmd: DeleteCircleCommand): Promise<Result<DeleteCircleResult>> {
         try {
-            this.circleRepo.delete(cmd.circleId)
+            await this.circleRepo.delete(cmd.circleId)
             return { ok: true, value: { result: true } }
         } catch (err) {
-            const message = err instanceof Error ? err.message : "Unexcepted error";
+            const message = err instanceof Error ? err.message : UNEXPECTED_ERROR;
             return { ok: false, error: message }
         }
     }

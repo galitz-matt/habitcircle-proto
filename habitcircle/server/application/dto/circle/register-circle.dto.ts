@@ -1,10 +1,10 @@
+import type { HabitTemplate } from "@/lib/types";
+
 export type RegisterCircleCommand = {
     circleName: string;
     ownerId: string
     memberIds: string[];
-    habitTemplates: {
-        name: string
-    }[]
+    habitTemplates: HabitTemplate[]
 }
 
 export type RegisterCircleResult = {
