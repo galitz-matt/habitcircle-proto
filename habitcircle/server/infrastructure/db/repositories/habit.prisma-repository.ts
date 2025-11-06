@@ -2,16 +2,18 @@ import type { PrismaClient } from "@/generated/prisma";
 import { HabitRepository } from "@/server/domain/repositories/habit.repository";
 import { HabitPrismaMapper } from "@/server/infrastructure/db/mappers/habit.prisma-mapper";
 import type { Habit } from "@/server/domain/entities/habit.entity";
+import { NotFoundError } from "@/lib/errors";
 
 export class HabitPrismaRepository implements HabitRepository {
     constructor(private readonly prisma: PrismaClient) {}
 
-    async findById(id: string): Promise<Habit | null> {
+    async findById(id: string): Promise<Habit> {
         const habitRecord = await this.prisma.habit.findUnique({
             where: { id: id },
         })
+        if (!habitRecord) throw new NotFoundError(`Habit with id ${id} not found`);
 
-        return habitRecord ? HabitPrismaMapper.toDomain(habitRecord) : null;
+        return HabitPrismaMapper.toDomain(habitRecord);
     }
 
     async findByCircleId(circleId: string): Promise<Habit[]> {

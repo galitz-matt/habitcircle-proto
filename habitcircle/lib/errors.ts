@@ -6,9 +6,16 @@ export class DomainError extends Error {
     }
 }
 
-export class PermissionError extends Error {
+export class AuthorizationError extends Error {
     constructor(message: string) {
         super(message);
         this.name = "PermissionError";
+    }
+}
+
+export class NotFoundError extends Error {
+    constructor(message: string) {
+        super(message);
+        this.name = "NotFoundError"
     }
 }

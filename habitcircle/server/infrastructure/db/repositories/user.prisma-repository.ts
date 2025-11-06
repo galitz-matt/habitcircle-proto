@@ -2,24 +2,27 @@ import type { PrismaClient } from "@/generated/prisma";
 import { UserRepository } from "@/server/domain/repositories/user.repository";
 import { UserPrismaMapper } from "@/server/infrastructure/db/mappers/user.prisma-mapper";
 import type { User } from "@/server/domain/entities/user.entity";
+import { NotFoundError } from "@/lib/errors";
 
 export class UserPrismaRepository implements UserRepository {
     constructor(private readonly prisma: PrismaClient) {}
 
-    async findById(id: string): Promise<User | null> {
+    async findById(id: string): Promise<User> {
         const userRecord = await this.prisma.user.findUnique({
             where: { id: id }
         })
+        if (!userRecord) throw new NotFoundError(`User with id ${id} not found`);
 
-        return userRecord ? UserPrismaMapper.toDomain(userRecord) : null;
+        return UserPrismaMapper.toDomain(userRecord);
     }
 
-    async findByUsername(username: string): Promise<User | null> {
+    async findByUsername(username: string): Promise<User> {
         const userRecord = await this.prisma.user.findUnique({
             where: { username: username}
         })
+        if (!userRecord) throw new NotFoundError(`User with username ${username} not found`);
 
-        return userRecord ? UserPrismaMapper.toDomain(userRecord) : null;
+        return UserPrismaMapper.toDomain(userRecord);
     }
 
     async findAll(): Promise<User[]> {

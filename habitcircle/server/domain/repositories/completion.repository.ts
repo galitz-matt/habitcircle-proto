@@ -1,7 +1,7 @@
 import { Completion } from "../entities/completion.entity";
 
 export interface CompletionRepository {
-    findByUserHabitAndDate(userId: string, habitId: string, completedAt: Date): Promise<Completion | null>
+    findByUserHabitAndDate(userId: string, habitId: string, completedAt: Date): Promise<Completion>
     findByUserAndHabit(userId: string, habitId: string): Promise<Completion[]>
     findByUserId(userId: string): Promise<Completion[]>;
     findByHabitId(habitId: string): Promise<Completion[]>;

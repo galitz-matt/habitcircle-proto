@@ -1,4 +1,5 @@
 import type { PrismaClient } from "@/generated/prisma";
+import { NotFoundError } from "@/lib/errors";
 import type { Completion } from "@/server/domain/entities/completion.entity";
 import { CompletionRepository } from "@/server/domain/repositories/completion.repository";
 import { CompletionPrismaMapper } from "@/server/infrastructure/db/mappers/completion.prisma-mapper";
@@ -6,7 +7,7 @@ import { CompletionPrismaMapper } from "@/server/infrastructure/db/mappers/compl
 export class CompletionPrismaRepository implements CompletionRepository {
     constructor(private readonly prisma: PrismaClient) {}
 
-    async findByUserHabitAndDate(userId: string, habitId: string, completedAt: Date): Promise<Completion | null> {
+    async findByUserHabitAndDate(userId: string, habitId: string, completedAt: Date): Promise<Completion> {
         const completionRecord = await this.prisma.completion.findUnique({
             where: {
                 userId_habitId_completedAt: {
@@ -16,8 +17,11 @@ export class CompletionPrismaRepository implements CompletionRepository {
                 },
             },
         });
+        if (!completionRecord) throw new NotFoundError(
+            `No completion found with user ${userId}, habitId ${habitId}, and completed at ${completedAt.toString()}`
+        );
 
-        return completionRecord ? CompletionPrismaMapper.toDomain(completionRecord) : null;
+        return CompletionPrismaMapper.toDomain(completionRecord);
     }
 
     async findByUserAndHabit(userId: string, habitId: string): Promise<Completion[]> {

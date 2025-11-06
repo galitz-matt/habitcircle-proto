@@ -2,17 +2,19 @@ import type { Circle } from "@/server/domain/entities/circle.entity";
 import { CircleRepository } from "@/server/domain/repositories/circle.repository";
 import { CirclePrismaMapper } from "@/server/infrastructure/db/mappers/circle.prisma-mapper";
 import type { PrismaClient } from "@/generated/prisma";
+import { NotFoundError } from "@/lib/errors";
 
 export class CirclePrismaRepository implements CircleRepository {
     constructor(private readonly prisma: PrismaClient) {}
 
-    async findById(id: string): Promise<Circle | null> {
+    async findById(id: string): Promise<Circle> {
         const circleRecord = await this.prisma.circle.findUnique({
             where: { id : id },
             include: { owner: true, members: true, habits: true }
         });
+        if (!circleRecord) throw new NotFoundError(`Circle with id ${id} not found`);
 
-        return circleRecord ? CirclePrismaMapper.toDomain(circleRecord) : null;
+        return CirclePrismaMapper.toDomain(circleRecord);
     }
 
     async findByName(name: string): Promise<Circle[]> {
@@ -77,7 +79,7 @@ export class CirclePrismaRepository implements CircleRepository {
         await this.prisma.circle.delete({
             where: { id: id }
         }).catch((err) => {
-            if (err.code === "P2025") throw new Error(`Circle with id ${id} not found`);
+            if (err.code === "P2025") throw new NotFoundError(`Circle with id ${id} not found`);
             throw err;
         });
     }
