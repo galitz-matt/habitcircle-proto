@@ -1,9 +1,8 @@
-export type DeleteUserRequest = {
-    requestingId: string;
+export type DeleteUserCommand = {
+    requestingUserId: string;
     targetUserId: string;
 }
 
-export type DeleteUserResponse = {
+export type DeleteUserResult = {
     result: boolean;
-    message?: string;
 }

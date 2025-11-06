@@ -1,33 +1,36 @@
 import { UserRepository } from "@/server/domain/repositories/user.repository";
 import { User } from "@/server/domain/entities/user.entity";
-import { RegisterUserRequest, RegisterUserResponse } from "../dto/user/register-user.dto";
-import { DeleteUserRequest, DeleteUserResponse } from "../dto/user/delete-user.dto";
-import { PermissionError } from "@/lib/errors";
+import { RegisterUserCommand, RegisterUserResult } from "../dto/user/register-user.dto";
+import { DeleteUserCommand, DeleteUserResult } from "../dto/user/delete-user.dto";
+import { Result } from "@/lib/types";
 
 export class UserService {
     constructor(
         private readonly userRepo: UserRepository
     ) {}
 
-    async register(request: RegisterUserRequest): Promise<RegisterUserResponse> {
-        const user = await User.create(request.username, request.password);
-        this.userRepo.save(user)
-        return { id: user.id, username: user.getUsername() }
+    async register(cmd: RegisterUserCommand): Promise<Result<RegisterUserResult>> {
+        try {
+            const user = await User.create(cmd.username, cmd.password);
+            this.userRepo.save(user)
+            return { ok: true, value: { userId: user.id, username: user.getUsername() }}
+        } catch (err) {
+            const message = err instanceof Error ? err.message : "Unexpected error";
+            return { ok: false, error: message}
+        }
     }
 
-    async delete(request: DeleteUserRequest): Promise<DeleteUserResponse> {
-        if (request.requestingId !== request.targetUserId) {
-            throw new PermissionError("Cannot delete another user");
+    async delete(cmd: DeleteUserCommand): Promise<Result<DeleteUserResult>> {
+        if (cmd.requestingUserId !== cmd.targetUserId) {
+            return { ok: false, error: "Cannot delete another user" };
         }
         
         try {
-            await this.userRepo.delete(request.targetUserId);
-            return { result: true };
+            await this.userRepo.delete(cmd.targetUserId);
+            return { ok: true, value: { result: true }}
         } catch (err) {
-            if (err instanceof Error) {
-                return { result: false, message: err.message };
-            }
-            return { result: false, message: "Unexpected Error"};
+            const message = err instanceof Error ? err.message : "Unexcpeted error";
+            return { ok: false, error: message}
         }
     }
 }
