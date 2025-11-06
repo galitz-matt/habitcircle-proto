@@ -3,6 +3,7 @@ import { User } from "@/server/domain/entities/user.entity";
 import { RegisterUserCommand, RegisterUserResult } from "../dto/user/register-user.dto";
 import { DeleteUserCommand, DeleteUserResult } from "../dto/user/delete-user.dto";
 import { Result } from "@/lib/types";
+import { UNEXPECTED_ERROR } from "@/lib/constants";
 
 export class UserService {
     constructor(
@@ -15,7 +16,7 @@ export class UserService {
             this.userRepo.save(user)
             return { ok: true, value: { userId: user.id, username: user.getUsername() }}
         } catch (err) {
-            const message = err instanceof Error ? err.message : "Unexpected error";
+            const message = err instanceof Error ? err.message : UNEXPECTED_ERROR;
             return { ok: false, error: message}
         }
     }
@@ -29,7 +30,7 @@ export class UserService {
             await this.userRepo.delete(cmd.targetUserId);
             return { ok: true, value: { result: true }}
         } catch (err) {
-            const message = err instanceof Error ? err.message : "Unexcpeted error";
+            const message = err instanceof Error ? err.message : UNEXPECTED_ERROR;
             return { ok: false, error: message}
         }
     }
