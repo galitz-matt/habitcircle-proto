@@ -40,6 +40,20 @@ export class CircleService {
         }
     }
 
+    async delete(cmd: DeleteCircleCommand): Promise<Result<DeleteCircleResult>> {
+        const circle = await this.circleRepo.findById(cmd.circleId);
+        const circleOwnerId = circle.getOwner().id;
+        if (circleOwnerId !== cmd.requestingUserId)
+            return badResult("Cannot delete circle you do not own");
+
+        try {
+            await this.circleRepo.delete(cmd.circleId);
+            return { ok: true, value: { result: true } };
+        } catch (err) {
+            return badResult(err);
+        }
+    }
+
     async addHabit(cmd: AddHabitCommand): Promise<Result<AddHabitResult>> {
         try {
             const habit = Habit.create(
@@ -49,26 +63,13 @@ export class CircleService {
             const circle = await this.circleRepo.findById(cmd.circleId);
             const circleWithHabit = circle.addHabit(habit);
             
+            // TODO; this needs to be atomic
             await Promise.all([
-                this.habitRepo.save(habit),
+                this.habitRepo.save(habit), 
                 this.circleRepo.save(circleWithHabit)
-            ])
+            ]);
             
-            return { ok: true, value: { result: true } }
-        } catch (err) {
-            return badResult(err);
-        }
-    }
-
-    async delete(cmd: DeleteCircleCommand): Promise<Result<DeleteCircleResult>> {
-        const circle = await this.circleRepo.findById(cmd.circleId);
-        const circleOwnerId = circle.getOwner().id;
-        if (circleOwnerId !== cmd.requestingUserId)
-            return badResult("Cannot delete circle you do not own");
-
-        try {
-            await this.circleRepo.delete(cmd.circleId)
-            return { ok: true, value: { result: true } }
+            return { ok: true, value: { result: true } };
         } catch (err) {
             return badResult(err);
         }

@@ -1,4 +1,5 @@
-import { Circle } from "../entities/circle.entity";
+import type { Habit } from "@/generated/prisma";
+import type { Circle } from "../entities/circle.entity";
 
 export interface CircleRepository {
     findById(id: string): Promise<Circle>;
