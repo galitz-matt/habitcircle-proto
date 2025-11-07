@@ -1,4 +1,3 @@
-import type { Habit } from "@/generated/prisma";
 import type { Circle } from "../entities/circle.entity";
 
 export interface CircleRepository {

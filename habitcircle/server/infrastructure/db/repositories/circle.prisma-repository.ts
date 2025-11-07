@@ -4,7 +4,6 @@ import { CirclePrismaMapper } from "@/server/infrastructure/db/mappers/circle.pr
 import { HabitPrismaMapper } from "@/server/infrastructure/db/mappers/habit.prisma-mapper";
 import type { PrismaClient } from "@/generated/prisma";
 import { NotFoundError } from "@/lib/errors";
-import { Habit } from "@/server/domain/entities/habit.entity";
 
 export class CirclePrismaRepository implements CircleRepository {
     constructor(private readonly prisma: PrismaClient) {}
