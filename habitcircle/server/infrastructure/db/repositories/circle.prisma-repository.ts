@@ -31,7 +31,7 @@ export class CirclePrismaRepository implements CircleRepository {
             where: { id: userId },
             include: { 
                 circles: {
-                    include: { owner: true, members: true, habits: true}
+                    include: { owner: true, members: true, habits: true }
                 } 
             }
         });
