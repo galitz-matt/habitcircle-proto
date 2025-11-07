@@ -1,4 +1,5 @@
 export type DeleteCircleCommand = {
+    requestingUserId: string;
     circleId: string;
 }
 
