@@ -105,7 +105,7 @@ export class CircleService {
                 return serviceFailure("Cannot delete habit in circle you do not own");
             }
             
-            await this.habitRepo.deleteManyByCircleId(cmd.habitIds, cmd.circleId);
+            await this.habitRepo.deleteManyByCircleId(cmd.habitIdsToRemove, cmd.circleId);
             return { ok: true, value: { success: true } }
         } catch (err) {
             return serviceFailure(err);

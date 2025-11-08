@@ -1,7 +1,7 @@
 export type RemoveHabitsFromCircleCommand = {
     requestingUserId: string;
     circleId: string;
-    habitIds: string[];
+    habitIdsToRemove: string[];
 }
 
 export type RemoveHabitsFromCircleResult = {
