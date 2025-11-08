@@ -83,7 +83,10 @@ export class HabitPrismaRepository implements HabitRepository {
             }
 
             await tx.habit.deleteMany({
-                where: { id: { in: ids }}
+                where: { 
+                    id: { in: ids },
+                    circleId: circleId
+                }
             });
         });
     }
