@@ -1,10 +1,10 @@
 import type { HabitTemplate } from "@/lib/types";
 
-export type AddHabitsCommand = {
+export type AddHabitsToCircleCommand = {
     circleId: string;
     habitTemplates: HabitTemplate[]
 }
 
-export type AddHabitsResult = {
+export type AddHabitsToCircleResult = {
     result: boolean
 }

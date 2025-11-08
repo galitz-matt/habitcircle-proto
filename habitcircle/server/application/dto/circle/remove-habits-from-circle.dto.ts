@@ -1,10 +1,10 @@
-export type DeleteHabitsCommand = {
+export type RemoveHabitsFromCircleCommand = {
     requestingUserId: string;
     circleId: string;
     habitIds: string[];
 }
 
-export type DeleteHabitsResult = {
+export type RemoveHabitsFromCircleResult = {
     success: boolean;
 }
 
