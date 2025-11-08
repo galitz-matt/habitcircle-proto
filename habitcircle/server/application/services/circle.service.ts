@@ -5,9 +5,10 @@ import { Circle } from "@/server/domain/entities/circle.entity";
 import { UserRepository } from "@/server/domain/repositories/user.repository";
 import { Habit } from "@/server/domain/entities/habit.entity";
 import { DeleteCircleCommand, DeleteCircleResult } from "../dto/circle/delete-circle.dto";
-import { AddHabitCommand, AddHabitResult } from "../dto/circle/add-habit.dto";
+import { AddHabitsCommand as AddHabitsToCircleCommand, AddHabitsResult as AddHabitsToCircleResult } from "../dto/circle/add-habits.dto";
 import { HabitRepository } from "@/server/domain/repositories/habit.repository";
-import { badResult } from "@/lib/utils";
+import { serviceFailure } from "@/lib/utils";
+import { DeleteHabitsCommand as RemoveHabitsFromCircleCommand, DeleteHabitsResult as RemoveHabitsFromCircleResult } from "../dto/circle/delete-habits.dto";
 
 export class CircleService {
     constructor(
@@ -16,7 +17,40 @@ export class CircleService {
         private readonly habitRepo: HabitRepository
     ) {}
 
-    async register(cmd: RegisterCircleCommand): Promise<Result<RegisterCircleResult>> {
+    async addHabitsToCircle(cmd: AddHabitsToCircleCommand): Promise<Result<AddHabitsToCircleResult>> {
+        try {
+            const habits = cmd.habitTemplates.map(h => (
+                Habit.create(
+                    h.name,
+                    cmd.circleId
+                )
+            ));
+            const circle = await this.circleRepo.findById(cmd.circleId);
+            const circleWithHabits = circle.addHabits(habits);
+            
+            await this.circleRepo.save(circleWithHabits);
+            return { ok: true, value: { result: true } };
+
+        } catch (err) {
+            return serviceFailure(err);
+        }
+    }
+
+    async deleteCircle(cmd: DeleteCircleCommand): Promise<Result<DeleteCircleResult>> {
+        const circle = await this.circleRepo.findById(cmd.circleId);
+        const circleOwnerId = circle.getOwner().id;
+        if (circleOwnerId !== cmd.requestingUserId)
+            return serviceFailure("Cannot delete circle you do not own");
+
+        try {
+            await this.circleRepo.delete(cmd.circleId);
+            return { ok: true, value: { success: true } };
+        } catch (err) {
+            return serviceFailure(err);
+        }
+    }
+
+    async registerCircle(cmd: RegisterCircleCommand): Promise<Result<RegisterCircleResult>> {
         try {
             const owner = await this.userRepo.findById(cmd.ownerId);
             const members = await Promise.all(
@@ -36,42 +70,24 @@ export class CircleService {
             return { ok: true, value: { circleId: circle.id, name: circle.name.get() } }
 
         } catch (err) {
-            return badResult(err);
+            return serviceFailure(err);
         }
     }
 
-    async delete(cmd: DeleteCircleCommand): Promise<Result<DeleteCircleResult>> {
-        const circle = await this.circleRepo.findById(cmd.circleId);
-        const circleOwnerId = circle.getOwner().id;
-        if (circleOwnerId !== cmd.requestingUserId)
-            return badResult("Cannot delete circle you do not own");
-
+    async removeHabitsFromCircle(cmd: RemoveHabitsFromCircleCommand): Promise<Result<RemoveHabitsFromCircleResult>> {
         try {
-            await this.circleRepo.delete(cmd.circleId);
-            return { ok: true, value: { result: true } };
-        } catch (err) {
-            return badResult(err);
-        }
-    }
-
-    async addHabit(cmd: AddHabitCommand): Promise<Result<AddHabitResult>> {
-        try {
-            const habit = Habit.create(
-                cmd.habitTemplate.name,
-                cmd.circleId
-            )
             const circle = await this.circleRepo.findById(cmd.circleId);
-            const circleWithHabit = circle.addHabit(habit);
+            const ownerId = circle.getOwner().id;
             
-            // TODO; this needs to be atomic
-            await Promise.all([
-                this.habitRepo.save(habit), 
-                this.circleRepo.save(circleWithHabit)
-            ]);
+            if (cmd.requestingUserId !== ownerId) {
+                return serviceFailure("Cannot delete habit in circle you do not own");
+            }
             
-            return { ok: true, value: { result: true } };
+            await this.habitRepo.deleteMany(cmd.habitIds);
+            return { ok: true, value: { success: true } }
+            
         } catch (err) {
-            return badResult(err);
+            return serviceFailure(err);
         }
     }
 }

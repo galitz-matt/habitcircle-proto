@@ -45,9 +45,8 @@ export class HabitPrismaRepository implements HabitRepository {
                 circle: { connect: { id: habit.circleId }}
             },
         }).catch((err) => {
-            if (err.code === "P2002") {
+            if (err.code === "P2002")
                 throw new Error(`Habit w/ name, "${habitRecord.name}" already exists`);
-            }
             throw err;
         });
     }
@@ -56,8 +55,25 @@ export class HabitPrismaRepository implements HabitRepository {
         await this.prisma.habit.delete({
             where: { id: id }
         }).catch((err) => {
-            if (err.code === "P2025") throw Error(`Habit with id ${id} not found`);
+            if (err.code === "P2025") 
+                throw new NotFoundError(`Habit with id ${id} not found`);
             throw err;
         });
+    }
+
+    async deleteMany(ids: string[]): Promise<void> {
+        await this.prisma.$transaction(async (tx) => {
+            await Promise.all(
+                ids.map(async (id) => {
+                    await tx.habit.delete({
+                        where: { id: id }
+                    }).catch((err) => {
+                        if (err.code == "P2025") 
+                            throw new NotFoundError(`Habit with ${id} not found`);
+                        throw err;
+                    })
+                })
+            )
+        })
     }
 }

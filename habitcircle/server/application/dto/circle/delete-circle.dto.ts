@@ -4,5 +4,5 @@ export type DeleteCircleCommand = {
 }
 
 export type DeleteCircleResult = {
-    result: boolean;
+    success: boolean;
 }
