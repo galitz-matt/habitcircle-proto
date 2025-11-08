@@ -53,7 +53,7 @@ export class CircleService {
             )
             const circleWithNewMembers = circle.addMembers(newMembers);
 
-            this.circleRepo.save(circleWithNewMembers);
+            await this.circleRepo.save(circleWithNewMembers);
             return { ok: true, value: { memberIds: cmd.toBeAddedUserIds } }
         } catch (err) {
             return serviceFailure(err);
