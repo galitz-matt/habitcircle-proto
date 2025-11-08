@@ -53,6 +53,18 @@ export class Circle {
         return this.clone({ members: updatedMembers });
     }
 
+    getHabits(): Habit[] {
+        return this.habits.getAll();
+    }
+
+    getMembers(): User[] {
+        return this.members.getAll();
+    }
+
+    getName(): string {
+        return this.name.get();
+    }
+
     getOwner(): User {
         return this.members.owner;
     }
