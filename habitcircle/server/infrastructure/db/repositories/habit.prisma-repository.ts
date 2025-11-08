@@ -61,6 +61,14 @@ export class HabitPrismaRepository implements HabitRepository {
         });
     }
 
+    /**
+     * Deletes multiple habits, scoped to a specific circle.
+     * 
+     * Note: This assumes the caller (service layer) has already
+     * verified ownership of the circle. This method defensively
+     * ensures that all habitIds belong to the specified circle
+     * before performing the deletion.
+    */
     async deleteManyByCircleId(ids: string[], circleId: string): Promise<void> {
         await this.prisma.$transaction(async (tx) => {
             const existing = await tx.habit.findMany({
