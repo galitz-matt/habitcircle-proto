@@ -44,7 +44,6 @@ export class CircleService {
     async addMembersToCircle(cmd: AddMembersToCircleCommand): Promise<Result<AddMembersToCircleResult>> {
         try {
             const circle = await this.circleRepo.findById(cmd.circleId);
-
             if (cmd.requestingUserId !== circle.getOwner().id)
                 return serviceFailure("Cannot add members to circle you do not own");
 
@@ -52,8 +51,8 @@ export class CircleService {
                 cmd.toBeAddedUserIds.map(id => this.userRepo.findById(id))
             )
             const circleWithNewMembers = circle.addMembers(newMembers);
-
             await this.circleRepo.save(circleWithNewMembers);
+
             return { ok: true, value: { memberIds: cmd.toBeAddedUserIds } }
         } catch (err) {
             return serviceFailure(err);
@@ -61,12 +60,11 @@ export class CircleService {
     }
 
     async deleteCircle(cmd: DeleteCircleCommand): Promise<Result<DeleteCircleResult>> {
-        const circle = await this.circleRepo.findById(cmd.circleId);
-        const circleOwnerId = circle.getOwner().id;
-        if (circleOwnerId !== cmd.requestingUserId)
-            return serviceFailure("Cannot delete circle you do not own");
-
         try {
+            const circle = await this.circleRepo.findById(cmd.circleId);
+            if (cmd.requestingUserId !== circle.getOwner().id)
+                return serviceFailure("Cannot delete circle you do not own");
+
             await this.circleRepo.delete(cmd.circleId);
             return { ok: true, value: { success: true } };
         } catch (err) {
