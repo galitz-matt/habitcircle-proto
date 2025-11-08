@@ -13,7 +13,7 @@ export const StringUtils = {
     hasSpecial: (s: string): boolean => /[^\p{L}\p{N}\s]/u.test(s),
 }
 
-export const badResult = <T>(err: unknown): Result<T> => {
+export const serviceFailure = <T>(err: unknown): Result<T> => {
     if (err instanceof Error)
         return { ok: false, error: err.message };
     if (typeof err === "string") {
