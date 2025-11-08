@@ -33,25 +33,6 @@ export class Circle {
         );
     }
 
-    getOwner(): User {
-        return this.members.owner;
-    }
-
-    setOwner(user: User): Circle {
-        const updatedMembers = this.members.setOwner(user);
-        return this.clone({ members: updatedMembers });
-    }
-
-    addMember(user: User): Circle {
-        const updatedMembers = this.members.add(user);
-        return this.clone({ members: updatedMembers });
-    }
-
-    removeMember(user: User): Circle {
-        const updatedMembers = this.members.remove(user);
-        return this.clone({ members: updatedMembers });
-    }
-
     addHabit(habit: Habit): Circle {
         const updatedHabits = this.habits.add(habit);
         return this.clone({ habits: updatedHabits });
@@ -62,19 +43,28 @@ export class Circle {
         return this.clone({ habits: updatedHabits });
     }
 
-    deleteHabit(habit: Habit): Circle {
+    addMember(user: User): Circle {
+        const updatedMembers = this.members.add(user);
+        return this.clone({ members: updatedMembers });
+    }
+
+    addMembers(users: User[]): Circle {
+        const updatedMembers = this.members.addMany(users);
+        return this.clone({ members: updatedMembers });
+    }
+
+    getOwner(): User {
+        return this.members.owner;
+    }
+
+    removeHabit(habit: Habit): Circle {
         const updatedHabits = this.habits.remove(habit);
         return this.clone({ habits: updatedHabits });
     }
 
-    private clone(changes: Partial<Circle>): Circle {
-        return new Circle(
-            changes.id ?? this.id,
-            changes.createdAt ?? this.createdAt,
-            changes.name ?? this.name,
-            changes.members ?? this.members,
-            changes.habits ?? this.habits,
-        )
+    removeMember(user: User): Circle {
+        const updatedMembers = this.members.remove(user);
+        return this.clone({ members: updatedMembers });
     }
 
     static rehydrate(
@@ -98,6 +88,21 @@ export class Circle {
             circleName, 
             circleMembers, 
             circleHabits
+        )
+    }
+
+    setOwner(user: User): Circle {
+        const updatedMembers = this.members.setOwner(user);
+        return this.clone({ members: updatedMembers });
+    }
+
+    private clone(changes: Partial<Circle>): Circle {
+        return new Circle(
+            changes.id ?? this.id,
+            changes.createdAt ?? this.createdAt,
+            changes.name ?? this.name,
+            changes.members ?? this.members,
+            changes.habits ?? this.habits,
         )
     }
 

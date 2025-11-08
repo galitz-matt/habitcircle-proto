@@ -1,8 +1,8 @@
 import type { HabitTemplate } from "@/lib/types";
 
 export type RegisterCircleCommand = {
+    requestingUserId: string
     circleName: string;
-    ownerId: string
     memberIds: string[];
     habitTemplates: HabitTemplate[]
 }

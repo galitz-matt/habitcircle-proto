@@ -9,6 +9,7 @@ import { AddHabitsToCircleCommand, AddHabitsToCircleResult} from "../dto/circle/
 import { HabitRepository } from "@/server/domain/repositories/habit.repository";
 import { serviceFailure } from "@/lib/utils";
 import { RemoveHabitsFromCircleCommand, RemoveHabitsFromCircleResult} from "../dto/circle/remove-habits-from-circle.dto";
+import { AddMembersToCircleCommand, AddMembersToCircleResult } from "../dto/circle/add-members-to-circle.dto";
 
 export class CircleService {
     constructor(
@@ -19,18 +20,41 @@ export class CircleService {
 
     async addHabitsToCircle(cmd: AddHabitsToCircleCommand): Promise<Result<AddHabitsToCircleResult>> {
         try {
+            const circle = await this.circleRepo.findById(cmd.circleId);
+            
+            if (cmd.requestingUserId !== circle.getOwner().id)
+                return serviceFailure("Cannot add habits to circle you do not own")
+
             const habits = cmd.habitTemplates.map(h => (
                 Habit.create(
                     h.name,
                     cmd.circleId
                 )
             ));
-            const circle = await this.circleRepo.findById(cmd.circleId);
-            const circleWithHabits = circle.addHabits(habits);
+            const circleWithNewHabits = circle.addHabits(habits);
             
-            await this.circleRepo.save(circleWithHabits);
+            await this.circleRepo.save(circleWithNewHabits);
             return { ok: true, value: { result: true } };
 
+        } catch (err) {
+            return serviceFailure(err);
+        }
+    }
+
+    async addMembersToCircle(cmd: AddMembersToCircleCommand): Promise<Result<AddMembersToCircleResult>> {
+        try {
+            const circle = await this.circleRepo.findById(cmd.circleId);
+
+            if (cmd.requestingUserId !== circle.getOwner().id)
+                return serviceFailure("Cannot add members to circle you do not own");
+
+            const newMembers = await Promise.all(
+                cmd.toBeAddedUserIds.map(id => this.userRepo.findById(id))
+            )
+            const circleWithNewMembers = circle.addMembers(newMembers);
+
+            this.circleRepo.save(circleWithNewMembers);
+            return { ok: true, value: { memberIds: cmd.toBeAddedUserIds } }
         } catch (err) {
             return serviceFailure(err);
         }
@@ -52,7 +76,7 @@ export class CircleService {
 
     async registerCircle(cmd: RegisterCircleCommand): Promise<Result<RegisterCircleResult>> {
         try {
-            const owner = await this.userRepo.findById(cmd.ownerId);
+            const owner = await this.userRepo.findById(cmd.requestingUserId);
             const members = await Promise.all(
                 cmd.memberIds.map(id => this.userRepo.findById(id))
             );
