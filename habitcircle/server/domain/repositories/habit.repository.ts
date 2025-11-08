@@ -6,5 +6,5 @@ export interface HabitRepository {
     findAll(): Promise<Habit[]>;
     save(habit: Habit): Promise<void>;
     delete(id: string): Promise<void>;
-    deleteMany(ids: string[]): Promise<void>;
+    deleteManyByCircleId(ids: string[], circleId: string): Promise<void>;
 }

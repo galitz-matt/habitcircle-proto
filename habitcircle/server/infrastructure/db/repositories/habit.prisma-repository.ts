@@ -61,19 +61,22 @@ export class HabitPrismaRepository implements HabitRepository {
         });
     }
 
-    async deleteMany(ids: string[]): Promise<void> {
+    async deleteManyByCircleId(ids: string[], circleId: string): Promise<void> {
         await this.prisma.$transaction(async (tx) => {
-            await Promise.all(
-                ids.map(async (id) => {
-                    await tx.habit.delete({
-                        where: { id: id }
-                    }).catch((err) => {
-                        if (err.code == "P2025") 
-                            throw new NotFoundError(`Habit with ${id} not found`);
-                        throw err;
-                    })
-                })
-            )
-        })
+            const existing = await tx.habit.findMany({
+                where: { 
+                    id: { in: ids },
+                    circleId: circleId
+                }
+            })
+
+            if (existing.length !== ids.length) {
+                throw new NotFoundError("Some habits not found or do not belong to this circle");
+            }
+
+            await tx.habit.deleteMany({
+                where: { id: { in: ids }}
+            });
+        });
     }
 }

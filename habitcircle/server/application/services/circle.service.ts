@@ -5,10 +5,10 @@ import { Circle } from "@/server/domain/entities/circle.entity";
 import { UserRepository } from "@/server/domain/repositories/user.repository";
 import { Habit } from "@/server/domain/entities/habit.entity";
 import { DeleteCircleCommand, DeleteCircleResult } from "../dto/circle/delete-circle.dto";
-import { AddHabitsCommand as AddHabitsToCircleCommand, AddHabitsResult as AddHabitsToCircleResult } from "../dto/circle/add-habits.dto";
+import { AddHabitsToCircleCommand, AddHabitsToCircleResult} from "../dto/circle/add-habits-to-circle.dto";
 import { HabitRepository } from "@/server/domain/repositories/habit.repository";
 import { serviceFailure } from "@/lib/utils";
-import { DeleteHabitsCommand as RemoveHabitsFromCircleCommand, DeleteHabitsResult as RemoveHabitsFromCircleResult } from "../dto/circle/delete-habits.dto";
+import { RemoveHabitsFromCircleCommand, RemoveHabitsFromCircleResult} from "../dto/circle/remove-habits-from-circle.dto";
 
 export class CircleService {
     constructor(
@@ -83,9 +83,8 @@ export class CircleService {
                 return serviceFailure("Cannot delete habit in circle you do not own");
             }
             
-            await this.habitRepo.deleteMany(cmd.habitIds);
+            await this.habitRepo.deleteManyByCircleId(cmd.habitIds, cmd.circleId);
             return { ok: true, value: { success: true } }
-            
         } catch (err) {
             return serviceFailure(err);
         }
