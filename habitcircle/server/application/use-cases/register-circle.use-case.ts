@@ -1,4 +1,4 @@
-import type { HabitTemplate } from "@/lib/types";
+import type { HabitTemplate } from "@/server/application/dtos/habit/habit-template.dto";
 
 export type RegisterCircleCommand = {
     circleName: string;
