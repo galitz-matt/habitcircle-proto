@@ -1,5 +1,4 @@
 export type DeleteUserCommand = {
-    requestingUserId: string;
     userIdToRemove: string;
 }
 

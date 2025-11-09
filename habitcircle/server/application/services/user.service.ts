@@ -1,6 +1,6 @@
 import { UserRepository } from "@/server/domain/repositories/user.repository";
 import { User } from "@/server/domain/entities/user.entity";
-import { RegisterUserCommand, RegisterUserResult } from "../use-cases/register-user.user-case";
+import { RegisterUserCommand, RegisterUserResult } from "../use-cases/register-user.use-case";
 import { DeleteUserCommand, DeleteUserResult } from "../use-cases/delete-user.use-case";
 import { Result } from "@/lib/types";
 import { serviceFailure } from "@/lib/utils";
@@ -20,8 +20,8 @@ export class UserService {
         }
     }
 
-    async deleteUser(cmd: DeleteUserCommand): Promise<Result<DeleteUserResult>> {
-        if (cmd.requestingUserId !== cmd.userIdToRemove)
+    async deleteUser(actorId: string, cmd: DeleteUserCommand): Promise<Result<DeleteUserResult>> {
+        if (actorId !== cmd.userIdToRemove)
             return serviceFailure("Cannot delete another user");
         
         try {
