@@ -12,6 +12,7 @@ import { RemoveHabitsFromCircleCommand, RemoveHabitsFromCircleResult} from "../u
 import { AddMembersToCircleCommand, AddMembersToCircleResult } from "../use-cases/add-members-to-circle.use-case";
 import { RemoveMembersFromCircleCommand, RemoveMembersFromCircleResult } from "../use-cases/remove-members-from-circle.use-case";
 import { CircleDtoMapper } from "../mappers/circle.dto-mapper";
+import { DomainError } from "@/lib/errors";
 
 export class CircleService {
     constructor(
@@ -24,8 +25,7 @@ export class CircleService {
         try {
             const circle = await this.circleRepo.findById(cmd.circleId);
             
-            if (actorId !== circle.getOwner().id)
-                return failure("Cannot add habits to circle you do not own")
+            this.ensureOwner(actorId, circle);
 
             const habits = cmd.habitDtos.map(h => (
                 Habit.create(
@@ -47,8 +47,8 @@ export class CircleService {
     async addMembersToCircle(actorId: string, cmd: AddMembersToCircleCommand): Promise<Result<AddMembersToCircleResult>> {
         try {
             const circle = await this.circleRepo.findById(cmd.circleId);
-            if (actorId !== circle.getOwner().id)
-                return failure("Cannot add members to circle you do not own");
+
+            this.ensureOwner(actorId, circle);
 
             const newMembers = await Promise.all(
                 cmd.toBeAddedUserIds.map(id => this.userRepo.findById(id))
@@ -66,8 +66,8 @@ export class CircleService {
     async deleteCircle(actorId: string, cmd: DeleteCircleCommand): Promise<Result<DeleteCircleResult>> {
         try {
             const circle = await this.circleRepo.findById(cmd.circleId);
-            if (actorId !== circle.getOwner().id)
-                return failure("Cannot delete circle you do not own");
+
+            this.ensureOwner(actorId, circle);
 
             await this.circleRepo.delete(cmd.circleId);
             return success({ deletedCircleId: circle.id });
@@ -108,11 +108,8 @@ export class CircleService {
     async removeHabitsFromCircle(actorId: string, cmd: RemoveHabitsFromCircleCommand): Promise<Result<RemoveHabitsFromCircleResult>> {
         try {
             const circle = await this.circleRepo.findById(cmd.circleId);
-            const ownerId = circle.getOwner().id;
             
-            if (actorId !== ownerId) {
-                return failure("Cannot delete habit in circle you do not own");
-            }
+            this.ensureOwner(actorId, circle);
             
             const circleWithHabitsRemoved = circle.removeHabitsById(cmd.habitIdsToRemove);
             await this.circleRepo.save(circleWithHabitsRemoved);
@@ -127,11 +124,8 @@ export class CircleService {
     async removeMembersFromCircle(actorId: string, cmd: RemoveMembersFromCircleCommand): Promise<Result<RemoveMembersFromCircleResult>> {
         try { 
             const circle = await this.circleRepo.findById(cmd.circleId);
-            const ownerId = circle.getOwner().id;
-            
-            if (actorId !== ownerId) {
-                return failure("Cannot remove members from circle you do not own");
-            }
+
+            this.ensureOwner(actorId, circle);
 
             if (!cmd.memberIdsToRemove.every(id => circle.hasMemberById(id))) {
                 return failure("One or users being removed are not members of this circle");
@@ -145,5 +139,10 @@ export class CircleService {
         } catch (err) {
             return failure(err);
         }
+    }
+
+    private ensureOwner(actorId: string, circle: Circle): void {
+        if (actorId !== circle.getOwner().id)
+            throw new DomainError("User does not own this circle");
     }
 }
