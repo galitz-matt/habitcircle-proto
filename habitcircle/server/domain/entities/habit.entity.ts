@@ -15,6 +15,10 @@ export class Habit {
         return new Habit(IdGenerator.new(), new Date(), habitName, circleId);
     }
 
+    equals(other: Habit): boolean {
+        return !!other && other.id == this.id;
+    }
+
     getName(): string {
         return this.name.value;
     }

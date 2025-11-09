@@ -14,7 +14,7 @@ export class UserService {
         
         try {
             await this.userRepo.delete(cmd.userIdToRemove);
-            return { ok: true, value: { result: true }}
+            return { ok: true, value: { deletedUserId: cmd.userIdToRemove }}
         } catch (err) {
             return serviceFailure(err);
         }

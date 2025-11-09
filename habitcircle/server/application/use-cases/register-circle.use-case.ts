@@ -1,13 +1,13 @@
-import type { HabitTemplate } from "@/server/application/dtos/habit/habit-template.dto";
+import type { HabitDto } from "@/server/application/dtos/habit.dto";
+import type { CircleDto } from "../dtos/circle.dto";
 
 export type RegisterCircleCommand = {
     circleName: string;
     ownerId: string;
     memberIds: string[];
-    habitTemplates: HabitTemplate[]
+    habitDtos: HabitDto[]
 }
 
 export type RegisterCircleResult = {
-    circleId: string;
-    name: string;
+    circle: CircleDto
 }

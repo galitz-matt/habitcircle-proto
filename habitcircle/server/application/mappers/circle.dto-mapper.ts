@@ -1,5 +1,5 @@
 import { Circle } from "@/server/domain/entities/circle.entity";
-import { CircleDto } from "@/server/application/dtos/circle/circle.dto";
+import { CircleDto } from "@/server/application/dtos/circle.dto";
 
 export class CircleDtoMapper {
     static toDto(circle: Circle): CircleDto {

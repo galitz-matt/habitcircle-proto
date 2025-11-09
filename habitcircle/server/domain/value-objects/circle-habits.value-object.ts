@@ -29,7 +29,15 @@ export class CircleHabits extends ValueObject<CircleHabits> {
     }
 
     remove(habit: Habit): CircleHabits {
-        const updatedHabits = this.habits.filter(h => h.id !== habit.id)
+        const updatedHabits = this.habits.filter(h => !h.equals(habit))
+        CircleHabitsInvariants.enforce(updatedHabits);
+        return new CircleHabits(updatedHabits);
+    }
+
+    removeMany(habits: Habit[]): CircleHabits {
+        const updatedHabits = this.habits.filter(
+            habit => !habits.some(h => h.equals(habit))
+        )
         CircleHabitsInvariants.enforce(updatedHabits);
         return new CircleHabits(updatedHabits);
     }

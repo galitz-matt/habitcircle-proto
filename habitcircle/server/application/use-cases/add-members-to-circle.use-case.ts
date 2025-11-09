@@ -1,8 +1,10 @@
+import type { CircleDto } from "../dtos/circle.dto";
+
 export type AddMembersToCircleCommand = {
     circleId: string;
     toBeAddedUserIds: string[];
 }
 
 export type AddMembersToCircleResult = {
-    memberIds: string[]
+    circle: CircleDto
 }

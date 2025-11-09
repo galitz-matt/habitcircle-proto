@@ -3,6 +3,7 @@ import { UserRepository } from "@/server/domain/repositories/user.repository";
 import type { RegisterUserCommand, RegisterUserResult } from "../use-cases/register-user.use-case";
 import type { Result } from "@/lib/types";
 import { serviceFailure } from "@/lib/utils";
+import { UserDtoMapper } from "../mappers/user.dto-mapper";
 
 export class AuthenticationService {
     constructor(
@@ -13,7 +14,8 @@ export class AuthenticationService {
         try {
             const user = await User.create(cmd.username, cmd.password);
             await this.userRepo.save(user)
-            return { ok: true, value: { userId: user.id, username: user.getUsername() }}
+            const userDto = UserDtoMapper.toDto(user);            
+            return { ok: true, value: { user: userDto }}
         } catch (err) {
             return serviceFailure(err);
         }

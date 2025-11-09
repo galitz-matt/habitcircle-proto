@@ -1,4 +1,4 @@
-import type { CircleDto } from "../dtos/circle/circle.dto";
+import type { CircleDto } from "../dtos/circle.dto";
 
 export type RemoveMembersFromCircleCommand = {
     circleId: string;

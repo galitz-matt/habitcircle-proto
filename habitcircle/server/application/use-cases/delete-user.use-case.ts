@@ -3,5 +3,5 @@ export type DeleteUserCommand = {
 }
 
 export type DeleteUserResult = {
-    result: boolean;
+    deletedUserId: string;
 }

@@ -1,9 +1,10 @@
+import type { UserDto } from "../dtos/user.dto";
+
 export type RegisterUserCommand = {
     username: string;
     password: string;
 }
 
 export type RegisterUserResult = {
-    userId: string;
-    username: string;
+    user: UserDto
 }

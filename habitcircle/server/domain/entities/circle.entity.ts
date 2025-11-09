@@ -78,6 +78,11 @@ export class Circle {
         return this.clone({ habits: updatedHabits });
     }
 
+    removeHabits(habits: Habit[]): Circle {
+        const updatedHabits = this.habits.removeMany(habits);
+        return this.clone({ habits: updatedHabits });
+    }
+
     removeMember(user: User): Circle {
         const updatedMembers = this.members.remove(user);
         return this.clone({ members: updatedMembers });
