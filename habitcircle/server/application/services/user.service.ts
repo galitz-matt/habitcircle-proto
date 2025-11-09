@@ -1,7 +1,7 @@
 import { UserRepository } from "@/server/domain/repositories/user.repository";
 import { User } from "@/server/domain/entities/user.entity";
-import { RegisterUserCommand, RegisterUserResult } from "../dto/user/register-user.dto";
-import { DeleteUserCommand, DeleteUserResult } from "../dto/user/delete-user.dto";
+import { RegisterUserCommand, RegisterUserResult } from "../use-cases/register-user.user-case";
+import { DeleteUserCommand, DeleteUserResult } from "../use-cases/delete-user.use-case";
 import { Result } from "@/lib/types";
 import { serviceFailure } from "@/lib/utils";
 
