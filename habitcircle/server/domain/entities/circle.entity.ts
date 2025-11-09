@@ -69,6 +69,10 @@ export class Circle {
         return this.members.owner;
     }
 
+    isMember(user: User): boolean {
+        return this.members.contains(user);
+    }
+
     removeHabit(habit: Habit): Circle {
         const updatedHabits = this.habits.remove(habit);
         return this.clone({ habits: updatedHabits });
@@ -76,6 +80,11 @@ export class Circle {
 
     removeMember(user: User): Circle {
         const updatedMembers = this.members.remove(user);
+        return this.clone({ members: updatedMembers });
+    }
+
+    removeMembers(users: User[]): Circle {
+        const updatedMembers = this.members.removeMany(users);
         return this.clone({ members: updatedMembers });
     }
 

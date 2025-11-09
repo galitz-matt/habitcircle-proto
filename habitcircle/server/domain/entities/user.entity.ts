@@ -16,6 +16,10 @@ export class User {
         return new User(IdGenerator.new(), new Date(), username, password);
     }
 
+    equals(other: User): boolean {
+        return !!other && this.id === other.id;
+    }
+
     getUsername(): string {
         return this.username.toString();
     }

@@ -30,18 +30,26 @@ export class CircleMembers extends ValueObject<CircleMembers> {
     }
 
     remove(user: User): CircleMembers {
-        const updatedMembers = this.members.filter(u => u.id !== user.id);
+        const updatedMembers = this.members.filter(u => !u.equals(user));
         CircleMembersInvariants.enforce(this.owner, updatedMembers);
         return new CircleMembers(this.owner, updatedMembers);
     }
 
-    includes(user: User): boolean {
+    removeMany(users: User[]): CircleMembers {
+        const updatedMembers = this.members.filter(
+            m => !users.some(u => u.equals(m))
+        );
+        CircleMembersInvariants.enforce(this.owner, updatedMembers);
+        return new CircleMembers(this.owner, updatedMembers);
+    }
+
+    contains(user: User): boolean {
         return this.members.some(m => m.id === user.id);
     }
 
     setOwner(user: User): CircleMembers {
         if (user.id === this.owner.id) throw new Error("User is already owner.");
-        if (!this.includes(user)) throw new Error("User is not in circle.");
+        if (!this.contains(user)) throw new Error("User is not in circle.");
         return new CircleMembers(user, this.members)
     }
 

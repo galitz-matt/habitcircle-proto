@@ -72,9 +72,9 @@ describe("CircleMembers Value Object", () => {
     const outsider = createUser("outsider");
     const circleMembers = CircleMembers.create(owner, [owner, member]);
 
-    expect(circleMembers.includes(owner)).toBe(true);
-    expect(circleMembers.includes(member)).toBe(true);
-    expect(circleMembers.includes(outsider)).toBe(false);
+    expect(circleMembers.contains(owner)).toBe(true);
+    expect(circleMembers.contains(member)).toBe(true);
+    expect(circleMembers.contains(outsider)).toBe(false);
   });
 
   it("updates owner when member exists", () => {
@@ -86,7 +86,7 @@ describe("CircleMembers Value Object", () => {
 
     expect(updated).not.toBe(circleMembers);
     expect(updated.getAll()).toEqual([owner, newOwner]);
-    expect(updated.includes(newOwner)).toBe(true);
+    expect(updated.contains(newOwner)).toBe(true);
   });
 
   it("throws when setting owner to existing owner", () => {

@@ -32,8 +32,8 @@ describe("Circle Entity", () => {
     expect(circle.createdAt).toBeInstanceOf(Date);
     expect(circle.getOwner()).toBe(owner);
     expect(circle.name.get()).toBe("MorningCrew");
-    expect(circle.members.includes(owner)).toBe(true);
-    expect(circle.members.includes(member)).toBe(true);
+    expect(circle.members.contains(owner)).toBe(true);
+    expect(circle.members.contains(member)).toBe(true);
     expect(circle.habits.getAll()).toEqual([habit]);
   });
 
@@ -59,8 +59,8 @@ describe("Circle Entity", () => {
     const updatedCircle = circle.addMember(newMember);
 
     expect(updatedCircle).not.toBe(circle);
-    expect(updatedCircle.members.includes(newMember)).toBe(true);
-    expect(circle.members.includes(newMember)).toBe(false);
+    expect(updatedCircle.members.contains(newMember)).toBe(true);
+    expect(circle.members.contains(newMember)).toBe(false);
   });
 
   it("removes a non-owner member immutably", () => {
@@ -76,9 +76,9 @@ describe("Circle Entity", () => {
     const updatedCircle = circle.removeMember(memberToRemove);
 
     expect(updatedCircle).not.toBe(circle);
-    expect(updatedCircle.members.includes(memberToRemove)).toBe(false);
-    expect(updatedCircle.members.includes(memberToKeep)).toBe(true);
-    expect(circle.members.includes(memberToRemove)).toBe(true);
+    expect(updatedCircle.members.contains(memberToRemove)).toBe(false);
+    expect(updatedCircle.members.contains(memberToKeep)).toBe(true);
+    expect(circle.members.contains(memberToRemove)).toBe(true);
   });
 
   it("throws when attempting to remove the owner", () => {
@@ -129,7 +129,7 @@ describe("Circle Entity", () => {
     expect(circle.createdAt).toBe(createdAt);
     expect(circle.name.get()).toBe("Persisted Circle");
     expect(circle.getOwner()).toBe(owner);
-    expect(circle.members.includes(member)).toBe(true);
+    expect(circle.members.contains(member)).toBe(true);
     expect(circle.habits.getAll()).toEqual([habit]);
   });
 });

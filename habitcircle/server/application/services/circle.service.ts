@@ -10,6 +10,8 @@ import { HabitRepository } from "@/server/domain/repositories/habit.repository";
 import { serviceFailure } from "@/lib/utils";
 import { RemoveHabitsFromCircleCommand, RemoveHabitsFromCircleResult} from "../dto/circle/remove-habits-from-circle.dto";
 import { AddMembersToCircleCommand, AddMembersToCircleResult } from "../dto/circle/add-members-to-circle.dto";
+import { RemoveMembersFromCircleCommand, RemoveMembersFromCircleResult } from "../dto/circle/remove-members-from-circle.dto";
+import { CircleDtoMapper } from "../mappers/circle.dto-mapper";
 
 export class CircleService {
     constructor(
@@ -18,6 +20,9 @@ export class CircleService {
         private readonly habitRepo: HabitRepository
     ) {}
 
+    // todo: extract requestingUserId from command objects, pass as arg
+    // why: commands represent use cases -> user intent, not authorization
+    // commands say what to do, not who is doing it
     async addHabitsToCircle(cmd: AddHabitsToCircleCommand): Promise<Result<AddHabitsToCircleResult>> {
         try {
             const circle = await this.circleRepo.findById(cmd.circleId);
@@ -107,6 +112,34 @@ export class CircleService {
             
             await this.habitRepo.deleteManyByCircleId(cmd.habitIdsToRemove, cmd.circleId);
             return { ok: true, value: { success: true } }
+        } catch (err) {
+            return serviceFailure(err);
+        }
+    }
+
+    async removeMembersFromCircle(cmd: RemoveMembersFromCircleCommand): Promise<Result<RemoveMembersFromCircleResult>> {
+        try { 
+            const circle = await this.circleRepo.findById(cmd.circleId);
+            const ownerId = circle.getOwner().id;
+            
+            if (cmd.requestingUserId !== ownerId) {
+                return serviceFailure("Cannot remove members from circle you do not own");
+            }
+
+            const membersToRemove = await Promise.all(
+                cmd.memberIdsToRemove.map(id => this.userRepo.findById(id))
+            );
+
+            if (!membersToRemove.every(member => circle.isMember(member))) {
+                return serviceFailure("One or users being removed are not members of this circle");
+            }
+
+            const circleWithRemovedMembers = circle.removeMembers(membersToRemove);
+            await this.circleRepo.save(circleWithRemovedMembers);
+
+            const circleWithRemovedMembersDto = CircleDtoMapper.toDto(circleWithRemovedMembers);
+            return { ok: true, value: { circle: circleWithRemovedMembersDto }}
+
         } catch (err) {
             return serviceFailure(err);
         }
