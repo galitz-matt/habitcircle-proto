@@ -29,6 +29,14 @@ export class CircleMembers extends ValueObject<CircleMembers> {
         return new CircleMembers(this.owner, updatedMembers)
     }
 
+    contains(user: User): boolean {
+        return this.members.some(m => m.equals(user));
+    }
+
+    containsById(userId: string): boolean {
+        return this.members.some(m => m.id === userId);
+    }
+
     remove(user: User): CircleMembers {
         const updatedMembers = this.members.filter(u => !u.equals(user));
         CircleMembersInvariants.enforce(this.owner, updatedMembers);
@@ -43,8 +51,12 @@ export class CircleMembers extends ValueObject<CircleMembers> {
         return new CircleMembers(this.owner, updatedMembers);
     }
 
-    contains(user: User): boolean {
-        return this.members.some(m => m.id === user.id);
+    removeManyById(userIds: string[]): CircleMembers {
+        const updatedMembers = this.members.filter(
+            m => !userIds.some(id => id === m.id)
+        )
+        CircleMembersInvariants.enforce(this.owner, updatedMembers);
+        return new CircleMembers(this.owner, updatedMembers);
     }
 
     setOwner(user: User): CircleMembers {

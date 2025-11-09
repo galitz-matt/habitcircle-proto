@@ -42,6 +42,14 @@ export class CircleHabits extends ValueObject<CircleHabits> {
         return new CircleHabits(updatedHabits);
     }
 
+    removeManyById(habitIds: string[]): CircleHabits {
+        const updatedHabits = this.habits.filter(
+            h => !habitIds.some(id => h.id === id)
+        );
+        CircleHabitsInvariants.enforce(updatedHabits);
+        return new CircleHabits(updatedHabits);
+    }
+
     toString(): string {
         let s = "{ "
         for (let i = 0; i < this.habits.length; i++) {

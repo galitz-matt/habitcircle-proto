@@ -69,8 +69,12 @@ export class Circle {
         return this.members.owner;
     }
 
-    isMember(user: User): boolean {
+    hasMember(user: User): boolean {
         return this.members.contains(user);
+    }
+
+    hasMemberById(userId: string): boolean {
+        return this.members.containsById(userId);
     }
 
     removeHabit(habit: Habit): Circle {
@@ -83,6 +87,11 @@ export class Circle {
         return this.clone({ habits: updatedHabits });
     }
 
+    removeHabitsById(habitIds: string[]): Circle {
+        const updatedHabits = this.habits.removeManyById(habitIds);
+        return this.clone({ habits: updatedHabits });
+    }
+
     removeMember(user: User): Circle {
         const updatedMembers = this.members.remove(user);
         return this.clone({ members: updatedMembers });
@@ -90,6 +99,11 @@ export class Circle {
 
     removeMembers(users: User[]): Circle {
         const updatedMembers = this.members.removeMany(users);
+        return this.clone({ members: updatedMembers });
+    }
+
+    removeMembersById(userIds: string[]): Circle {
+        const updatedMembers = this.members.removeManyById(userIds);
         return this.clone({ members: updatedMembers });
     }
 

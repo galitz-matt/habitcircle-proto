@@ -85,6 +85,7 @@ export class CircleService {
             const members = await Promise.all(
                 cmd.memberIds.map(id => this.userRepo.findById(id))
             );
+            
             const circle = Circle.create(
                 cmd.circleName,
                 owner,
@@ -113,9 +114,8 @@ export class CircleService {
                 return failure("Cannot delete habit in circle you do not own");
             }
             
-            await this.habitRepo.deleteManyByCircleId(cmd.habitIdsToRemove, cmd.circleId);
-
-            const circleWithHabitsRemoved = await this.circleRepo.findById(cmd.circleId);
+            const circleWithHabitsRemoved = circle.removeHabitsById(cmd.habitIdsToRemove);
+            await this.circleRepo.save(circleWithHabitsRemoved);
             const circleDto = CircleDtoMapper.toDto(circleWithHabitsRemoved);
 
             return success({ circle: circleDto });
@@ -133,17 +133,12 @@ export class CircleService {
                 return failure("Cannot remove members from circle you do not own");
             }
 
-            const membersToRemove = await Promise.all(
-                cmd.memberIdsToRemove.map(id => this.userRepo.findById(id))
-            );
-
-            if (!membersToRemove.every(member => circle.isMember(member))) {
+            if (!cmd.memberIdsToRemove.every(id => circle.hasMemberById(id))) {
                 return failure("One or users being removed are not members of this circle");
             }
 
-            const circleWithRemovedMembers = circle.removeMembers(membersToRemove);
+            const circleWithRemovedMembers = circle.removeMembersById(cmd.memberIdsToRemove);
             await this.circleRepo.save(circleWithRemovedMembers);
-
             const circleDto = CircleDtoMapper.toDto(circleWithRemovedMembers);
 
             return success({ circle: circleDto });
