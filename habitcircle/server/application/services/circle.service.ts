@@ -113,13 +113,10 @@ export class CircleService {
                 return failure("Cannot delete habit in circle you do not own");
             }
             
-            const habitsToRemove = await Promise.all(
-                cmd.habitIdsToRemove.map(id => this.habitRepo.findById(id))
-            );
             await this.habitRepo.deleteManyByCircleId(cmd.habitIdsToRemove, cmd.circleId);
 
-            const circleWithRemovedHabits = circle.removeHabits(habitsToRemove);
-            const circleDto = CircleDtoMapper.toDto(circleWithRemovedHabits);
+            const circleWithHabitsRemoved = await this.circleRepo.findById(cmd.circleId);
+            const circleDto = CircleDtoMapper.toDto(circleWithHabitsRemoved);
 
             return success({ circle: circleDto });
         } catch (err) {
