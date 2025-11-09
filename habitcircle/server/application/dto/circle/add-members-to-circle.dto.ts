@@ -1,5 +1,4 @@
 export type AddMembersToCircleCommand = {
-    requestingUserId: string;
     circleId: string;
     toBeAddedUserIds: string[];
 }

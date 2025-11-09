@@ -20,14 +20,11 @@ export class CircleService {
         private readonly habitRepo: HabitRepository
     ) {}
 
-    // todo: extract requestingUserId from command objects, pass as arg
-    // why: commands represent use cases -> user intent, not authorization
-    // commands say what to do, not who is doing it
-    async addHabitsToCircle(cmd: AddHabitsToCircleCommand): Promise<Result<AddHabitsToCircleResult>> {
+    async addHabitsToCircle(actorId: string, cmd: AddHabitsToCircleCommand): Promise<Result<AddHabitsToCircleResult>> {
         try {
             const circle = await this.circleRepo.findById(cmd.circleId);
             
-            if (cmd.requestingUserId !== circle.getOwner().id)
+            if (actorId !== circle.getOwner().id)
                 return serviceFailure("Cannot add habits to circle you do not own")
 
             const habits = cmd.habitTemplates.map(h => (
@@ -46,10 +43,10 @@ export class CircleService {
         }
     }
 
-    async addMembersToCircle(cmd: AddMembersToCircleCommand): Promise<Result<AddMembersToCircleResult>> {
+    async addMembersToCircle(actorId: string, cmd: AddMembersToCircleCommand): Promise<Result<AddMembersToCircleResult>> {
         try {
             const circle = await this.circleRepo.findById(cmd.circleId);
-            if (cmd.requestingUserId !== circle.getOwner().id)
+            if (actorId !== circle.getOwner().id)
                 return serviceFailure("Cannot add members to circle you do not own");
 
             const newMembers = await Promise.all(
@@ -64,10 +61,10 @@ export class CircleService {
         }
     }
 
-    async deleteCircle(cmd: DeleteCircleCommand): Promise<Result<DeleteCircleResult>> {
+    async deleteCircle(actorId: string, cmd: DeleteCircleCommand): Promise<Result<DeleteCircleResult>> {
         try {
             const circle = await this.circleRepo.findById(cmd.circleId);
-            if (cmd.requestingUserId !== circle.getOwner().id)
+            if (actorId !== circle.getOwner().id)
                 return serviceFailure("Cannot delete circle you do not own");
 
             await this.circleRepo.delete(cmd.circleId);
@@ -77,9 +74,12 @@ export class CircleService {
         }
     }
 
-    async registerCircle(cmd: RegisterCircleCommand): Promise<Result<RegisterCircleResult>> {
+    async registerCircle(actorId: string, cmd: RegisterCircleCommand): Promise<Result<RegisterCircleResult>> {
         try {
-            const owner = await this.userRepo.findById(cmd.requestingUserId);
+            if (actorId !== cmd.ownerId)
+                return serviceFailure("Cannot create circle for other user");
+
+            const owner = await this.userRepo.findById(cmd.ownerId);
             const members = await Promise.all(
                 cmd.memberIds.map(id => this.userRepo.findById(id))
             );
@@ -101,12 +101,12 @@ export class CircleService {
         }
     }
 
-    async removeHabitsFromCircle(cmd: RemoveHabitsFromCircleCommand): Promise<Result<RemoveHabitsFromCircleResult>> {
+    async removeHabitsFromCircle(actorId: string, cmd: RemoveHabitsFromCircleCommand): Promise<Result<RemoveHabitsFromCircleResult>> {
         try {
             const circle = await this.circleRepo.findById(cmd.circleId);
             const ownerId = circle.getOwner().id;
             
-            if (cmd.requestingUserId !== ownerId) {
+            if (actorId !== ownerId) {
                 return serviceFailure("Cannot delete habit in circle you do not own");
             }
             
@@ -117,12 +117,12 @@ export class CircleService {
         }
     }
 
-    async removeMembersFromCircle(cmd: RemoveMembersFromCircleCommand): Promise<Result<RemoveMembersFromCircleResult>> {
+    async removeMembersFromCircle(actorId: string, cmd: RemoveMembersFromCircleCommand): Promise<Result<RemoveMembersFromCircleResult>> {
         try { 
             const circle = await this.circleRepo.findById(cmd.circleId);
             const ownerId = circle.getOwner().id;
             
-            if (cmd.requestingUserId !== ownerId) {
+            if (actorId !== ownerId) {
                 return serviceFailure("Cannot remove members from circle you do not own");
             }
 
