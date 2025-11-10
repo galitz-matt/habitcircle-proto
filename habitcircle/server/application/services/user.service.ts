@@ -9,12 +9,12 @@ export class UserService {
     ) {}
 
     async deleteUser(actorId: string, cmd: DeleteUserCommand): Promise<Result<DeleteUserResult>> {
-        if (actorId !== cmd.userIdToRemove)
+        if (actorId !== cmd.toDeleteUserId)
             return failure("Cannot delete another user");
         
         try {
-            await this.userRepo.delete(cmd.userIdToRemove);
-            return success({ deletedUserId: cmd.userIdToRemove })
+            await this.userRepo.delete(cmd.toDeleteUserId);
+            return success({ deletedUserId: cmd.toDeleteUserId })
         } catch (err) {
             return failure(err);
         }

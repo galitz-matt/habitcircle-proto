@@ -27,7 +27,7 @@ export class CircleService {
             
             this.ensureOwner(actorId, circle);
 
-            const habits = cmd.habitDtos.map(h => (
+            const habits = cmd.toAddHabits.map(h => (
                 Habit.create(
                     h.name,
                     cmd.circleId
@@ -51,7 +51,7 @@ export class CircleService {
             this.ensureOwner(actorId, circle);
 
             const newMembers = await Promise.all(
-                cmd.toBeAddedUserIds.map(id => this.userRepo.findById(id))
+                cmd.toAddUserIds.map(id => this.userRepo.findById(id))
             )
             const circleWithNewMembers = circle.addMembers(newMembers);
             await this.circleRepo.save(circleWithNewMembers);
@@ -65,11 +65,11 @@ export class CircleService {
 
     async deleteCircle(actorId: string, cmd: DeleteCircleCommand): Promise<Result<DeleteCircleResult>> {
         try {
-            const circle = await this.circleRepo.findById(cmd.circleId);
+            const circle = await this.circleRepo.findById(cmd.toDeleteCircleId);
 
             this.ensureOwner(actorId, circle);
 
-            await this.circleRepo.delete(cmd.circleId);
+            await this.circleRepo.delete(cmd.toDeleteCircleId);
             return success({ deletedCircleId: circle.id });
         } catch (err) {
             return failure(err);
@@ -111,7 +111,7 @@ export class CircleService {
             
             this.ensureOwner(actorId, circle);
             
-            const circleWithHabitsRemoved = circle.removeHabitsById(cmd.habitIdsToRemove);
+            const circleWithHabitsRemoved = circle.removeHabitsById(cmd.toRemoveHabitIds);
             await this.circleRepo.save(circleWithHabitsRemoved);
             const circleDto = CircleDtoMapper.toDto(circleWithHabitsRemoved);
 
@@ -127,11 +127,11 @@ export class CircleService {
 
             this.ensureOwner(actorId, circle);
 
-            if (!cmd.memberIdsToRemove.every(id => circle.hasMemberById(id))) {
+            if (!cmd.toRemoveMemberIds.every(id => circle.hasMemberById(id))) {
                 return failure("One or users being removed are not members of this circle");
             }
 
-            const circleWithRemovedMembers = circle.removeMembersById(cmd.memberIdsToRemove);
+            const circleWithRemovedMembers = circle.removeMembersById(cmd.toRemoveMemberIds);
             await this.circleRepo.save(circleWithRemovedMembers);
             const circleDto = CircleDtoMapper.toDto(circleWithRemovedMembers);
 

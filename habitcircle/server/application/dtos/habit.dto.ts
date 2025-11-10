@@ -1,3 +1,3 @@
-export type HabitDto = {
+export type HabitTemplate = {
     name: string;
 }

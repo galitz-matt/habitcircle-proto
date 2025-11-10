@@ -1,5 +1,5 @@
 export type DeleteCircleCommand = {
-    circleId: string;
+    toDeleteCircleId: string;
 }
 
 export type DeleteCircleResult = {
