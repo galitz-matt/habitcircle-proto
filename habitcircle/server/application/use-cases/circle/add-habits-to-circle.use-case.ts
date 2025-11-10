@@ -1,5 +1,5 @@
 import type { HabitTemplate } from "@/server/application/dtos/habit-template.dto";
-import { CircleDto } from "../dtos/circle.dto";
+import { CircleDto } from "@/server/application/dtos/circle.dto";
 
 export type AddHabitsToCircleCommand = {
     circleId: string;

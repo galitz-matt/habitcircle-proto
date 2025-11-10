@@ -1,5 +1,5 @@
 import { UserRepository } from "@/server/domain/repositories/user.repository";
-import { DeleteUserCommand, DeleteUserResult } from "../use-cases/delete-user.use-case";
+import { DeleteUserCommand, DeleteUserResult } from "../use-cases/user/delete-user.use-case";
 import { Result } from "@/lib/types";
 import { failure, success } from "@/lib/utils";
 

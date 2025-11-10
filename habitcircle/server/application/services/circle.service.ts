@@ -1,16 +1,16 @@
 import { Result } from "@/lib/types";
 import { CircleRepository } from "@/server/domain/repositories/circle.repository";
-import { RegisterCircleCommand, RegisterCircleResult } from "../use-cases/register-circle.use-case";
+import { RegisterCircleCommand, RegisterCircleResult } from "../use-cases/circle/register-circle.use-case";
 import { Circle } from "@/server/domain/entities/circle.entity";
 import { UserRepository } from "@/server/domain/repositories/user.repository";
 import { Habit } from "@/server/domain/entities/habit.entity";
-import { DeleteCircleCommand, DeleteCircleResult } from "../use-cases/delete-circle.use-case";
-import { AddHabitsToCircleCommand, AddHabitsToCircleResult} from "../use-cases/add-habits-to-circle.use-case";
+import { DeleteCircleCommand, DeleteCircleResult } from "../use-cases/circle/delete-circle.use-case";
+import { AddHabitsToCircleCommand, AddHabitsToCircleResult} from "../use-cases/circle/add-habits-to-circle.use-case";
 import { HabitRepository } from "@/server/domain/repositories/habit.repository";
 import { failure, success } from "@/lib/utils";
-import { RemoveHabitsFromCircleCommand, RemoveHabitsFromCircleResult} from "../use-cases/remove-habits-from-circle.use-case";
-import { AddMembersToCircleCommand, AddMembersToCircleResult } from "../use-cases/add-members-to-circle.use-case";
-import { RemoveMembersFromCircleCommand, RemoveMembersFromCircleResult } from "../use-cases/remove-members-from-circle.use-case";
+import { RemoveHabitsFromCircleCommand, RemoveHabitsFromCircleResult} from "../use-cases/circle/remove-habits-from-circle.use-case";
+import { AddMembersToCircleCommand, AddMembersToCircleResult } from "../use-cases/circle/add-members-to-circle.use-case";
+import { RemoveMembersFromCircleCommand, RemoveMembersFromCircleResult } from "../use-cases/circle/remove-members-from-circle.use-case";
 import { CircleDtoMapper } from "../mappers/circle.dto-mapper";
 import { DomainError } from "@/lib/errors";
 
