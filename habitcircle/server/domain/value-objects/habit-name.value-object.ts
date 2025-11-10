@@ -7,21 +7,22 @@ export class HabitName extends ValueObject<HabitName> {
         readonly value: string
     ) { super() }
 
-    static create(value: string) {
+    static create(value: string): HabitName {
         const normalized = StringUtils.normalize(value);
         HabitNameInvariants.enforce(normalized);
         return new HabitName(normalized);
+    }
+
+    equals(other: HabitName): boolean {
+        return this.value === other.value;
+    }
+
+    static rehydrate(value: string): HabitName {
+        return new HabitName(value);
     }
 
     toString(): string {
         return this.value;
     }
 
-    equals(other: HabitName) {
-        return this.value === other.value;
-    }
-
-    static rehydrate(value: string) {
-        return new HabitName(value);
-    }
 }
