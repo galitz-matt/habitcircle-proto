@@ -34,8 +34,7 @@ export class Circle {
     }
 
     addHabit(habit: Habit): Circle {
-        const updatedHabits = this.habits.add(habit);
-        return this.clone({ habits: updatedHabits });
+        return this.addHabits([habit]);
     }
 
     addHabits(habits: Habit[]): Circle {
@@ -44,8 +43,7 @@ export class Circle {
     }
 
     addMember(user: User): Circle {
-        const updatedMembers = this.members.add(user);
-        return this.clone({ members: updatedMembers });
+        return this.addMembers([user]);
     }
 
     addMembers(users: User[]): Circle {
@@ -67,6 +65,10 @@ export class Circle {
 
     getOwner(): User {
         return this.members.owner;
+    }
+
+    hasHabitById(habitId: string) {
+        return this.habits.containsById(habitId);
     }
 
     hasMember(user: User): boolean {
