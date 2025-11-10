@@ -20,7 +20,7 @@ export class Habit {
     }
 
     getName(): string {
-        return this.name.value;
+        return this.name.name;
     }
 
     static rehydrate(
@@ -31,5 +31,19 @@ export class Habit {
     ): Habit {
         /* Used exclusively by repositories to reconstitue from persistence */
         return new Habit(id, createdAt, HabitName.rehydrate(name), circleId);
+    }
+
+    setName(name: string): Habit {
+        const updatedName = HabitName.create(name);
+        return this.clone({ name: updatedName })
+    }
+
+    private clone(changes: Partial<Habit>): Habit {
+        return new Habit(
+            changes.id ?? this.id,
+            changes.createdAt ?? this.createdAt,
+            changes.name ?? this.name,
+            changes.circleId ?? this.circleId
+        )
     }
 }
