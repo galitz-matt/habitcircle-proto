@@ -12,7 +12,6 @@ import { RemoveHabitsFromCircleCommand, RemoveHabitsFromCircleResult} from "../u
 import { AddMembersToCircleCommand, AddMembersToCircleResult } from "../use-cases/circle/add-members-to-circle.use-case";
 import { RemoveMembersFromCircleCommand, RemoveMembersFromCircleResult } from "../use-cases/circle/remove-members-from-circle.use-case";
 import { CircleDtoMapper } from "@/server/application/mappers/circle.dto-mapper";
-import { DomainError } from "@/lib/errors";
 import { GetCircleQuery, GetCircleResult } from "@/server/application/use-cases/circle/get-circle.use-case";
 
 export class CircleService {
