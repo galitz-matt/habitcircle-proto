@@ -4,25 +4,25 @@ import { ValueObject } from "./value-object.base";
 
 export class HabitName extends ValueObject<HabitName> {
     private constructor(
-        readonly value: string
+        readonly name: string
     ) { super() }
 
-    static create(value: string): HabitName {
-        const normalized = StringUtils.normalize(value);
+    static create(name: string): HabitName {
+        const normalized = StringUtils.normalize(name);
         HabitNameInvariants.enforce(normalized);
         return new HabitName(normalized);
     }
 
     equals(other: HabitName): boolean {
-        return this.value === other.value;
+        return this.name === other.name;
     }
 
-    static rehydrate(value: string): HabitName {
-        return new HabitName(value);
+    static rehydrate(name: string): HabitName {
+        return new HabitName(name);
     }
 
     toString(): string {
-        return this.value;
+        return this.name;
     }
 
 }
