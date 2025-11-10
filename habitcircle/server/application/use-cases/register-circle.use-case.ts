@@ -1,4 +1,4 @@
-import type { HabitTemplate } from "@/server/application/dtos/habit.dto";
+import type { HabitTemplate } from "@/server/application/dtos/habit-template.dto";
 import type { CircleDto } from "../dtos/circle.dto";
 
 export type RegisterCircleCommand = {
