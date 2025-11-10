@@ -79,6 +79,10 @@ export class Circle {
         return this.members.containsById(userId);
     }
 
+    isOwner(userId: string): boolean {
+        return this.getOwner().id === userId;
+    }
+
     removeHabit(habit: Habit): Circle {
         const updatedHabits = this.habits.remove(habit);
         return this.clone({ habits: updatedHabits });
