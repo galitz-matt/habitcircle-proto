@@ -28,6 +28,10 @@ export class CircleHabits extends ValueObject<CircleHabits> {
         return new CircleHabits(updatedHabits);
     }
 
+    containsById(habitId: string): boolean {
+        return this.habits.some(h => h.id === habitId);
+    }
+
     remove(habit: Habit): CircleHabits {
         const updatedHabits = this.habits.filter(h => !h.equals(habit))
         CircleHabitsInvariants.enforce(updatedHabits);
