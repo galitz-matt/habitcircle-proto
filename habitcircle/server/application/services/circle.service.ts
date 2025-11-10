@@ -11,8 +11,9 @@ import { failure, success } from "@/lib/utils";
 import { RemoveHabitsFromCircleCommand, RemoveHabitsFromCircleResult} from "../use-cases/circle/remove-habits-from-circle.use-case";
 import { AddMembersToCircleCommand, AddMembersToCircleResult } from "../use-cases/circle/add-members-to-circle.use-case";
 import { RemoveMembersFromCircleCommand, RemoveMembersFromCircleResult } from "../use-cases/circle/remove-members-from-circle.use-case";
-import { CircleDtoMapper } from "../mappers/circle.dto-mapper";
+import { CircleDtoMapper } from "@/server/application/mappers/circle.dto-mapper";
 import { DomainError } from "@/lib/errors";
+import { GetCircleQuery, GetCircleResult } from "@/server/application/use-cases/circle/get-circle.use-case";
 
 export class CircleService {
     constructor(
@@ -71,6 +72,20 @@ export class CircleService {
 
             await this.circleRepo.delete(cmd.toDeleteCircleId);
             return success({ deletedCircleId: circle.id });
+        } catch (err) {
+            return failure(err);
+        }
+    }
+
+    async getCircle(actorId: string, query: GetCircleQuery): Promise<Result<GetCircleResult>> {
+        try {
+            const circle = await this.circleRepo.findById(query.circleId);
+
+            if (!circle.hasMemberById(actorId))
+                return failure("User does not belong to this circle")
+
+            const circleDto = CircleDtoMapper.toDto(circle);
+            return success({ circle: circleDto });
         } catch (err) {
             return failure(err);
         }
