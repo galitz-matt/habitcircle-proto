@@ -25,7 +25,7 @@ export class CircleService {
         try {
             const circle = await this.circleRepo.findById(cmd.circleId);
             
-            if (!circle.isOwner(actorId))
+            if (!circle.isOwnedBy(actorId))
                 return failure("Cannot add habits to circle you do not own");
 
             const habits = cmd.toAddHabits.map(h => (
@@ -49,7 +49,7 @@ export class CircleService {
         try {
             const circle = await this.circleRepo.findById(cmd.circleId);
 
-            if (!circle.isOwner(actorId)) 
+            if (!circle.isOwnedBy(actorId)) 
                 return failure("User cannot add members to circle they do not own");
 
             const newMembers = await Promise.all(
@@ -69,7 +69,7 @@ export class CircleService {
         try {
             const circle = await this.circleRepo.findById(cmd.toDeleteCircleId);
 
-            if (!circle.isOwner(actorId)) 
+            if (!circle.isOwnedBy(actorId)) 
                 return failure("User cannot delete circle they do not own");
 
             await this.circleRepo.delete(cmd.toDeleteCircleId);
@@ -126,7 +126,7 @@ export class CircleService {
         try {
             const circle = await this.circleRepo.findById(cmd.circleId);
             
-            if (!circle.isOwner(actorId))
+            if (!circle.isOwnedBy(actorId))
                 return failure("User cannot remove habits from circle they do not own");
             if (!cmd.toRemoveHabitIds.every(id => circle.hasHabitById(id)))
                 return failure("One or more habits not found in circle");
@@ -145,7 +145,7 @@ export class CircleService {
         try { 
             const circle = await this.circleRepo.findById(cmd.circleId);
 
-            if (!circle.isOwner(actorId))
+            if (!circle.isOwnedBy(actorId))
                 return failure("User cannot remove members from circle they do not own");
             if (!cmd.toRemoveMemberIds.every(id => circle.hasMemberById(id))) {
                 return failure("One or users being removed are not members of this circle");

@@ -79,7 +79,7 @@ export class Circle {
         return this.members.containsById(userId);
     }
 
-    isOwner(userId: string): boolean {
+    isOwnedBy(userId: string): boolean {
         return this.getOwner().id === userId;
     }
 
