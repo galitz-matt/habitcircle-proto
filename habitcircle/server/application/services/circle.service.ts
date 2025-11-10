@@ -110,6 +110,8 @@ export class CircleService {
             const circle = await this.circleRepo.findById(cmd.circleId);
             
             this.ensureOwner(actorId, circle);
+            if (!cmd.toRemoveHabitIds.every(id => circle.hasHabitById(id)))
+                return failure("One or more habits not found in circle");
             
             const circleWithHabitsRemoved = circle.removeHabitsById(cmd.toRemoveHabitIds);
             await this.circleRepo.save(circleWithHabitsRemoved);
