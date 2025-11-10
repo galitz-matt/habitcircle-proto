@@ -1,24 +1,26 @@
 import { Result } from "@/lib/types";
-import { CircleRepository } from "@/server/domain/repositories/circle.repository";
+import type { CircleRepository } from "@/server/domain/repositories/circle.repository";
 import { RegisterCircleCommand, RegisterCircleResult } from "../use-cases/circle/register-circle.use-case";
 import { Circle } from "@/server/domain/entities/circle.entity";
-import { UserRepository } from "@/server/domain/repositories/user.repository";
+import type { UserRepository } from "@/server/domain/repositories/user.repository";
 import { Habit } from "@/server/domain/entities/habit.entity";
 import { DeleteCircleCommand, DeleteCircleResult } from "../use-cases/circle/delete-circle.use-case";
 import { AddHabitsToCircleCommand, AddHabitsToCircleResult} from "../use-cases/circle/add-habits-to-circle.use-case";
-import { HabitRepository } from "@/server/domain/repositories/habit.repository";
+import type { HabitRepository } from "@/server/domain/repositories/habit.repository";
 import { failure, success } from "@/lib/utils";
 import { RemoveHabitsFromCircleCommand, RemoveHabitsFromCircleResult} from "../use-cases/circle/remove-habits-from-circle.use-case";
 import { AddMembersToCircleCommand, AddMembersToCircleResult } from "../use-cases/circle/add-members-to-circle.use-case";
 import { RemoveMembersFromCircleCommand, RemoveMembersFromCircleResult } from "../use-cases/circle/remove-members-from-circle.use-case";
 import { CircleDtoMapper } from "@/server/application/mappers/circle.dto-mapper";
 import { GetCircleQuery, GetCircleResult } from "@/server/application/use-cases/circle/get-circle.use-case";
+import { inject, injectable } from "tsyringe";
 
+@injectable()
 export class CircleService {
     constructor(
-        private readonly circleRepo: CircleRepository,
-        private readonly userRepo: UserRepository,
-        private readonly habitRepo: HabitRepository
+        @inject("CircleRepository") private readonly circleRepo: CircleRepository,
+        @inject("UserRepository") private readonly userRepo: UserRepository,
+        @inject("HabitRepository") private readonly habitRepo: HabitRepository
     ) {}
 
     async addHabitsToCircle(actorId: string, cmd: AddHabitsToCircleCommand): Promise<Result<AddHabitsToCircleResult>> {

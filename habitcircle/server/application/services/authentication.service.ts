@@ -1,13 +1,15 @@
 import { User } from "@/server/domain/entities/user.entity";
-import { UserRepository } from "@/server/domain/repositories/user.repository";
+import type { UserRepository } from "@/server/domain/repositories/user.repository";
 import type { RegisterUserCommand, RegisterUserResult } from "@/server/application/use-cases/auth/register-user.use-case";
 import type { Result } from "@/lib/types";
 import { failure, success } from "@/lib/utils";
 import { UserDtoMapper } from "../mappers/user.dto-mapper";
+import { inject, injectable } from "tsyringe";
 
+@injectable()
 export class AuthenticationService {
     constructor(
-        private readonly userRepo: UserRepository
+        @inject("UserRepository") private readonly userRepo: UserRepository
     ) {}
 
     async registerUser(cmd: RegisterUserCommand): Promise<Result<RegisterUserResult>> {

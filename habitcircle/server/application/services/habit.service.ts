@@ -1,14 +1,16 @@
-import { HabitRepository } from "@/server/domain/repositories/habit.repository";
+import type { HabitRepository } from "@/server/domain/repositories/habit.repository";
 import { RenameHabitCommand, RenameHabitResult } from "../use-cases/habit/rename-habit.use-case";
 import { Result } from "@/lib/types";
-import { CircleRepository } from "@/server/domain/repositories/circle.repository";
+import type { CircleRepository } from "@/server/domain/repositories/circle.repository";
 import { failure, success } from "@/lib/utils";
 import { HabitDtoMapper } from "../mappers/habit.dto-mapper";
+import { inject, injectable } from "tsyringe";
 
+@injectable()
 export class HabitService {
     constructor(
-        private readonly habitRepo: HabitRepository,
-        private readonly circleRepo: CircleRepository
+        @inject("CircleRepository") private readonly circleRepo: CircleRepository,
+        @inject("HabitRepository") private readonly habitRepo: HabitRepository,
     ) {}
 
     async renameHabit(actorId: string, cmd: RenameHabitCommand): Promise<Result<RenameHabitResult>> {

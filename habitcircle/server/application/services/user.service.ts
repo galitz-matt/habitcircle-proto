@@ -1,11 +1,13 @@
-import { UserRepository } from "@/server/domain/repositories/user.repository";
+import type { UserRepository } from "@/server/domain/repositories/user.repository";
 import { DeleteUserCommand, DeleteUserResult } from "../use-cases/user/delete-user.use-case";
 import { Result } from "@/lib/types";
 import { failure, success } from "@/lib/utils";
+import { injectable, inject } from "tsyringe";
 
+@injectable()
 export class UserService {
     constructor(
-        private readonly userRepo: UserRepository
+        @inject("UserRepository") private readonly userRepo: UserRepository
     ) {}
 
     async deleteUser(actorId: string, cmd: DeleteUserCommand): Promise<Result<DeleteUserResult>> {
