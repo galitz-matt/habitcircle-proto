@@ -91,7 +91,7 @@ export class CircleService {
                 owner,
                 members
             )
-            const habits = cmd.habitDtos.map(
+            const habits = cmd.habitTemplates.map(
                 template => Habit.create(template.name, circle.id)
             )
             const circleWithHabits = circle.addHabits(habits);

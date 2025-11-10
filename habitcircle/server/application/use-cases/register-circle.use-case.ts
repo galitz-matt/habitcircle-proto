@@ -5,7 +5,7 @@ export type RegisterCircleCommand = {
     circleName: string;
     ownerId: string;
     memberIds: string[];
-    habitDtos: HabitTemplate[]
+    habitTemplates: HabitTemplate[]
 }
 
 export type RegisterCircleResult = {
