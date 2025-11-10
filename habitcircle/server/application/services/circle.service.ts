@@ -81,7 +81,7 @@ export class CircleService {
         }
     }
 
-    async getCircle(actorId: string, query: GetCircleQuery): Promise<Result<GetCircleResult>> {
+    async getCircleInfo(actorId: string, query: GetCircleQuery): Promise<Result<GetCircleResult>> {
         try {
             const circle = await this.circleRepo.findById(query.circleId);
 
