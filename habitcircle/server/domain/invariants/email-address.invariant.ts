@@ -3,7 +3,7 @@ import { DomainError } from "@/lib/errors";
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export class EmailAddressInvariants {
-    public static enforce(value: string) {
+    public static enforce(value: string): void {
         this.ensureValid(value);
     }
 
