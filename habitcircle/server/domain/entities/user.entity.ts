@@ -6,8 +6,10 @@ export class User {
     private constructor(
         readonly id: string,
         readonly createdAt: Date,
-        private readonly username: Username,
-        private readonly password: Password
+        readonly updatedAt: Date,
+        private readonly username?: Username,
+        private readonly password?: Password,
+        
     ) {}
 
     static async create(usernameValue: string, passwordValue: string): Promise<User> {

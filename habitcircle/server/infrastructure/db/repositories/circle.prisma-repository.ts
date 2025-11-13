@@ -31,13 +31,13 @@ export class CirclePrismaRepository implements CircleRepository {
         const userRecord = await this.prisma.user.findUnique({
             where: { id: userId },
             include: { 
-                circles: {
+                joinedCircles: {
                     include: { owner: true, members: true, habits: true }
                 } 
             }
         });
 
-        return userRecord?.circles.map(CirclePrismaMapper.toDomain) ?? [];
+        return userRecord?.joinedCircles.map(CirclePrismaMapper.toDomain) ?? [];
     }
 
     async findAll(): Promise<Circle[]> {

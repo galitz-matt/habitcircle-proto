@@ -22,7 +22,7 @@ model User {
   email                 String?       @unique @db.Citext
   password              String?
   biography             String?
-  profilePictureUrl     String?
+  profilePictureKey     String?
 
   // Relationships
   ownedCircles          Circle[]      @relation("CircleOwner")
@@ -101,7 +101,7 @@ model Post {
   userId            String        
   completion        Completion    @relation(fields: [completionId], references: [id])
   completionId      String       
-  photoUrl          String?
+  photoKey          String?
   caption           String?
 
   @@unique([completionId])
@@ -122,7 +122,7 @@ model Circle {
   createdAt         DateTime        @default(now())
   updatedAt         DateTime        @updatedAt
   name              String
-  photoUrl          String?
+  photoKey          String?
   owner             User            @relation("CircleOwner", fields: [ownerId], references: [id])
   ownerId           String
   members           User[]          @relation("CircleMembers")
