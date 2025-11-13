@@ -7,17 +7,21 @@ export class Biography extends ValueObject<Biography> {
         readonly value: string
     ) { super() }
 
-    static create(value: string) {
+    static create(value: string): Biography {
         const normalized = StringUtils.normalize(value);
         BiographyInvariants.enforce(normalized);
         return new Biography(value);
     }
 
-    equals(other: Biography) {
+    equals(other: Biography): boolean {
         return !!other && this.value == other.value;
     }
 
-    toString() {
+    static rehydrate(value: string): Biography {
+        return new Biography(value);
+    }
+
+    toString(): string {
         return this.value;
     }
 }
