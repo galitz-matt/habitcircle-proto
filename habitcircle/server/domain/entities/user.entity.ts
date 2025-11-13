@@ -10,17 +10,25 @@ export class User {
         readonly createdAt: Date,
         readonly updatedAt: Date,
         private readonly username: Username,
-        private readonly emailAddress?: EmailAddress, // replace with ValueObject
+        private readonly emailAddress?: EmailAddress,
         private readonly password?: Password,
-        private readonly biography?: Biography, // replace with ValueObject
-        private readonly profilePictureKey?: string // replace with ValueObject
+        private readonly biography?: Biography, 
+        private readonly profilePictureKey?: string 
     ) {}
 
-    static async create(usernameValue: string, passwordValue: string): Promise<User> {
-        const username = Username.create(usernameValue)
-        const password = await Password.create(passwordValue);
-        return new User(IdGenerator.new(), new Date(), username, password);
-    }
+    static async create(rawUsername: string, rawPassword?: string, rawEmailAddress?: string): Promise<User> {
+        const username = Username.create(rawUsername)
+        const password = rawPassword ? await Password.create(rawPassword): undefined;
+        const emailAddress = rawEmailAddress ? EmailAddress.create(rawEmailAddress): undefined;
+        return new User(
+            IdGenerator.new(),
+            new Date(),
+            new Date(),
+            username,
+            emailAddress,
+            password
+        );
+    };
 
     equals(other: User): boolean {
         return !!other && this.id === other.id;
@@ -31,20 +39,33 @@ export class User {
     }
 
     async verifyPassword(plain: string): Promise<boolean> {
-        return this.password.matches(plain);
+        return !!this.password ? this.password.matches(plain) : false;
     }
 
     getPasswordHash(): string {
-        return this.password.toString();
+        return !!this.password ? this.password.toString() : "";
     }
 
     static rehydrate(
         id: string,
         createdAt: Date,
+        updatedAt: Date,
         username: string,
-        password: string,
+        emailAddress?: string,
+        password?: string,
+        biography?: string,
+        profilePictureKey?: string
     ): User {
         /* Used exclusively by repositories to reconstitue from persistence */
-        return new User(id, createdAt, Username.rehydrate(username), Password.rehydrate(password));
+        return new User(
+            id, 
+            createdAt, 
+            updatedAt,
+            Username.rehydrate(username), 
+            emailAddress ? EmailAddress.rehydrate(emailAddress) : undefined,
+            password ? Password.rehydrate(password) : undefined,
+            biography ? Biography.rehydrate(biography) : undefined,
+            profilePictureKey ? profilePictureKey : undefined,
+        );
     }
 }
