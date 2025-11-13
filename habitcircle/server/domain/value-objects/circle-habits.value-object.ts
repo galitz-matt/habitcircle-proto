@@ -1,11 +1,10 @@
 import { Habit } from "../entities/habit.entity";
 import { CircleHabitsInvariants } from "../invariants/circle-habits.invariant";
-import { ValueObject } from "./value-object.base";
 
-export class CircleHabits extends ValueObject<CircleHabits> {
+export class CircleHabits {
     constructor(
         readonly habits: Habit[]
-    ) { super() }
+    ) {}
 
     static create(habits: Habit[]): CircleHabits {
         CircleHabitsInvariants.enforce(habits);

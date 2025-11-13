@@ -1,11 +1,10 @@
 import { StringUtils } from "@/lib/utils";
 import { UsernameInvariants } from "../invariants/username.invariant";
-import { ValueObject } from "./value-object.base";
 
-export class Username extends ValueObject<Username> {
+export class Username {
     private constructor(
         readonly value: string,
-    ) { super() }
+    ) {}
 
     static create(value: string): Username {
         const normalized = StringUtils.normalize(value);

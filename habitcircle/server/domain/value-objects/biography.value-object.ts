@@ -1,11 +1,10 @@
 import { StringUtils } from "@/lib/utils";
-import { ValueObject } from "./value-object.base";
 import { BiographyInvariants } from "../invariants/biography.invariant";
 
-export class Biography extends ValueObject<Biography> {
+export class Biography {
     private constructor(
         readonly value: string
-    ) { super() }
+    ) { }
 
     static create(value: string): Biography {
         const normalized = StringUtils.normalize(value);

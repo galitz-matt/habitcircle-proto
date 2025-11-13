@@ -1,12 +1,11 @@
 import bcrypt from "bcryptjs"
 import { PasswordInvariants } from "../invariants/password.invariant";
-import { ValueObject } from "./value-object.base";
 
-export class Password extends ValueObject<Password> {
+export class Password {
 
     private constructor(
         private readonly value: string, 
-    ) { super() }
+    ) {}
 
     static async create(value: string): Promise<Password> {
         PasswordInvariants.enforce(value);

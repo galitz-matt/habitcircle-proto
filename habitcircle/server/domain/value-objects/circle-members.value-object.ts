@@ -1,12 +1,11 @@
 import { User } from "../entities/user.entity";
 import { CircleMembersInvariants } from "../invariants/circle-members.invariant";
-import { ValueObject } from "./value-object.base";
 
-export class CircleMembers extends ValueObject<CircleMembers> {
+export class CircleMembers {
     private constructor(
         readonly owner: User,
         readonly members: User[]
-    ) { super() }
+    ) {}
 
     static create(owner: User, members: User[]): CircleMembers {
         CircleMembersInvariants.enforce(owner, members);

@@ -1,11 +1,10 @@
 import { StringUtils } from "@/lib/utils";
 import { HabitNameInvariants } from "../invariants/habit-name.invariant";
-import { ValueObject } from "./value-object.base";
 
-export class HabitName extends ValueObject<HabitName> {
+export class HabitName {
     private constructor(
         readonly name: string
-    ) { super() }
+    ) {}
 
     static create(name: string): HabitName {
         const normalized = StringUtils.normalize(name);
