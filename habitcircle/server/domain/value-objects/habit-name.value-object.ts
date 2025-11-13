@@ -14,7 +14,7 @@ export class HabitName extends ValueObject<HabitName> {
     }
 
     equals(other: HabitName): boolean {
-        return this.name === other.name;
+        return !!other && this.name === other.name;
     }
 
     static rehydrate(name: string): HabitName {

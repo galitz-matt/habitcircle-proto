@@ -22,7 +22,7 @@ export class CircleName extends ValueObject<CircleName> {
     }
 
     equals(other: CircleName) {
-        return this.value === other.value;
+        return !!other && this.value === other.value;
     }
 
     static rehydrate(value: string) {

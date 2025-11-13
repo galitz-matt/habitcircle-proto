@@ -19,7 +19,7 @@ export class Password extends ValueObject<Password> {
     }
 
     equals(other: Password): boolean {
-        return this.value === other.toString();
+        return !!other && this.value === other.toString();
     }
 
     async matches(otherValue: string): Promise<boolean> {

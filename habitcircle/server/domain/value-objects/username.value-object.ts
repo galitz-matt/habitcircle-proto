@@ -18,7 +18,7 @@ export class Username extends ValueObject<Username> {
     }
 
     equals(other: Username): boolean {
-        return this.value.localeCompare(other.value, undefined, { sensitivity: "accent" }) === 0;
+        return !!other && this.value.localeCompare(other.value, undefined, { sensitivity: "accent" }) === 0;
     }
 
     static rehydrate(value: string): Username {
