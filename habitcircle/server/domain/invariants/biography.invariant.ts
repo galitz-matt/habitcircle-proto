@@ -1,0 +1,13 @@
+import { DomainError } from "@/lib/errors";
+
+export class BiographyInvariants {
+    static enforce(value: string) {
+        this.ensureValidLength(value);
+    }
+
+    static ensureValidLength(value: string) {
+        if (value.length > 200) {
+            throw new DomainError("Biography must be at most 200 characters");
+        } 
+    }
+}

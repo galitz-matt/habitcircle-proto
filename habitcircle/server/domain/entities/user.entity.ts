@@ -1,6 +1,8 @@
 import { IdGenerator } from "@/lib/utils";
 import { Username } from "@/server/domain/value-objects/username.value-object";
 import { Password } from "@/server/domain/value-objects/password.value-object";
+import { EmailAddress } from "@/server/domain/value-objects/email-address.value-object";
+import { Biography } from "@/server/domain/value-objects/biography.value-object";
 
 export class User {
     private constructor(
@@ -8,9 +10,9 @@ export class User {
         readonly createdAt: Date,
         readonly updatedAt: Date,
         private readonly username: Username,
-        private readonly email?: string, // replace with ValueObject
+        private readonly emailAddress?: EmailAddress, // replace with ValueObject
         private readonly password?: Password,
-        private readonly biography?: string, // replace with ValueObject
+        private readonly biography?: Biography, // replace with ValueObject
         private readonly profilePictureKey?: string // replace with ValueObject
     ) {}
 
