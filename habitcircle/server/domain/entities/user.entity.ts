@@ -7,9 +7,11 @@ export class User {
         readonly id: string,
         readonly createdAt: Date,
         readonly updatedAt: Date,
-        private readonly username?: Username,
+        private readonly username: Username,
+        private readonly email?: string, // replace with ValueObject
         private readonly password?: Password,
-        
+        private readonly biography?: string, // replace with ValueObject
+        private readonly profilePictureKey?: string // replace with ValueObject
     ) {}
 
     static async create(usernameValue: string, passwordValue: string): Promise<User> {
