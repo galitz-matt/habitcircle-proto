@@ -9,9 +9,7 @@ export class Habit {
         readonly circleId: string,
     ) {}
 
-    static create(name: string, circleId: string): Habit {
-        const habitName = HabitName.create(name); 
-        
+    static create(habitName: HabitName, circleId: string): Habit {
         return new Habit(IdGenerator.new(), new Date(), habitName, circleId);
     }
 

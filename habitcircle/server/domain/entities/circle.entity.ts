@@ -15,15 +15,10 @@ export class Circle {
     ) {}
 
     static create(
-        name: string, 
-        owner: User, 
-        members: User[], 
-        habits: Habit[] = [],
+        circleName: CircleName,
+        circleMembers: CircleMembers,
+        circleHabits: CircleHabits
     ): Circle {
-        const circleName = CircleName.create(name);
-        const circleMembers = CircleMembers.create(owner, members)
-        const circleHabits = CircleHabits.create(habits);
-
         return new Circle(
             IdGenerator.new(), 
             new Date(), 

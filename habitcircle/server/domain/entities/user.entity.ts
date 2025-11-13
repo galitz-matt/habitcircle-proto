@@ -17,10 +17,7 @@ export class User {
         readonly profilePictureKey?: string 
     ) {}
 
-    static async create(rawUsername: string, rawPassword?: string, rawEmailAddress?: string): Promise<User> {
-        const username = Username.create(rawUsername)
-        const password = rawPassword ? await Password.create(rawPassword): undefined;
-        const emailAddress = rawEmailAddress ? EmailAddress.create(rawEmailAddress): undefined;
+    static async create(username: Username, password?: Password, emailAddress?: EmailAddress): Promise<User> {
         return new User(
             IdGenerator.new(),
             new Date(),
