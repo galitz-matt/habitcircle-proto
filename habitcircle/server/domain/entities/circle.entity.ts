@@ -11,20 +11,23 @@ export class Circle {
         readonly createdAt: Date,
         readonly name: CircleName,
         readonly members: CircleMembers, // owner is an element of members
-        readonly habits: CircleHabits
+        readonly habits: CircleHabits,
+        readonly photoKey?: string
     ) {}
 
     static create(
         circleName: CircleName,
         circleMembers: CircleMembers,
-        circleHabits: CircleHabits
+        circleHabits: CircleHabits,
+        photoKey?: string
     ): Circle {
         return new Circle(
             IdGenerator.new(), 
             new Date(), 
             circleName, 
             circleMembers, 
-            circleHabits
+            circleHabits,
+            photoKey
         );
     }
 
@@ -114,28 +117,29 @@ export class Circle {
         name: string,
         owner: User,
         members: User[],
-        habits: Habit[]
+        habits: Habit[],
+        photoKey?: string,
     ): Circle {
         /* Used exclusively by repositories to reconstitue from persistence */
-
         const circleName = CircleName.rehydrate(name);
         const circleMembers = CircleMembers.rehydrate(owner, members);
         const circleHabits = CircleHabits.rehydrate(habits);
-
 
         return new Circle(
             id, 
             createdAt, 
             circleName, 
             circleMembers, 
-            circleHabits
+            circleHabits,
+            photoKey
         )
     }
-
+    
     setOwner(user: User): Circle {
         const updatedMembers = this.members.setOwner(user);
         return this.clone({ members: updatedMembers });
     }
+
 
     private clone(changes: Partial<Circle>): Circle {
         return new Circle(
