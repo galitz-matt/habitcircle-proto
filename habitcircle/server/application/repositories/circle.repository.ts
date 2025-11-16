@@ -1,0 +1,10 @@
+import type { Circle } from "../entities/circle.entity";
+
+export interface CircleRepository {
+    findById(id: string): Promise<Circle>;
+    findByName(name: string): Promise<Circle[]>;
+    findByUserId(userId: string): Promise<Circle[]>;
+    findAll(): Promise<Circle[]>;
+    save(circle: Circle): Promise<void>;
+    delete(id: string): Promise<void>;
+}
