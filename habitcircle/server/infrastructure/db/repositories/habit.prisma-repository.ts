@@ -1,5 +1,5 @@
 import type { PrismaClient } from "@/generated/prisma";
-import { HabitRepository } from "@/server/domain/repositories/habit.repository";
+import { HabitRepository } from "@/server/application/repositories/habit.repository";
 import { HabitPrismaMapper } from "@/server/infrastructure/db/mappers/habit.prisma-mapper";
 import type { Habit } from "@/server/domain/entities/habit.entity";
 import { NotFoundError } from "@/lib/errors";

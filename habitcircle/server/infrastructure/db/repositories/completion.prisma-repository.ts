@@ -1,7 +1,7 @@
 import type { PrismaClient } from "@/generated/prisma";
 import { NotFoundError } from "@/lib/errors";
 import type { Completion } from "@/server/domain/entities/completion.entity";
-import { CompletionRepository } from "@/server/domain/repositories/completion.repository";
+import { CompletionRepository } from "@/server/application/repositories/completion.repository";
 import { CompletionPrismaMapper } from "@/server/infrastructure/db/mappers/completion.prisma-mapper";
 
 export class CompletionPrismaRepository implements CompletionRepository {
