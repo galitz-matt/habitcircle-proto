@@ -1,8 +1,9 @@
 import { Completion } from "@/server/domain/entities/completion.entity";
-import { Completion as CompletionRecord } from "@/generated/prisma";
+import { Completion as CompletionRecord } from "@/prisma/generated";
+import { CompletionPrimitive } from "../../dtos/completion-primitive.dto";
 
 export class CompletionPrismaMapper {
-    static toDomain(record: CompletionRecord) {
+    static toDomain(record: CompletionRecord): Completion {
         return Completion.rehydrate(
             record.id,
             record.createdAt,
@@ -12,7 +13,7 @@ export class CompletionPrismaMapper {
         );
     }
 
-    static toPersistence(completion: Completion) {
+    static toPersistence(completion: Completion): CompletionPrimitive {
         return {
             id: completion.id,
             createdAt: completion.createdAt,

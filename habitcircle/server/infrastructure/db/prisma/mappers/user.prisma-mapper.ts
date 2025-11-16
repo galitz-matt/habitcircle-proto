@@ -1,5 +1,6 @@
 import { User } from "@/server/domain/entities/user.entity";
-import type { User as UserRecord } from "@/generated/prisma";
+import type { User as UserRecord } from "@/prisma/generated"
+import { UserPrimitive } from "../../dtos/user-primitive.dto";
 
 
 export class UserPrismaMapper {
@@ -8,16 +9,20 @@ export class UserPrismaMapper {
             record.id,
             record.createdAt,
             record.username,
-            record.password
+            record.emailAddress ?? undefined,
+            record.biography ?? undefined,
+            record.profilePictureKey ?? undefined
         );
     }
 
-    static toPersistence(user: User): UserRecord {
+    static toPersistence(user: User): UserPrimitive {
         return {
             id: user.id,
             createdAt: user.createdAt,
             username: user.getUsername(),
-            password: user.getPasswordHash()
+            emailAddress: user.getEmailAddress() ?? null,
+            biography: user.getBiography() ?? null,
+            profilePictureKey: user.getProfilePictureKey() ?? null
         };
     }
 }
