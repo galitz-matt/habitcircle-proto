@@ -30,11 +30,11 @@ export class User {
     }
 
     getBiography(): string | undefined {
-        return !!this.biography ? this.biography.toString() : undefined;
+        return this.biography ? this.biography.toString() : undefined;
     }
 
     getEmailAddress(): string | undefined {
-        return !!this.emailAddress ? this.emailAddress.toString() : undefined;
+        return this.emailAddress ? this.emailAddress.toString() : undefined;
     }
 
     getUsername(): string {
@@ -42,7 +42,7 @@ export class User {
     }
 
     getProfilePictureKey(): string | undefined {
-        return !!this.profilePictureKey ? this.profilePictureKey.toString() : undefined;
+        return this.profilePictureKey ? this.profilePictureKey.toString() : undefined;
     }
 
     static rehydrate(
