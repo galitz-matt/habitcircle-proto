@@ -1,6 +1,6 @@
-import type { PrismaClient } from "@/generated/prisma";
+import type { PrismaClient } from "@/prisma/generated";
 import { UserRepository } from "@/server/application/repositories/user.repository";
-import { UserPrismaMapper } from "@/server/infrastructure/db/mappers/user.prisma-mapper";
+import { UserPrismaMapper } from "@/server/infrastructure/db/prisma/mappers/user.prisma-mapper";
 import type { User } from "@/server/domain/entities/user.entity";
 import { NotFoundError } from "@/lib/errors";
 
