@@ -24,9 +24,8 @@
     "paths": {
       "@/lib/*": ["lib/*"],
       "@/server/*": ["server/*"],
-      "@/graphql/*": ["graphql/*"],
       "@/components/*": ["components/*"],
-      "@/generated/*": ["generated/*"],
+      "@/prisma/generated": ["server/infrastructure/db/prisma/generated"],
       "@/tests/*": ["tests/*"]
     }
   },
