@@ -7,8 +7,9 @@ export const RESERVED_USERNAMES = new Set([
     "undefined"
 ]);
 
-export const VALID_USERNAME_CHARACTERS_PATTERN = /^[\p{L}\p{M}\p{N}_.-]+$/u
-export const VALID_NAME_CHARACTERS_PATTERN = /^[\p{L}\p{M}\p{N}_.\-\s]+$/u;
+export const USERNAME_PATTERN = /^[\p{L}\p{M}\p{N}_.-]+$/u;
+export const NAME_PATTERN = /^[\p{L}\p{M}\p{N}_.\-\s]+$/u;
+export const CAPTION_PATTERN = /^[\p{L}0-9\p{Extended_Pictographic}]+$/u;
 
 export const BCRYPT_HASH_PATTERN = /^\$2[aby]\$[0-3][0-9]\$[A-Za-z0-9./]{53}$/;
 
