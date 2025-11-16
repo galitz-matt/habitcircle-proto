@@ -1,4 +1,4 @@
-import { VALID_NAME_CHARACTERS_PATTERN } from "@/lib/constants";
+import { NAME_PATTERN } from "@/lib/constants";
 import { DomainError } from "@/lib/errors";
 
 export class HabitNameInvariants {
@@ -14,7 +14,7 @@ export class HabitNameInvariants {
     }
 
     static ensureValidCharacters(habitName: string): void {
-        if (!VALID_NAME_CHARACTERS_PATTERN.test(habitName)) {
+        if (!NAME_PATTERN.test(habitName)) {
             throw new DomainError("Habit name contains invalid characters");
         }
     }

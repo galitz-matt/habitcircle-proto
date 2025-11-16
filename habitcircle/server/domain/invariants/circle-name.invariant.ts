@@ -1,5 +1,5 @@
 import { DomainError } from "@/lib/errors";
-import { VALID_NAME_CHARACTERS_PATTERN } from "@/lib/constants";
+import { NAME_PATTERN } from "@/lib/constants";
 
 export class CircleNameInvariants {
     static enforce(circleName: string): void {
@@ -14,7 +14,7 @@ export class CircleNameInvariants {
     }
 
     static ensureValidCharacters(circleName: string): void {
-        if (!VALID_NAME_CHARACTERS_PATTERN.test(circleName)) {
+        if (!NAME_PATTERN.test(circleName)) {
             throw new DomainError("Circle name includes invalid characters.")
         }
     }
