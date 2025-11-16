@@ -1,6 +1,5 @@
 import { IdGenerator } from "@/lib/utils";
 import { Username } from "@/server/domain/value-objects/username.value-object";
-import { Password } from "@/server/domain/value-objects/password.value-object";
 import { EmailAddress } from "@/server/domain/value-objects/email-address.value-object";
 import { Biography } from "@/server/domain/value-objects/biography.value-object";
 
@@ -14,7 +13,10 @@ export class User {
         readonly profilePictureKey?: string 
     ) {}
 
-    static async create(username: Username, password?: Password, emailAddress?: EmailAddress): Promise<User> {
+    static async create(
+        username: Username, 
+        emailAddress?: EmailAddress
+    ): Promise<User> {
         return new User(
             IdGenerator.new(),
             new Date(),
