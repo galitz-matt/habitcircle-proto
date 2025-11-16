@@ -1,4 +1,4 @@
-import { Completion } from "../entities/completion.entity";
+import { Completion } from "@/server/domain/entities/completion.entity";
 
 export interface CompletionRepository {
     findByUserHabitAndDate(userId: string, habitId: string, completedAt: Date): Promise<Completion>

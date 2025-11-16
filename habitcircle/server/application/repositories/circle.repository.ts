@@ -1,4 +1,4 @@
-import type { Circle } from "../entities/circle.entity";
+import type { Circle } from "@/server/domain/entities/circle.entity";
 
 export interface CircleRepository {
     findById(id: string): Promise<Circle>;
