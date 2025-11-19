@@ -1,7 +1,7 @@
 import { OAuthIdentity } from "@/server/domain/value-objects/auth/oauth-identity.value-object";
 import { OAuthTokens } from "./oauth-tokens.value-object";
-import { OAuthTokenInfo } from "../../dtos/oauth-token-info.dto";
-import { OAuthIdentityInfo } from "../../dtos/oauth-identity-info.dto";
+import { OAuthTokenInfo } from "@/server/domain/dtos/auth/oauth-token-info.dto";
+import { OAuthIdentityInfo } from "@/server/domain/dtos/auth/oauth-identity-info.dto";
 
 export class OAuthAuthentication {
     readonly type = "oauth" as const;

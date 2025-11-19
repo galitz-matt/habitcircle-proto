@@ -1,7 +1,7 @@
 import { IdGenerator } from "@/lib/utils";
 import { AccountAuth } from "../types/account-auth";
 import { DomainError } from "@/lib/errors";
-import { AuthInfo as AuthenticationInfo } from "../dtos/auth-info.dto";
+import { AuthInfo as AuthenticationInfo } from "../dtos/auth/auth-info.dto";
 import { Password } from "../value-objects/auth/password.value-object";
 import { CredentialsAuthentication } from "../value-objects/auth/credentials-auth.value-object";
 import { OAuthIdentity } from "../value-objects/auth/oauth-identity.value-object";

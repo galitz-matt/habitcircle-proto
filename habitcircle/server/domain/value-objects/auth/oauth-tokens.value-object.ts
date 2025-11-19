@@ -1,5 +1,5 @@
 import { DomainError } from "@/lib/errors";
-import { OAuthTokenInfo } from "../../dtos/oauth-token-info.dto";
+import { OAuthTokenInfo } from "@/server/domain/dtos/auth/oauth-token-info.dto";
 
 export class OAuthTokens {
     private constructor(
