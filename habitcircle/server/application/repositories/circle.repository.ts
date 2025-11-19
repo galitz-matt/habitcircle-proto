@@ -1,7 +1,7 @@
 import type { Circle } from "@/server/domain/entities/circle.entity";
 
 export interface CircleRepository {
-    findById(id: string): Promise<Circle>;
+    findById(id: string): Promise<Circle | null>;
     findByName(name: string): Promise<Circle[]>;
     findByUserId(userId: string): Promise<Circle[]>;
     findAll(): Promise<Circle[]>;
