@@ -1,72 +1,71 @@
 import { IdGenerator } from "@/lib/utils";
 import { PostCaption } from "../value-objects/post-caption.value-object";
+import { Entity } from "./entity.abc";
 
-export class Post {
-    private constructor(
-        readonly id: string,
-        readonly createdAt: Date,
-        readonly userId: string,
-        readonly habitId: string,
-        readonly completionId: string,
-        readonly photoKey?: string,
-        readonly caption?: PostCaption 
-    ) {}
+export type PostProps = {
+    id: string,
+    createdAt: Date,
+    userId: string,
+    habitId: string,
+    completionId: string,
+    photoKey?: string,
+    caption?: PostCaption
+}
 
-    static create(
-        userId: string,
-        habitId: string,
-        completionId: string,
-        photoKey?: string,
-        caption?: PostCaption
-    ): Post {
-        return new Post(
-            IdGenerator.new(),
-            new Date(),
-            userId,
-            habitId,
-            completionId,
-            photoKey,
-            caption
-        )
+export type CreatePostInput = {
+    userId: string,
+    habitId: string,
+    completionId: string,
+    photoKey?: string,
+    caption?: PostCaption
+}
+
+export class Post extends Entity<PostProps> {
+    private constructor(props: PostProps) { super(props) }
+
+    static create(input: CreatePostInput): Post {
+        const props: PostProps = {
+            id: IdGenerator.new(),
+            createdAt: new Date(),
+            ...input
+        };
+
+        return new Post(props)
     }
 
-    setCaption(caption: PostCaption): Post {
-        return this.clone({ caption: caption });
+    static rehydrate(props: PostProps): Post {
+        return new Post(props);
     }
 
-    setPhotoKey(photoKey: string): Post {
-        return this.clone({ photoKey: photoKey });
+    get id(): string {
+        return this.props.id;
     }
 
-    static rehydrate(
-        id: string,
-        createdAt: Date,
-        userId: string,
-        habitId: string,
-        completionId: string,
-        photoKey?: string,
-        caption?: string
-    ): Post {
-        return new Post(
-            id,
-            createdAt,
-            userId,
-            habitId,
-            completionId,
-            photoKey,
-            caption ? PostCaption.rehydrate(caption) : undefined
-        )
+    get createdAt(): Date {
+        return this.props.createdAt;
+    }
+
+    get userId(): string {
+        return this.props.userId;
+    }
+
+    get habitId(): string {
+        return this.props.habitId;
+    }
+
+    get completionId(): string {
+        return this.props.completionId;
     }
     
-    private clone(changes: Partial<Post>): Post {
-        return new Post(
-            changes.id ?? this.id,
-            changes.createdAt ?? this.createdAt,
-            changes.userId ?? this.userId,
-            changes.habitId ?? this.habitId,
-            changes.completionId ?? this.completionId,
-            changes.photoKey ?? this.photoKey,
-            changes.caption ?? this.caption
-        );
+    get photoKey(): string | undefined {
+        return this.props.photoKey;
+    }
+
+    get caption(): PostCaption | undefined {
+        return this.props.caption;
+    }
+
+    protected create(props: PostProps): this {
+        return new Post(props) as this;
     }
 }

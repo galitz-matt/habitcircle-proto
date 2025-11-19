@@ -4,31 +4,36 @@ import { User } from "@/server/domain/entities/user.entity"
 import { CircleName } from "@/server/domain/value-objects/circle-name.value-object";
 import { CircleMembers } from "@/server/domain/value-objects/circle-members.value-object";
 import { CircleHabits } from "@/server/domain/value-objects/circle-habits.value-object";
+import { Entity } from "./entity.abc";
 
-export class Circle {
-    private constructor(
-        readonly id: string,
-        readonly createdAt: Date,
-        readonly name: CircleName,
-        readonly members: CircleMembers, // owner is an element of members
-        readonly habits: CircleHabits,
-        readonly photoKey?: string
-    ) {}
+export type CircleProps = {
+    id: string,
+    createdAt: Date,
+    name: CircleName,
+    members: CircleMembers,
+    habits: CircleHabits,
+    photoKey?: string
+}
 
-    static create(
-        circleName: CircleName,
-        circleMembers: CircleMembers,
-        circleHabits: CircleHabits,
-        photoKey?: string
-    ): Circle {
-        return new Circle(
-            IdGenerator.new(), 
-            new Date(), 
-            circleName, 
-            circleMembers, 
-            circleHabits,
-            photoKey
-        );
+export type CreateCircleInput = {
+    name: CircleName,
+    members: CircleMembers,
+    habits: CircleHabits,
+    photoKey?: string
+}
+
+export class Circle extends Entity<CircleProps> {
+
+    private constructor(props: CircleProps) { super(props); }
+
+    static create(input: CreateCircleInput): Circle {
+        const props: CircleProps = {
+            id: IdGenerator.new(),
+            createdAt: new Date(),
+            ...input
+        };
+
+        return new Circle(props);
     }
 
     addHabit(habit: Habit): Circle {
@@ -111,44 +116,38 @@ export class Circle {
         return this.clone({ members: updatedMembers });
     }
 
-    static rehydrate(
-        id: string,
-        createdAt: Date,
-        name: string,
-        owner: User,
-        members: User[],
-        habits: Habit[],
-        photoKey?: string,
-    ): Circle {
-        /* Used exclusively by repositories to reconstitue from persistence */
-        const circleName = CircleName.rehydrate(name);
-        const circleMembers = CircleMembers.rehydrate(owner, members);
-        const circleHabits = CircleHabits.rehydrate(habits);
-
-        return new Circle(
-            id, 
-            createdAt, 
-            circleName, 
-            circleMembers, 
-            circleHabits,
-            photoKey
-        )
-    }
-    
     setOwner(user: User): Circle {
         const updatedMembers = this.members.setOwner(user);
         return this.clone({ members: updatedMembers });
     }
 
-
-    private clone(changes: Partial<Circle>): Circle {
-        return new Circle(
-            changes.id ?? this.id,
-            changes.createdAt ?? this.createdAt,
-            changes.name ?? this.name,
-            changes.members ?? this.members,
-            changes.habits ?? this.habits,
-        )
+    get name(): CircleName {
+        return this.props.name;
     }
 
+    get members(): CircleMembers {
+        return this.props.members;
+    }
+
+    get habits(): CircleHabits {
+        return this.props.habits;
+    }
+
+    static rehydrate(input: CircleProps): Circle {
+        /* Used exclusively by repositories to reconstitue from persistence */
+        const props: CircleProps = {
+            id: input.id,
+            createdAt: input.createdAt,
+            name: input.name,
+            members: input.members,
+            habits: input.habits,
+            photoKey: input.photoKey
+        }
+
+        return new Circle(props);
+    }
+    
+    protected create(props: CircleProps): this {
+        return new Circle(props) as this;
+    }
 }

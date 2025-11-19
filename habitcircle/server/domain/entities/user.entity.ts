@@ -2,27 +2,36 @@ import { IdGenerator } from "@/lib/utils";
 import { Username } from "@/server/domain/value-objects/username.value-object";
 import { EmailAddress } from "@/server/domain/value-objects/email-address.value-object";
 import { Biography } from "@/server/domain/value-objects/biography.value-object";
+import { Entity } from "./entity.abc";
 
-export class User {
-    private constructor(
-        readonly id: string,
-        readonly createdAt: Date,
-        readonly username: Username,
-        readonly emailAddress?: EmailAddress,
-        readonly biography?: Biography, 
-        readonly profilePictureKey?: string 
-    ) {}
+export type UserProps = {
+    id: string,
+    createdAt: Date,
+    username: Username,
+    emailAddress?: EmailAddress,
+    biography?: Biography,
+    profilePictureKey?: string
+}
 
-    static async create(
-        username: Username, 
-        emailAddress?: EmailAddress
-    ): Promise<User> {
-        return new User(
-            IdGenerator.new(),
-            new Date(),
-            username,
-            emailAddress,
-        );
+export type CreateUserInput = {
+    username: Username,
+    emailAddress?: EmailAddress
+}
+
+export class User extends Entity<UserProps> {
+    private constructor(props: UserProps) { super(props); }
+
+    static create(input: CreateUserInput) {
+        const props: UserProps = {
+            id: IdGenerator.new(),
+            createdAt: new Date(),
+            username: input.username,
+            emailAddress: input.emailAddress,
+            biography: undefined,
+            profilePictureKey: undefined
+        }
+
+        return new User(props);
     };
 
     equals(other: User): boolean {
@@ -45,33 +54,36 @@ export class User {
         return this.profilePictureKey?.toString();
     }
 
-    static rehydrate(
-        id: string,
-        createdAt: Date,
-        username: string,
-        emailAddress?: string,
-        biography?: string,
-        profilePictureKey?: string
-    ): User {
+    static rehydrate(props: UserProps): User {
         /* Used exclusively by repositories to reconstitue from persistence */
-        return new User(
-            id, 
-            createdAt, 
-            Username.rehydrate(username), 
-            emailAddress ? EmailAddress.rehydrate(emailAddress) : undefined,
-            biography ? Biography.rehydrate(biography) : undefined,
-            profilePictureKey ? profilePictureKey : undefined,
-        );
+        return new User(props);
     }
 
-    private clone(changes: Partial<User>): User {
-        return new User(
-            changes.id ?? this.id,
-            changes.createdAt ?? this.createdAt,
-            changes.username ?? this.username,
-            changes.emailAddress ?? this.emailAddress,
-            changes.biography ?? this.biography,
-            changes.profilePictureKey ?? this.profilePictureKey
-        )
+    get id(): string {
+        return this.props.id;
+    }
+
+    get createdAt(): Date {
+        return this.props.createdAt;
+    }
+
+    get username(): Username {
+        return this.props.username;
+    }
+
+    get emailAddress(): EmailAddress | undefined {
+        return this.props.emailAddress;
+    }
+
+    get biography(): Biography | undefined {
+        return this.props.biography;
+    }
+
+    get profilePictureKey(): string | undefined {
+        return this.props.profilePictureKey;
+    }
+
+    protected create(props: UserProps): this {
+        return new User(props) as this;
     }
 }

@@ -4,7 +4,7 @@ import { OAuthTokenInfo } from "../../dtos/oauth-token-info.dto";
 import { OAuthIdentityInfo } from "../../dtos/oauth-identity-info.dto";
 
 export class OAuthAuthentication {
-    readonly type = "oauth" as const
+    readonly type = "oauth" as const;
 
     private constructor(
         readonly identity: OAuthIdentity,
@@ -43,9 +43,9 @@ export class OAuthAuthentication {
     }
 
     static rehydrate(
-        identiy: OAuthIdentity,
+        identity: OAuthIdentity,
         tokens: OAuthTokens
     ): OAuthAuthentication {
-        return new OAuthAuthentication(identiy, tokens);
+        return new OAuthAuthentication(identity, tokens);
     }
 }

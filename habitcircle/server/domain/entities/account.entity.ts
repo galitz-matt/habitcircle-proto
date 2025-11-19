@@ -7,22 +7,51 @@ import { CredentialsAuthentication } from "../value-objects/auth/credentials-aut
 import { OAuthIdentity } from "../value-objects/auth/oauth-identity.value-object";
 import { OAuthTokens } from "../value-objects/auth/oauth-tokens.value-object";
 import { OAuthAuthentication } from "../value-objects/auth/oauth-auth.value-object";
+import { Entity } from "./entity.abc";
 
-export class Account {
-    private constructor(
-        readonly id: string,
-        readonly userId: string,
-        readonly auth: AccountAuth
-    ) {}
+export type AccountProps = {
+    id: string,
+    userId: string,
+    auth: AccountAuth
+}
+
+export type CreateAccountWithCredentialsInput = {
+    userId: string,
+    password: Password
+}
+
+export type CreateAccountWithOAuthInput = {
+    userId: string,
+    identity: OAuthIdentity,
+    tokens: OAuthTokens
+}
+
+export class Account extends Entity<AccountProps> {
+
+    private constructor(props: AccountProps) { super(props); }
     
-    static createWithCredentials(userId: string, password: Password): Account {
-        const credentialsAuth = CredentialsAuthentication.create(password);
-        return new Account(IdGenerator.new(), userId, credentialsAuth);
+    static createWithCredentials(input: CreateAccountWithCredentialsInput): Account {
+        const credentialsAuth = CredentialsAuthentication.create(input.password);
+
+        const props: AccountProps = {
+            id: IdGenerator.new(),
+            userId: input.userId,
+            auth: credentialsAuth
+        }
+
+        return new Account(props);
     }
 
-    static createWithOAuth(userId: string, identity: OAuthIdentity, tokens: OAuthTokens) {
-        const oauthAuth = OAuthAuthentication.create(identity, tokens);
-        return new Account(IdGenerator.new(), userId, oauthAuth);
+    static createWithOAuth(input: CreateAccountWithOAuthInput) {
+        const oauthAuth = OAuthAuthentication.create(input.identity, input.tokens);
+
+        const props: AccountProps = {
+            id: IdGenerator.new(),
+            userId: input.userId,
+            auth: oauthAuth
+        }
+
+        return new Account(props);
     }
 
     belongsTo(userId: string): boolean {
@@ -52,23 +81,23 @@ export class Account {
         return this.clone({ auth: newAuth });
     }
 
-    static rehydrate(
-        id: string,
-        userId: string,
-        auth: AccountAuth
-    ): Account {
-        return new Account(
-            id,
-            userId,
-            auth
-        );
+    get id(): string {
+        return this.props.id;
     }
 
-    private clone(changes: Partial<Account>): Account {
-        return new Account(
-            changes.id ?? this.id,
-            changes.userId ?? this.userId,
-            changes.auth ?? this.auth
-        );
+    get userId(): string {
+        return this.props.userId;
+    }
+
+    get auth(): AccountAuth {
+        return this.props.auth;
+    }
+
+    static rehydrate(props: AccountProps): Account {
+        return new Account(props);
+    }
+
+    protected create(props: AccountProps): this {
+        return new Account(props) as this;
     }
 }

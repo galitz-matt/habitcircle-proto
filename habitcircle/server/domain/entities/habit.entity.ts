@@ -1,47 +1,59 @@
 import { IdGenerator } from "@/lib/utils";
 import { HabitName } from "@/server/domain/value-objects/habit-name.value-object";
+import { Entity } from "./entity.abc";
 
-export class Habit {
-    private constructor(
-        readonly id: string,
-        readonly createdAt: Date,
-        readonly name: HabitName,
-        readonly circleId: string,
-    ) {}
+export type HabitProps = {
+    id: string,
+    createdAt: Date,
+    name: HabitName,
+    circleId: string
+}
 
-    static create(habitName: HabitName, circleId: string): Habit {
-        return new Habit(IdGenerator.new(), new Date(), habitName, circleId);
+export type CreateHabitInput = {
+    name: HabitName,
+    circleId: string
+}
+
+export class Habit extends Entity<HabitProps> {
+    private constructor(props: HabitProps) { super(props) }
+
+    static create(input: CreateHabitInput): Habit {
+        const props: HabitProps = {
+            id: IdGenerator.new(),
+            createdAt: new Date(),
+            name: input.name,
+            circleId: input.circleId
+        }
+
+        return new Habit(props);
     }
 
     equals(other: Habit): boolean {
         return !!other && other.id == this.id;
     }
 
-    getName(): string {
-        return this.name.name;
+    get id(): string {
+        return this.props.id;
     }
 
-    static rehydrate(
-        id: string,
-        createdAt: Date,
-        name: string,
-        circleId: string
-    ): Habit {
+    get createdAt(): Date {
+        return this.props.createdAt;
+    }
+
+    get name(): HabitName {
+        return this.props.name;
+    }
+
+    get circleId(): string {
+        return this.props.circleId;
+    }
+
+    static rehydrate(props: HabitProps): Habit {
         /* Used exclusively by repositories to reconstitue from persistence */
-        return new Habit(id, createdAt, HabitName.rehydrate(name), circleId);
+        return new Habit(props);
     }
 
-    setName(name: string): Habit {
-        const updatedName = HabitName.create(name);
-        return this.clone({ name: updatedName })
-    }
-
-    private clone(changes: Partial<Habit>): Habit {
-        return new Habit(
-            changes.id ?? this.id,
-            changes.createdAt ?? this.createdAt,
-            changes.name ?? this.name,
-            changes.circleId ?? this.circleId
-        )
+    protected create(props: HabitProps): this {
+        return new Habit(props) as this;
     }
 }

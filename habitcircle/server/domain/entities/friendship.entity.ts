@@ -11,7 +11,7 @@ export type FriendshipProps = {
     status: FriendshipStatus
 }
 
-export type CreateFriendshipProps = {
+export type CreateFriendshipInput = {
     requesterId: string,
     addresseeId: string
 }
@@ -20,7 +20,7 @@ export class Friendship extends Entity<FriendshipProps> {
 
     private constructor(props: FriendshipProps) { super(props) }
 
-    static create(input: CreateFriendshipProps): Friendship {
+    static create(input: CreateFriendshipInput): Friendship {
         if (input.requesterId === input.addresseeId)
             throw new DomainError("Cannot friend yourself");
 
@@ -41,6 +41,26 @@ export class Friendship extends Entity<FriendshipProps> {
 
     decline(): Friendship {
         return this.clone({ status: FriendshipStatus.DECLINED })
+    }
+
+    get id() {
+        return this.props.id;
+    }
+
+    get createdAt() {
+        return this.props.createdAt;
+    }
+
+    get requesterId() {
+        return this.props.requesterId;
+    }
+
+    get addresseeId() {
+        return this.props.addresseeId;
+    }
+
+    get status(): FriendshipStatus {
+        return this.props.status;
     }
 
     // Used by persistence layer
