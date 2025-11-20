@@ -1,4 +1,4 @@
 export enum DomainAuthType {
-    CREDENTIALS,
-    OAUTH
+    CREDENTIALS = "CREDENTIALS",
+    OAUTH = "OAUTH"
 }

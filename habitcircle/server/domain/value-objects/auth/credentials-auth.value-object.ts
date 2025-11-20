@@ -33,6 +33,8 @@ export class CredentialsAuthentication implements Authentication {
     getAuthInfo(): AuthDto {
         return {
             type: this.type,
+            password: this.password.toString(),
+            passwordVersion: this.passwordVersion,
             failedAttempts: this.failedAttempts,
             emailVerified: this.emailVerified
         }
@@ -60,8 +62,8 @@ export class CredentialsAuthentication implements Authentication {
         return this.password.matches(plain);
     }
 
-    static rehydrate() {
-
+    static rehydrate(props: CredentialsAuthenticationProps): CredentialsAuthentication {
+        return new CredentialsAuthentication(props);
     }
 
     get password(): Password {

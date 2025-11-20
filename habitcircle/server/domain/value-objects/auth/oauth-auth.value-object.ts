@@ -6,19 +6,18 @@ import { DomainAuthType } from "@/server/domain/types/auth-type";
 import { Authentication } from "./authentication.interface";
 import { AuthDto } from "../../dtos/auth/authentication.dto";
 
+export type OAuthAuthenticationProps = {
+    identity: OAuthIdentity,
+    tokens: OAuthTokens
+}
+
 export class OAuthAuthentication implements Authentication {
     readonly type = DomainAuthType.OAUTH;
 
-    private constructor(
-        readonly identity: OAuthIdentity,
-        readonly tokens: OAuthTokens
-    ) {}
+    private constructor(readonly props: OAuthAuthenticationProps) {}
 
-    static create(
-        identity: OAuthIdentity,
-        tokens: OAuthTokens
-    ): OAuthAuthentication {
-        return new OAuthAuthentication(identity, tokens);
+    static create(identity: OAuthIdentity, tokens: OAuthTokens): OAuthAuthentication {
+        return new OAuthAuthentication({ identity, tokens });
     }
 
     getAuthInfo(): AuthDto {
@@ -42,21 +41,30 @@ export class OAuthAuthentication implements Authentication {
 
     refreshTokens(accessToken: string, expiresAt: Date): OAuthAuthentication {
         const newTokens = this.tokens.refresh(accessToken, expiresAt);
-        return new OAuthAuthentication(this.identity, newTokens);
+        return this.clone({ tokens: newTokens })
     }
 
     setIdentity(identity: OAuthIdentity): OAuthAuthentication {
-        return new OAuthAuthentication(identity, this.tokens);
+        return this.clone({ identity: identity })
     }
 
     setTokens(tokens: OAuthTokens): OAuthAuthentication {
-        return new OAuthAuthentication(this.identity, tokens);
+        return this.clone({ tokens: tokens });
     }
 
-    static rehydrate(
-        identity: OAuthIdentity,
-        tokens: OAuthTokens
-    ): OAuthAuthentication {
-        return new OAuthAuthentication(identity, tokens);
+    static rehydrate(props: OAuthAuthenticationProps): OAuthAuthentication {
+        return new OAuthAuthentication(props);
+    }
+
+    get identity() {
+        return this.props.identity;
+    }
+
+    get tokens() {
+        return this.props.tokens;
+    }
+
+    private clone(changes: Partial<OAuthAuthenticationProps>) {
+        return new OAuthAuthentication({ ...this.props, ...changes });
     }
 }
