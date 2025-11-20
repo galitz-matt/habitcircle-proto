@@ -1,0 +1,163 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "./generated"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                    String        @id @default(cuid())
+  createdAt             DateTime      @default(now())
+  updatedAt             DateTime      @updatedAt
+  username              String        @unique @db.Citext
+  emailAddress          String?       @unique @db.Citext
+  biography             String?
+  profilePictureKey     String?
+
+  // Relationships
+  ownedCircles          Circle[]      @relation("CircleOwner")
+  joinedCircles         Circle[]      @relation("CircleMembers")
+  completions           Completion[]  @relation("CompletionUser")
+  posts                 Post[]        @relation("UserPosts")
+
+  // Social (Symmetric)
+  sentFriendships       Friendship[]   @relation("UserSentFriendships")
+  receivedFriendships   Friendship[]   @relation("UserReceivedFriendships")
+
+  // Invites
+  sentCircleInvites     CircleInvite[] @relation("CircleInvitesSender")
+  receivedCircleInvites CircleInvite[] @relation("CircleInvitesRecipient")
+
+  // OAuth Account
+  accounts          Account[]
+}
+
+model Account {
+  id                String        @id @default(cuid())
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
+
+  user              User          @relation(fields: [userId], references: [id])
+  userId            String
+
+  type              AccountType
+
+  // Credentials auth fields
+  hashedPassword    String?
+  passwordVersion   Int?
+  failedAttempts    Int?          @default(0)
+  emailVerified     Boolean?      @default(false)
+
+  // OAuth fields
+  provider          String?
+  providerAccountId String?
+  accessToken       String?
+  refreshToken      String?
+  expiresAt         DateTime?
+
+  @@unique([provider, providerAccountId])
+}
+
+enum AccountType {
+  CREDENTIALS
+  OAUTH
+}
+
+model Friendship {
+  id                String            @id @default(cuid())
+  createdAt         DateTime          @default(now())
+  requester         User              @relation("UserSentFriendships", fields: [requesterId], references: [id])
+  requesterId       String
+  addressee         User              @relation("UserReceivedFriendships", fields: [addresseeId], references: [id])
+  addresseeId       String          
+  status            FriendshipStatus  @default(PENDING)
+
+  @@unique([requesterId, addresseeId])
+}
+
+enum FriendshipStatus {
+  PENDING
+  ACCEPTED
+  DECLINED
+}
+
+model CircleInvite {
+  id                String          @id @default(cuid())
+  createdAt         DateTime        @default(now())
+  sender            User            @relation("CircleInvitesSender", fields: [senderId], references: [id])
+  senderId          String
+  recipient         User            @relation("CircleInvitesRecipient", fields: [recipientId], references: [id])
+  recipientId       String
+  circle            Circle          @relation(fields: [circleId], references: [id])
+  circleId          String
+  status            InviteStatus    @default(PENDING)
+}
+
+enum InviteStatus {
+  PENDING
+  ACCEPTED
+  DECLINED
+}
+
+model Post {
+  id                String        @id @default(cuid())
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
+  user              User          @relation("UserPosts", fields: [userId], references: [id])
+  userId            String        
+  habit             Habit         @relation("HabitPosts", fields: [habitId], references: [id])
+  habitId           String
+  completion        Completion    @relation(fields: [completionId], references: [id])
+  completionId      String       
+  photoKey          String?
+  caption           String?
+
+  @@unique([completionId])
+}
+
+model Habit {
+  id                String        @id @default(cuid())
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
+  name              String
+  circle            Circle        @relation("CircleHabits", fields: [circleId], references: [id])
+  circleId          String
+  completions       Completion[]  @relation("CompletionHabit")
+  posts             Post[]        @relation("HabitPosts")
+}
+
+model Circle {
+  id                String          @id @default(cuid())
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+  name              String
+  photoKey          String?
+  owner             User            @relation("CircleOwner", fields: [ownerId], references: [id])
+  ownerId           String
+  members           User[]          @relation("CircleMembers")
+  habits            Habit[]         @relation("CircleHabits")
+  invites           CircleInvite[]
+}
+
+model Completion {
+  id                String        @id @default(cuid())
+  createdAt         DateTime      @default(now())
+  completedAt       DateTime
+  user              User          @relation("CompletionUser", fields: [userId], references: [id])
+  userId            String
+  habit             Habit         @relation("CompletionHabit", fields: [habitId], references: [id])
+  habitId           String
+  post              Post?
+
+  @@unique([userId, habitId, completedAt])
+}
+
