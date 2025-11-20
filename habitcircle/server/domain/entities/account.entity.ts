@@ -1,19 +1,19 @@
 import { IdGenerator } from "@/lib/utils";
-import { AccountAuth } from "../types/account-auth";
 import { DomainError } from "@/lib/errors";
-import { AuthInfo as AuthenticationInfo } from "../dtos/auth/auth-info.dto";
+import { AuthDto } from "../dtos/auth/authentication.dto";
 import { Password } from "../value-objects/auth/password.value-object";
 import { CredentialsAuthentication } from "../value-objects/auth/credentials-auth.value-object";
 import { OAuthIdentity } from "../value-objects/auth/oauth-identity.value-object";
 import { OAuthTokens } from "../value-objects/auth/oauth-tokens.value-object";
 import { OAuthAuthentication } from "../value-objects/auth/oauth-auth.value-object";
 import { Entity } from "./entity.ac";
-import { AuthType } from "../types/auth-type";
+import { Authentication } from "../value-objects/auth/authentication.ac";
+import { DomainAuthType } from "../types/auth-type";
 
 export type AccountProps = {
     id: string,
     userId: string,
-    auth: AccountAuth
+    auth: Authentication
 }
 
 export type CreateAccountWithCredentialsInput = {
@@ -59,26 +59,16 @@ export class Account extends Entity<AccountProps> {
         return this.userId === userId;
     }
 
-    getAuthInfo(): AuthenticationInfo {
-        if (this.usesCredentials()) {
-            return {
-                type: "credentials",
-                failedAttempts: this.auth.failedAttempts,
-                emailVerified: this.auth.emailVerified
-            }
-        }
-        return {
-            type: "oauth",
-            identityInfo: this.auth.getIdentityInfo(),
-            tokenInfo: this.auth.getTokenInfo()
-        }
+    getAuthInfo(): AuthDto {
+        return this.auth.getAuthInfo();
     }
 
     refreshTokens(accessToken: string, expiresAt: Date): Account {
-        if (this.usesCredentials())
+        if (this.auth.type !== DomainAuthType.OAUTH)
             throw new DomainError("Account is not using OAuth authentication");
 
-        const newAuth = this.auth.refreshTokens(accessToken, expiresAt);
+        const newAuth = (this.auth as OAuthAuthentication)
+            .refreshTokens(accessToken, expiresAt);
         return this.clone({ auth: newAuth });
     }
 
@@ -90,7 +80,7 @@ export class Account extends Entity<AccountProps> {
         return this.props.userId;
     }
 
-    get auth(): AccountAuth {
+    get auth(): Authentication {
         return this.props.auth;
     }
 

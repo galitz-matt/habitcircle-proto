@@ -1,17 +1,28 @@
 import { Password } from "@/server/domain/value-objects/auth/password.value-object";
+import { DomainAuthType } from "@/server/domain/types/auth-type";
+import { Authentication } from "./authentication.ac";
+import { AuthDto } from "../../dtos/auth/authentication.dto";
 
-export class CredentialsAuthentication {
-    readonly type = "credentials" as const;
+export class CredentialsAuthentication extends Authentication {
+    readonly type = DomainAuthType.CREDENTIALS;
     
     private constructor(
         readonly password: Password,
         readonly passwordVersion: number,
         readonly failedAttempts: number,
         readonly emailVerified: boolean,
-    ) {}
+    ) { super() }
 
     static create(password: Password): CredentialsAuthentication {
         return new CredentialsAuthentication(password, 1, 0, false);
+    }
+
+    getAuthInfo(): AuthDto {
+        return {
+            type: this.type,
+            failedAttempts: this.failedAttempts,
+            emailVerified: this.emailVerified
+        }
     }
 
     changePassword(hash: string): CredentialsAuthentication {

@@ -1,5 +1,5 @@
 import { DomainError } from "@/lib/errors";
-import { OAuthTokenInfo } from "@/server/domain/dtos/auth/oauth-token-info.dto";
+import { OAuthTokenDto } from "@/server/domain/dtos/auth/oauth-token.dto";
 
 export class OAuthTokens {
     private constructor(
@@ -37,7 +37,7 @@ export class OAuthTokens {
         return OAuthTokens.create(accessToken, this.refreshToken, expiresAt ?? this.expiresAt);
     }
 
-    toInfo(): OAuthTokenInfo {
+    toInfo(): OAuthTokenDto {
         return {
             accessToken: this.accessToken,
             refreshToken: this.refreshToken ?? undefined,
