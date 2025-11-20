@@ -1,4 +1,4 @@
-export type UserPrimitive = {
+export type UserPersistenceDto = {
     id: string,
     createdAt: Date,
     username: string,

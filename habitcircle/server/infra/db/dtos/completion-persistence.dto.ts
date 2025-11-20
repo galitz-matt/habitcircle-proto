@@ -1,4 +1,4 @@
-export type CompletionPrimitive = {
+export type CompletionPersistenceDto = {
     id: string,
     createdAt: Date,
     completedAt: Date,

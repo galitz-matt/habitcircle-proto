@@ -1,4 +1,4 @@
-export type CirclePrimitive = {
+export type CirclePersistenceDto = {
     id: string;
     name: string;
     createdAt: Date;
