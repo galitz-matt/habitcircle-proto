@@ -1,4 +1,4 @@
-export enum InviteStaus {
+export enum InviteStatus {
     PENDING,
     ACCEPTED,
     DECLINED

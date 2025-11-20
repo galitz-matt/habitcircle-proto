@@ -1,4 +1,4 @@
-import { InviteStatus } from "@/server/infrastructure/db/prisma/generated"
+import { InviteStatus } from "@/server/domain/types/invite-status"
 import { Entity } from "./entity.abc"
 import { IdGenerator } from "@/lib/utils"
 
