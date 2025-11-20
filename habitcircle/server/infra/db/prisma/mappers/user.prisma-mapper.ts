@@ -1,6 +1,6 @@
 import { User } from "@/server/domain/entities/user.entity";
 import type { User as UserRecord } from "@/prisma/generated"
-import { UserPrimitive } from "../../dtos/user-primitive.dto";
+import { UserPersistenceDto } from "../../dtos/user-persistence.dto";
 
 
 export class UserPrismaMapper {
@@ -15,7 +15,7 @@ export class UserPrismaMapper {
         );
     }
 
-    static toPersistence(user: User): UserPrimitive {
+    static toPersistence(user: User): UserPersistenceDto {
         return {
             id: user.id,
             createdAt: user.createdAt,

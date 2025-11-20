@@ -2,7 +2,7 @@ import { Circle } from "@/server/domain/entities/circle.entity";
 import { User } from "@/server/domain/entities/user.entity";
 import { Habit } from "@/server/domain/entities/habit.entity";
 import type { Prisma } from "@/prisma/generated"
-import { CirclePrimitive } from "@/server/infra/db/dtos/circle-primitive.dto";
+import { CirclePersistenceDto } from "@/server/infra/db/dtos/circle-persistence.dto";
 
 type CircleRecordWithRelations = Prisma.CircleGetPayload<{
     include: { owner: true; members: true; habits: true }
@@ -44,7 +44,7 @@ export class CirclePrismaMapper {
         );
     }
 
-    static toPersistence(circle: Circle): CirclePrimitive {
+    static toPersistence(circle: Circle): CirclePersistenceDto {
         return {
             id: circle.id,
             name: circle.name.get(),
