@@ -1,5 +1,5 @@
 import { IdGenerator } from "@/lib/utils";
-import { Entity } from "./entity.abc";
+import { Entity } from "./entity.ac";
 
 export type CompletionProps = {
     id: string,

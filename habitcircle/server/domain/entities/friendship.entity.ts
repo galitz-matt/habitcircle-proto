@@ -1,7 +1,7 @@
 import { DomainError } from "@/lib/errors";
 import { IdGenerator } from "@/lib/utils";
 import { FriendshipStatus } from "@/server/domain/types/friendship-status";
-import { Entity } from "./entity.abc";
+import { Entity } from "./entity.ac";
 
 export type FriendshipProps = {
     id: string,

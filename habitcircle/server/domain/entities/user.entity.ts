@@ -2,7 +2,7 @@ import { IdGenerator } from "@/lib/utils";
 import { Username } from "@/server/domain/value-objects/username.value-object";
 import { EmailAddress } from "@/server/domain/value-objects/email-address.value-object";
 import { Biography } from "@/server/domain/value-objects/biography.value-object";
-import { Entity } from "./entity.abc";
+import { Entity } from "./entity.ac";
 
 export type UserProps = {
     id: string,

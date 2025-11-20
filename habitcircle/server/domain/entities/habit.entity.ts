@@ -1,6 +1,6 @@
 import { IdGenerator } from "@/lib/utils";
 import { HabitName } from "@/server/domain/value-objects/habit-name.value-object";
-import { Entity } from "./entity.abc";
+import { Entity } from "./entity.ac";
 
 export type HabitProps = {
     id: string,

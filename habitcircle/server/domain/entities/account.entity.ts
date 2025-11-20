@@ -7,7 +7,8 @@ import { CredentialsAuthentication } from "../value-objects/auth/credentials-aut
 import { OAuthIdentity } from "../value-objects/auth/oauth-identity.value-object";
 import { OAuthTokens } from "../value-objects/auth/oauth-tokens.value-object";
 import { OAuthAuthentication } from "../value-objects/auth/oauth-auth.value-object";
-import { Entity } from "./entity.abc";
+import { Entity } from "./entity.ac";
+import { AuthType } from "../types/auth-type";
 
 export type AccountProps = {
     id: string,
@@ -59,7 +60,7 @@ export class Account extends Entity<AccountProps> {
     }
 
     getAuthInfo(): AuthenticationInfo {
-        if (this.auth.type === "credentials") {
+        if (this.usesCredentials()) {
             return {
                 type: "credentials",
                 failedAttempts: this.auth.failedAttempts,
@@ -74,7 +75,7 @@ export class Account extends Entity<AccountProps> {
     }
 
     refreshTokens(accessToken: string, expiresAt: Date): Account {
-        if (this.auth.type !== "oauth")
+        if (this.usesCredentials())
             throw new DomainError("Account is not using OAuth authentication");
 
         const newAuth = this.auth.refreshTokens(accessToken, expiresAt);
@@ -100,4 +101,5 @@ export class Account extends Entity<AccountProps> {
     protected create(props: AccountProps): this {
         return new Account(props) as this;
     }
+
 }

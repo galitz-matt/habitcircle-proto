@@ -1,5 +1,5 @@
 import { InviteStatus } from "@/server/domain/types/invite-status"
-import { Entity } from "./entity.abc"
+import { Entity } from "./entity.ac"
 import { IdGenerator } from "@/lib/utils"
 
 export type CircleInviteProps = {

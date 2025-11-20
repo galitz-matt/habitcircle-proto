@@ -1,6 +1,6 @@
 import { IdGenerator } from "@/lib/utils";
 import { PostCaption } from "../value-objects/post-caption.value-object";
-import { Entity } from "./entity.abc";
+import { Entity } from "./entity.ac";
 
 export type PostProps = {
     id: string,
