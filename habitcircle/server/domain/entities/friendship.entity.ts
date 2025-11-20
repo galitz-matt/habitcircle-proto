@@ -1,7 +1,6 @@
 import { DomainError } from "@/lib/errors";
 import { IdGenerator } from "@/lib/utils";
 import { FriendshipStatus } from "@/server/domain/types/friendship-status";
-import { Entity } from "./entity.ac";
 
 export type FriendshipProps = {
     id: string,
@@ -16,9 +15,9 @@ export type CreateFriendshipInput = {
     addresseeId: string
 }
 
-export class Friendship extends Entity<FriendshipProps> {
+export class Friendship {
 
-    private constructor(props: FriendshipProps) { super(props) }
+    private constructor(readonly props: FriendshipProps) {}
 
     static create(input: CreateFriendshipInput): Friendship {
         if (input.requesterId === input.addresseeId)
@@ -68,8 +67,7 @@ export class Friendship extends Entity<FriendshipProps> {
         return new Friendship(props);
     }
 
-    // Internal constructor for clone() -> used by ABC
-    protected create(props: FriendshipProps): this {
-        return new Friendship(props) as this;
+    private clone(changes: Partial<FriendshipProps>): Friendship {
+        return new Friendship({ ...this.props, ...changes });
     }
 }

@@ -1,5 +1,4 @@
 import { InviteStatus } from "@/server/domain/types/invite-status"
-import { Entity } from "./entity.ac"
 import { IdGenerator } from "@/lib/utils"
 
 export type CircleInviteProps = {
@@ -17,9 +16,9 @@ export type CreateCircleInviteInput = {
     circleId: string
 }
 
-export class CircleInvite extends Entity<CircleInviteProps> {
+export class CircleInvite {
 
-    private constructor(props: CircleInviteProps) { super(props) }
+    private constructor(readonly props: CircleInviteProps) {}
 
     static create(input: CreateCircleInviteInput): CircleInvite {
         const props: CircleInviteProps = {
@@ -46,7 +45,7 @@ export class CircleInvite extends Entity<CircleInviteProps> {
         return new CircleInvite(props);
     }
 
-    protected create(props: CircleInviteProps): this {
-        return new CircleInvite(props) as this;
+    private clone(changes: Partial<CircleInviteProps>): CircleInvite {
+        return new CircleInvite({ ...this.props, ...changes });
     }
 }

@@ -1,20 +1,33 @@
 import { Password } from "@/server/domain/value-objects/auth/password.value-object";
 import { DomainAuthType } from "@/server/domain/types/auth-type";
-import { Authentication } from "./authentication.ac";
+import { Authentication } from "./authentication.interface";
 import { AuthDto } from "../../dtos/auth/authentication.dto";
 
-export class CredentialsAuthentication extends Authentication {
+export type CredentialsAuthenticationProps = {
+    password: Password,
+    passwordVersion: number,
+    failedAttempts: number,
+    emailVerified: boolean
+}
+
+const VERSION_ONE = 1;
+const NO_ATTEMPTS = 0;
+const NOT_VERIFIED = false;
+
+export class CredentialsAuthentication implements Authentication {
     readonly type = DomainAuthType.CREDENTIALS;
     
-    private constructor(
-        readonly password: Password,
-        readonly passwordVersion: number,
-        readonly failedAttempts: number,
-        readonly emailVerified: boolean,
-    ) { super() }
+    private constructor(readonly props: CredentialsAuthenticationProps) {}
 
     static create(password: Password): CredentialsAuthentication {
-        return new CredentialsAuthentication(password, 1, 0, false);
+        const props: CredentialsAuthenticationProps = {
+            password: password,
+            passwordVersion: VERSION_ONE,
+            failedAttempts: NO_ATTEMPTS,
+            emailVerified: NOT_VERIFIED
+        }
+
+        return new CredentialsAuthentication(props);
     }
 
     getAuthInfo(): AuthDto {
@@ -43,16 +56,35 @@ export class CredentialsAuthentication extends Authentication {
         return this.clone({ emailVerified: isVerified });
     }
     
-    async verifyPassword(plain: string): Promise<boolean> {
+    verifyPassword(plain: string): boolean {
         return this.password.matches(plain);
     }
 
-    private clone(changes: Partial<CredentialsAuthentication>): CredentialsAuthentication {
-        return new CredentialsAuthentication(
-            changes.password ?? this.password,
-            changes.passwordVersion ?? this.passwordVersion,
-            changes.failedAttempts ?? this.failedAttempts,
-            changes.emailVerified ?? this.emailVerified
-        )
+    static rehydrate() {
+
+    }
+
+    get password(): Password {
+        return this.props.password;
+    }
+
+    get passwordVersion(): number {
+        return this.props.passwordVersion;
+    }
+
+    get failedAttempts(): number {
+        return this.props.failedAttempts;
+    }
+
+    get emailVerified(): boolean {
+        return this.props.emailVerified;
+    }
+
+    protected create(props: CredentialsAuthenticationProps): this {
+        return new CredentialsAuthentication(props) as this;
+    }
+
+    private clone(changes: Partial<CredentialsAuthenticationProps>) {
+        return new CredentialsAuthentication({...this.props, ...changes});
     }
 }

@@ -3,16 +3,16 @@ import { OAuthTokens } from "./oauth-tokens.value-object";
 import { OAuthTokenDto } from "@/server/domain/dtos/auth/oauth-token.dto";
 import { OAuthIdentityDto } from "@/server/domain/dtos/auth/oauth-identity.dto";
 import { DomainAuthType } from "@/server/domain/types/auth-type";
-import { Authentication } from "./authentication.ac";
+import { Authentication } from "./authentication.interface";
 import { AuthDto } from "../../dtos/auth/authentication.dto";
 
-export class OAuthAuthentication extends Authentication {
+export class OAuthAuthentication implements Authentication {
     readonly type = DomainAuthType.OAUTH;
 
     private constructor(
         readonly identity: OAuthIdentity,
         readonly tokens: OAuthTokens
-    ) { super() }
+    ) {}
 
     static create(
         identity: OAuthIdentity,

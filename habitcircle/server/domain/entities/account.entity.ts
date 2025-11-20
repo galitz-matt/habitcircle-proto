@@ -6,8 +6,7 @@ import { CredentialsAuthentication } from "../value-objects/auth/credentials-aut
 import { OAuthIdentity } from "../value-objects/auth/oauth-identity.value-object";
 import { OAuthTokens } from "../value-objects/auth/oauth-tokens.value-object";
 import { OAuthAuthentication } from "../value-objects/auth/oauth-auth.value-object";
-import { Entity } from "./entity.ac";
-import { Authentication } from "../value-objects/auth/authentication.ac";
+import { Authentication } from "../value-objects/auth/authentication.interface";
 import { DomainAuthType } from "../types/auth-type";
 
 export type AccountProps = {
@@ -27,9 +26,9 @@ export type CreateAccountWithOAuthInput = {
     tokens: OAuthTokens
 }
 
-export class Account extends Entity<AccountProps> {
+export class Account {
 
-    private constructor(props: AccountProps) { super(props); }
+    private constructor(readonly props: AccountProps) {}
     
     static createWithCredentials(input: CreateAccountWithCredentialsInput): Account {
         const credentialsAuth = CredentialsAuthentication.create(input.password);
@@ -88,8 +87,7 @@ export class Account extends Entity<AccountProps> {
         return new Account(props);
     }
 
-    protected create(props: AccountProps): this {
-        return new Account(props) as this;
+    private clone(changes: Partial<AccountProps>) {
+        return new Account({...this.props, ...changes});
     }
-
 }

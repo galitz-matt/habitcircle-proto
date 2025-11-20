@@ -1,6 +1,5 @@
 import { IdGenerator } from "@/lib/utils";
 import { HabitName } from "@/server/domain/value-objects/habit-name.value-object";
-import { Entity } from "./entity.ac";
 
 export type HabitProps = {
     id: string,
@@ -14,8 +13,8 @@ export type CreateHabitInput = {
     circleId: string
 }
 
-export class Habit extends Entity<HabitProps> {
-    private constructor(props: HabitProps) { super(props) }
+export class Habit {
+    private constructor(readonly props: HabitProps) {}
 
     static create(input: CreateHabitInput): Habit {
         const props: HabitProps = {
@@ -53,7 +52,7 @@ export class Habit extends Entity<HabitProps> {
         return new Habit(props);
     }
 
-    protected create(props: HabitProps): this {
-        return new Habit(props) as this;
+    private clone(changes: Partial<HabitProps>): Habit {
+        return new Habit({ ...this.props, ...changes });
     }
 }

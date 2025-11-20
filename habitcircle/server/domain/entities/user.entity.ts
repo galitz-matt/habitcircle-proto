@@ -2,7 +2,6 @@ import { IdGenerator } from "@/lib/utils";
 import { Username } from "@/server/domain/value-objects/username.value-object";
 import { EmailAddress } from "@/server/domain/value-objects/email-address.value-object";
 import { Biography } from "@/server/domain/value-objects/biography.value-object";
-import { Entity } from "./entity.ac";
 
 export type UserProps = {
     id: string,
@@ -18,8 +17,8 @@ export type CreateUserInput = {
     emailAddress?: EmailAddress
 }
 
-export class User extends Entity<UserProps> {
-    private constructor(props: UserProps) { super(props); }
+export class User {
+    private constructor(readonly props: UserProps) {}
 
     static create(input: CreateUserInput) {
         const props: UserProps = {
@@ -83,7 +82,7 @@ export class User extends Entity<UserProps> {
         return this.props.profilePictureKey;
     }
 
-    protected create(props: UserProps): this {
-        return new User(props) as this;
+    private clone(changes: Partial<User>) {
+        return new User({ ...this.props, ...changes });
     }
 }

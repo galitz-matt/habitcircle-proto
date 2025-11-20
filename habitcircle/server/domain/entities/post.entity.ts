@@ -1,6 +1,5 @@
 import { IdGenerator } from "@/lib/utils";
 import { PostCaption } from "../value-objects/post-caption.value-object";
-import { Entity } from "./entity.ac";
 
 export type PostProps = {
     id: string,
@@ -20,8 +19,8 @@ export type CreatePostInput = {
     caption?: PostCaption
 }
 
-export class Post extends Entity<PostProps> {
-    private constructor(props: PostProps) { super(props) }
+export class Post {
+    private constructor(readonly props: PostProps) {}
 
     static create(input: CreatePostInput): Post {
         const props: PostProps = {

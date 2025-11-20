@@ -1,5 +1,4 @@
 import { IdGenerator } from "@/lib/utils";
-import { Entity } from "./entity.ac";
 
 export type CompletionProps = {
     id: string,
@@ -14,8 +13,8 @@ export type CreateCompletionInput = {
     habitId: string,
 }
 
-export class Completion extends Entity<CompletionProps> {
-    private constructor(props: CompletionProps) { super(props) }
+export class Completion {
+    private constructor(readonly props: CompletionProps) {}
 
     static create(input: CreateCompletionInput): Completion {
         const completedAt = new Date();
@@ -55,9 +54,5 @@ export class Completion extends Entity<CompletionProps> {
 
     get habitId() {
         return this.props.habitId;
-    }
-
-    protected create(props: CompletionProps): this {
-        return new Completion(props) as this
     }
 }

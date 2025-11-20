@@ -4,7 +4,6 @@ import { User } from "@/server/domain/entities/user.entity"
 import { CircleName } from "@/server/domain/value-objects/circle-name.value-object";
 import { CircleMembers } from "@/server/domain/value-objects/circle-members.value-object";
 import { CircleHabits } from "@/server/domain/value-objects/circle-habits.value-object";
-import { Entity } from "./entity.ac";
 
 export type CircleProps = {
     id: string,
@@ -22,9 +21,9 @@ export type CreateCircleInput = {
     photoKey?: string
 }
 
-export class Circle extends Entity<CircleProps> {
+export class Circle {
 
-    private constructor(props: CircleProps) { super(props); }
+    private constructor(readonly props: CircleProps) {}
 
     static create(input: CreateCircleInput): Circle {
         const props: CircleProps = {
@@ -147,7 +146,7 @@ export class Circle extends Entity<CircleProps> {
         return new Circle(props);
     }
     
-    protected create(props: CircleProps): this {
-        return new Circle(props) as this;
+    private clone(changes: Partial<CircleProps>): Circle {
+        return new Circle({ ...this.props, ...changes });
     }
 }
