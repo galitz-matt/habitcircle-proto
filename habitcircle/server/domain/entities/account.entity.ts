@@ -1,93 +1,76 @@
 import { IdGenerator } from "@/lib/utils";
 import { DomainError } from "@/lib/errors";
-import { AuthDto } from "../dtos/auth/authentication.dto";
+import { AuthenticationDto } from "../dtos/auth/authentication.dto";
 import { Password } from "../value-objects/auth/password.value-object";
-import { CredentialsAuthentication } from "../value-objects/auth/credentials-auth.value-object";
+import { CredentialsAuthentication } from "./credentials-auth.entity";
 import { OAuthIdentity } from "../value-objects/auth/oauth-identity.value-object";
 import { OAuthTokens } from "../value-objects/auth/oauth-tokens.value-object";
-import { OAuthAuthentication } from "../value-objects/auth/oauth-auth.value-object";
-import { Authentication } from "../value-objects/auth/authentication.interface";
-import { DomainAuthType } from "../types/auth-type";
-
-export type AccountProps = {
-    id: string,
-    userId: string,
-    auth: Authentication
-}
-
-export type CreateAccountWithCredentialsInput = {
-    userId: string,
-    password: Password
-}
-
-export type CreateAccountWithOAuthInput = {
-    userId: string,
-    identity: OAuthIdentity,
-    tokens: OAuthTokens
-}
+import { OAuthAuthentication } from "./oauth-auth.entity";
+import { Authentication } from "./authentication.interface";
 
 export class Account {
 
-    private constructor(readonly props: AccountProps) {}
+    private constructor(
+        private readonly _id: string,
+        private readonly _userId: string,
+        private readonly _auth: Authentication
+    ) {}
     
-    static createWithCredentials(input: CreateAccountWithCredentialsInput): Account {
-        const credentialsAuth = CredentialsAuthentication.create(input.password);
+    static createWithCredentials(
+        userId: string, 
+        password: Password
+    ): Account {
+        const credentialsAuth = CredentialsAuthentication.create(password);
 
-        const props: AccountProps = {
-            id: IdGenerator.new(),
-            userId: input.userId,
-            auth: credentialsAuth
-        }
-
-        return new Account(props);
+        return new Account(
+            IdGenerator.new(),
+            userId,
+            credentialsAuth
+        );
     }
 
-    static createWithOAuth(input: CreateAccountWithOAuthInput) {
-        const oauthAuth = OAuthAuthentication.create(input.identity, input.tokens);
+    static createWithOAuth(
+        userId: string, 
+        identity: OAuthIdentity,
+        tokens: OAuthTokens
+    ) {
+        const oauthAuth = OAuthAuthentication.create(identity, tokens);
 
-        const props: AccountProps = {
-            id: IdGenerator.new(),
-            userId: input.userId,
-            auth: oauthAuth
-        }
-
-        return new Account(props);
+        return new Account(
+            IdGenerator.new(),
+            userId,
+            oauthAuth
+        );
     }
 
     belongsTo(userId: string): boolean {
-        return this.userId === userId;
+        return this._userId === userId;
     }
 
-    getAuthInfo(): AuthDto {
-        return this.auth.getAuthInfo();
+    getAuthInfo(): AuthenticationDto {
+        return this._auth.getAuthInfo();
     }
 
-    refreshTokens(accessToken: string, expiresAt: Date): Account {
-        if (this.auth.type !== DomainAuthType.OAUTH)
-            throw new DomainError("Account is not using OAuth authentication");
-
-        const newAuth = (this.auth as OAuthAuthentication)
-            .refreshTokens(accessToken, expiresAt);
-        return this.clone({ auth: newAuth });
+    refreshTokens(accessToken: string, expiresAt: Date): this {
+        if (typeof this._auth.refreshTokens !== "function")
+            throw new DomainError("This authentication method cannot refresh tokens.")
+            
+        this._auth.refreshTokens(accessToken, expiresAt);
+        return this;
     }
 
-    get id(): string {
-        return this.props.id;
-    }
-
-    get userId(): string {
-        return this.props.userId;
-    }
-
-    get auth(): Authentication {
-        return this.props.auth;
-    }
-
-    static rehydrate(props: AccountProps): Account {
-        return new Account(props);
-    }
-
-    private clone(changes: Partial<AccountProps>) {
-        return new Account({...this.props, ...changes});
+    static rehydrate(
+        id: string,
+        userId: string,
+        auth: Authentication
+    ): Account {
+        if (!auth)
+            throw new DomainError("Authentication method must be defined");
+        
+        return new Account(
+            id,
+            userId,
+            auth
+        );
     }
 }

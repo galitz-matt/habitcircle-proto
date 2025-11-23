@@ -1,6 +1,6 @@
 import { Account } from "@/server/domain/entities/account.entity";
-import { CredentialsAuthentication } from "@/server/domain/value-objects/auth/credentials-auth.value-object";
-import { OAuthAuthentication } from "@/server/domain/value-objects/auth/oauth-auth.value-object";
+import { CredentialsAuthentication } from "@/server/domain/entities/credentials-auth.entity";
+import { OAuthAuthentication } from "@/server/domain/entities/oauth-auth.entity";
 import { OAuthIdentity } from "@/server/domain/value-objects/auth/oauth-identity.value-object";
 import { OAuthTokens } from "@/server/domain/value-objects/auth/oauth-tokens.value-object";
 import { Password } from "@/server/domain/value-objects/auth/password.value-object";
@@ -90,11 +90,11 @@ export class AccountPrismaMapper {
             id: account.id,
             userId: account.userId,
             authType: authInfo.type,
-            provider: authInfo.identityInfo.provider,
-            providerAccountId: authInfo.identityInfo.providerAccountId,
-            accessToken: authInfo.tokenInfo.accessToken,
-            refreshToken: authInfo.tokenInfo.refreshToken ?? null,
-            expiresAt: authInfo.tokenInfo.expiresAt ?? null,
+            provider: authInfo.identity.provider,
+            providerAccountId: authInfo.identity.providerAccountId,
+            accessToken: authInfo.token.accessToken,
+            refreshToken: authInfo.token.refreshToken ?? null,
+            expiresAt: authInfo.token.expiresAt ?? null,
 
             hashedPassword: null,
             passwordVersion: null,
