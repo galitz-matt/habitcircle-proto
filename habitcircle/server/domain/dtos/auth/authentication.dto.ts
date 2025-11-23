@@ -8,7 +8,6 @@ export type AuthenticationDto =
 
 export type CredentialsAuthDto = {
     type: DomainAuthType.CREDENTIALS;
-    password: string;
     passwordVersion: number;
     failedAttempts: number;
     emailVerified: boolean;
