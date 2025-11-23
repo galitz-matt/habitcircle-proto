@@ -3,13 +3,6 @@ import { DomainAuthType } from "@/server/domain/types/auth-type";
 import { Authentication } from "./authentication.interface";
 import { AuthenticationDto } from "../dtos/auth/authentication.dto";
 
-export type CredentialsAuthenticationProps = {
-    password: Password,
-    passwordVersion: number,
-    failedAttempts: number,
-    emailVerified: boolean
-}
-
 const VERSION_ZERO = 0;
 const NO_ATTEMPTS = 0;
 const NOT_VERIFIED = false;
@@ -63,8 +56,8 @@ export class CredentialsAuthentication implements Authentication {
         return this;
     }
 
-    verifyPassword(password: string): boolean {
-        return this._password.matches(password);
+    verifyPassword(password: Password): boolean {
+        return this._password.equals(password);
     }
 
     static rehydrate(

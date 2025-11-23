@@ -28,7 +28,7 @@ export class OAuthAuthentication implements Authentication {
     }
 
     refreshTokens(accessToken: string, expiresAt: Date): this {
-        this._tokens = this._tokens.refresh(accessToken, expiresAt);
+        this._tokens = this._tokens.update(accessToken, expiresAt);
         return this;
     }
 
