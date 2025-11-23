@@ -2,7 +2,7 @@ import { DomainAuthType } from "../../types/auth-type";
 import { OAuthIdentityDto } from "./oauth-identity.dto";
 import { OAuthTokenDto } from "./oauth-token.dto";
 
-export type AuthDto = 
+export type AuthenticationDto = 
     | CredentialsAuthDto
     | OAuthAuthDto
 
@@ -16,6 +16,6 @@ export type CredentialsAuthDto = {
 
 export type OAuthAuthDto = {
     type: DomainAuthType.OAUTH;
-    identityInfo: OAuthIdentityDto;
-    tokenInfo: OAuthTokenDto;
+    identity: OAuthIdentityDto;
+    token: OAuthTokenDto;
 }
