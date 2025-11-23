@@ -3,8 +3,10 @@ import { HashInvariants } from "../../invariants/hash.invariant";
 export class Password {
 
     private constructor(
-        private readonly hash: string, 
-    ) {}
+        private readonly _hash: string, 
+    ) {
+        Object.freeze(this);
+    }
 
     static fromHash(hash: string): Password {
         HashInvariants.enforce(hash);
@@ -12,15 +14,15 @@ export class Password {
     }
 
     toString(): string {
-        return this.hash;
+        return this._hash;
     }
 
     equals(other: Password): boolean {
-        return !!other && this.hash === other.toString();
+        return !!other && this._hash === other.toString();
     }
 
-    matches(otherHash: string): boolean {
-        return otherHash === this.hash;
+    change(hash: string): Password {
+        return Password.fromHash(hash);
     }
 
     static rehydrate(hash: string): Password {

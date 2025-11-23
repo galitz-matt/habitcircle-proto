@@ -1,24 +1,21 @@
-import { DomainError } from "@/lib/errors";
 import { OAuthTokenDto } from "@/server/domain/dtos/auth/oauth-token.dto";
+import { OAuthTokensInvariants } from "../../invariants/auth/oauth-tokens.invariant";
 
 export class OAuthTokens {
     private constructor(
         readonly accessToken: string,
         readonly refreshToken?: string,
         readonly expiresAt?: Date
-    ) {}
+    ) {
+        Object.freeze(this);
+    }
 
     static create(
         accessToken: string,
         refreshToken?: string,
         expiresAt?: Date
     ): OAuthTokens {
-        if (accessToken.trim().length === 0) 
-            throw new DomainError("Access token cannot be empty");
-        if (expiresAt && expiresAt <= new Date()) {
-            throw new DomainError("Expiration date must be in the future");
-        }
-        
+        OAuthTokensInvariants.enforce(accessToken, refreshToken, expiresAt);
         return new OAuthTokens(accessToken, refreshToken, expiresAt);
     }
 
@@ -30,10 +27,10 @@ export class OAuthTokens {
     }
 
     isExpired(): boolean {
-        return this.expiresAt ? this.expiresAt <= new Date() : false;
+        return !!this.expiresAt ? this.expiresAt <= new Date() : false;
     }
 
-    refresh(accessToken: string, expiresAt?: Date) {
+    update(accessToken: string, expiresAt?: Date) {
         return OAuthTokens.create(accessToken, this.refreshToken, expiresAt ?? this.expiresAt);
     }
 
@@ -50,6 +47,7 @@ export class OAuthTokens {
         refreshToken?: string, 
         expiresAt?: Date
     ): OAuthTokens {
+        OAuthTokensInvariants.enforce(accessToken, refreshToken, expiresAt);
         return new OAuthTokens(
             accessToken,
             refreshToken,

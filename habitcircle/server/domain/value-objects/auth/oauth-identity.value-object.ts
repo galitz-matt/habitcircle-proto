@@ -1,18 +1,24 @@
 import { StringUtils } from "@/lib/utils";
+import { OAuthIdentityDto } from "../../dtos/auth/oauth-identity.dto";
 
 export class OAuthIdentity {
     private constructor(
         readonly provider: string,
         readonly providerAccountId: string
-    ) {}
+    ) {
+        Object.freeze(this);
+    }
 
     static create(provider: string, providerAccountId: string): OAuthIdentity {
-        if (!provider || !providerAccountId) {
-            throw new Error("Extenal Identity must include provider and providerAccountId");
-        }
-
         const normalizedProvider = StringUtils.normalize(provider).toLowerCase();
         return new OAuthIdentity(normalizedProvider, providerAccountId);
+    }
+
+    toInfo(): OAuthIdentityDto {
+        return {
+            provider: this.provider,
+            providerAccountId: this.providerAccountId
+        };
     }
 
     equals(other: OAuthIdentity): boolean {
