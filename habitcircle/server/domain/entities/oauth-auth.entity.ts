@@ -8,11 +8,9 @@ export class OAuthAuthentication implements Authentication {
     readonly type = DomainAuthType.OAUTH;
 
     private constructor(
-        private _identity: OAuthIdentity,
+        readonly identity: OAuthIdentity,
         private _tokens: OAuthTokens
-    ) {
-        Object.freeze(this);
-    }
+    ) {}
 
     static create(identity: OAuthIdentity, tokens: OAuthTokens): OAuthAuthentication {
         return new OAuthAuthentication(
@@ -24,18 +22,18 @@ export class OAuthAuthentication implements Authentication {
     getAuthInfo(): AuthenticationDto {
         return {
             type: this.type,
-            identity: this._identity.toInfo(),
+            identity: this.identity.toInfo(),
             token: this._tokens.toInfo()
         }
     }
 
-    refreshTokens(accessToken: string, expiresAt: Date): OAuthAuthentication {
-        const newTokens = this._tokens.refresh(accessToken, expiresAt);
+    refreshTokens(accessToken: string, expiresAt: Date): this {
+        this._tokens = this._tokens.refresh(accessToken, expiresAt);
+        return this;
+    }
 
-        return new OAuthAuthentication(
-            this._identity,
-            newTokens
-        )
+    get tokens() {
+        return this._tokens;
     }
 
     static rehydrate(
