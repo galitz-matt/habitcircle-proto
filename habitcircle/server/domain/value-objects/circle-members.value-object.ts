@@ -7,8 +7,10 @@ export class CircleMembers {
         readonly owner: User,
         readonly members: User[]
     ) {
+        const clone = [...members];
+        Object.freeze(clone);
+        this.members = clone;
         Object.freeze(this);
-        Object.freeze(members);
     }
 
     static create(owner: User, members: User[]): CircleMembers {
@@ -49,6 +51,9 @@ export class CircleMembers {
     }
 
     removeManyById(userIds: string[]): CircleMembers {
+        if (userIds.includes(this.owner.id))
+            throw new DomainError("Cannot remove owner. Use setOwner first.");
+
         const updatedMembers = this.members.filter(
             m => !userIds.some(id => id === m.id)
         );

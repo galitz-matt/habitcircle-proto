@@ -5,8 +5,10 @@ export class CircleHabits {
     private constructor(
         readonly habits: Habit[]
     ) {
+        const clone = [...habits];
+        Object.freeze(clone);
+        this.habits = clone;
         Object.freeze(this);
-        Object.freeze(habits);
     }
 
     static create(habits: Habit[]): CircleHabits {
