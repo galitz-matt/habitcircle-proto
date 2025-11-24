@@ -18,34 +18,55 @@ export type CreateCircleInviteInput = {
 
 export class CircleInvite {
 
-    private constructor(readonly props: CircleInviteProps) {}
+    private constructor(
+        private readonly _id: string,
+        private readonly _createdAt: Date,
+        private readonly _senderId: string,
+        private readonly _recipientId: string,
+        private readonly _circleId: string,
+        private status: InviteStatus
+    ) {}
 
-    static create(input: CreateCircleInviteInput): CircleInvite {
-        const props: CircleInviteProps = {
-            id: IdGenerator.new(),
-            createdAt: new Date(),
-            senderId: input.senderId,
-            recipientId: input.recipientId,
-            circleId: input.circleId,
-            status: InviteStatus.PENDING
-        }
-
-        return new CircleInvite(props);
+    static create(
+        senderId: string,
+        recipientId: string,
+        circleId: string
+    ): CircleInvite {
+        return new CircleInvite(
+            IdGenerator.new(),
+            new Date(),
+            senderId,
+            recipientId,
+            circleId,
+            InviteStatus.PENDING
+        );
     }
 
-    accept(): CircleInvite {
-        return this.clone({ status: InviteStatus.ACCEPTED });
+    accept(): this {
+        this.status = InviteStatus.ACCEPTED;
+        return this;
     }
 
-    decline(): CircleInvite {
-        return this.clone({ status: InviteStatus.DECLINED });
+    decline(): this {
+        this.status = InviteStatus.DECLINED;
+        return this;
     }
 
-    static rehydrate(props: CircleInviteProps): CircleInvite {
-        return new CircleInvite(props);
-    }
-
-    private clone(changes: Partial<CircleInviteProps>): CircleInvite {
-        return new CircleInvite({ ...this.props, ...changes });
+    static rehydrate(
+        id: string,
+        createdAt: Date,
+        senderId: string,
+        recipientId: string,
+        circleId: string,
+        status: InviteStatus
+    ): CircleInvite {
+        return new CircleInvite(
+            id,
+            createdAt,
+            senderId,
+            recipientId,
+            circleId,
+            status
+        );
     }
 }
