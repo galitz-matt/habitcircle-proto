@@ -5,6 +5,7 @@ export class CircleHabits {
     constructor(
         readonly habits: Habit[]
     ) {
+        Object.freeze(this);
         Object.freeze(habits);
     }
 
@@ -14,7 +15,7 @@ export class CircleHabits {
     }
 
     getAll(): Habit[] {
-        return this.habits;
+        return [...this.habits];
     }
 
     add(habit: Habit): CircleHabits {

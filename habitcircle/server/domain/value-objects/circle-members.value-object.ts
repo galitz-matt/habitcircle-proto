@@ -1,3 +1,4 @@
+import { DomainError } from "@/lib/errors";
 import { User } from "../entities/user.entity";
 import { CircleMembersInvariants } from "../invariants/circle-members.invariant";
 
@@ -7,6 +8,7 @@ export class CircleMembers {
         readonly members: User[]
     ) {
         Object.freeze(this);
+        Object.freeze(members);
     }
 
     static create(owner: User, members: User[]): CircleMembers {
@@ -15,7 +17,7 @@ export class CircleMembers {
     }
 
     getAll(): User[] {
-        return this.members;
+        return [...this.members];
     }
 
     add(user: User): CircleMembers {
@@ -36,12 +38,10 @@ export class CircleMembers {
         return this.members.some(m => m.id === userId);
     }
 
-    remove(user: User): CircleMembers {
-        const updatedMembers = this.members.filter(u => !u.equals(user));
-        return CircleMembers.create(this.owner, updatedMembers);
-    }
-
     removeMany(users: User[]): CircleMembers {
+        if (users.some(u => u.equals(this.owner)))
+            throw new DomainError("Cannot remove owner. Use setOwner first.")
+
         const updatedMembers = this.members.filter(
             m => !users.some(u => u.equals(m))
         );
