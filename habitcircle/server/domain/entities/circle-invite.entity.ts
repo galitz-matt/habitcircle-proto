@@ -9,7 +9,7 @@ export class CircleInvite {
         private readonly _senderId: string,
         private readonly _recipientId: string,
         private readonly _circleId: string,
-        private status: InviteStatus
+        private _status: InviteStatus
     ) {}
 
     static create(
@@ -28,12 +28,12 @@ export class CircleInvite {
     }
 
     accept(): this {
-        this.status = InviteStatus.ACCEPTED;
+        this._status = InviteStatus.ACCEPTED;
         return this;
     }
 
     decline(): this {
-        this.status = InviteStatus.DECLINED;
+        this._status = InviteStatus.DECLINED;
         return this;
     }
 
