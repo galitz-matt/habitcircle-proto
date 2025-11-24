@@ -1,21 +1,6 @@
 import { InviteStatus } from "@/server/domain/types/invite-status"
 import { IdGenerator } from "@/lib/utils"
 
-export type CircleInviteProps = {
-    id: string,
-    createdAt: Date,
-    senderId: string,
-    recipientId: string,
-    circleId: string,
-    status: InviteStatus
-}
-
-export type CreateCircleInviteInput = {
-    senderId: string,
-    recipientId: string,
-    circleId: string
-}
-
 export class CircleInvite {
 
     private constructor(
