@@ -98,8 +98,7 @@ export class Circle {
     }
 
     removeMember(user: User): this {
-        this._members = this._members.remove(user);
-        return this;
+        return this.removeMembers([user]);
     }
 
     removeMembers(users: User[]): this {
