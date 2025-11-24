@@ -2,7 +2,7 @@ import { Habit } from "../entities/habit.entity";
 import { CircleHabitsInvariants } from "../invariants/circle-habits.invariant";
 
 export class CircleHabits {
-    constructor(
+    private constructor(
         readonly habits: Habit[]
     ) {
         Object.freeze(this);
