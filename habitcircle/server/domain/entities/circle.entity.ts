@@ -5,148 +5,134 @@ import { CircleName } from "@/server/domain/value-objects/circle-name.value-obje
 import { CircleMembers } from "@/server/domain/value-objects/circle-members.value-object";
 import { CircleHabits } from "@/server/domain/value-objects/circle-habits.value-object";
 
-export type CircleProps = {
-    id: string,
-    createdAt: Date,
-    name: CircleName,
-    members: CircleMembers,
-    habits: CircleHabits,
-    photoKey?: string
-}
-
-export type CreateCircleInput = {
-    name: CircleName,
-    members: CircleMembers,
-    habits: CircleHabits,
-    photoKey?: string
-}
-
 export class Circle {
 
-    private constructor(readonly props: CircleProps) {}
+    private constructor(
+        private readonly _id: string,
+        private readonly _createdAt: Date,
+        private _name: CircleName,
+        private _members: CircleMembers,
+        private _habits: CircleHabits,
+        private _photoKey?: string
+    ) {}
 
-    static create(input: CreateCircleInput): Circle {
-        const props: CircleProps = {
-            id: IdGenerator.new(),
-            createdAt: new Date(),
-            ...input
-        };
-
-        return new Circle(props);
+    static create(
+        name: CircleName,
+        members: CircleMembers,
+        habits: CircleHabits,
+        photoKey?: string
+    ): Circle {
+        return new Circle(
+            IdGenerator.new(),
+            new Date(),
+            name,
+            members,
+            habits,
+            photoKey
+        );
     }
 
-    addHabit(habit: Habit): Circle {
+    addHabit(habit: Habit): this {
         return this.addHabits([habit]);
     }
 
-    addHabits(habits: Habit[]): Circle {
-        const updatedHabits = this.habits.addMany(habits);
-        return this.clone({ habits: updatedHabits });
+    addHabits(habits: Habit[]): this {
+        this._habits = this._habits.addMany(habits);
+        return this;
     }
 
-    addMember(user: User): Circle {
+    addMember(user: User): this {
         return this.addMembers([user]);
     }
 
-    addMembers(users: User[]): Circle {
-        const updatedMembers = this.members.addMany(users);
-        return this.clone({ members: updatedMembers });
+    addMembers(users: User[]): this {
+        this._members = this._members.addMany(users);
+        return this;
     }
 
     getHabits(): Habit[] {
-        return this.habits.getAll();
+        return this._habits.getAll();
     }
 
     getMembers(): User[] {
-        return this.members.getAll();
+        return this._members.getAll();
     }
 
     getName(): string {
-        return this.name.get();
+        return this._name.toString();
     }
 
     getOwner(): User {
-        return this.members.owner;
+        return this._members.owner;
     }
 
     hasHabitById(habitId: string) {
-        return this.habits.containsById(habitId);
+        return this._habits.containsById(habitId);
     }
 
     hasMember(user: User): boolean {
-        return this.members.contains(user);
+        return this._members.contains(user);
     }
 
     hasMemberById(userId: string): boolean {
-        return this.members.containsById(userId);
+        return this._members.containsById(userId);
     }
 
     isOwnedBy(userId: string): boolean {
         return this.getOwner().id === userId;
     }
 
-    removeHabit(habit: Habit): Circle {
-        const updatedHabits = this.habits.remove(habit);
-        return this.clone({ habits: updatedHabits });
+    removeHabit(habit: Habit): this {
+        this._habits = this._habits.remove(habit);
+        return this;
     }
 
-    removeHabits(habits: Habit[]): Circle {
-        const updatedHabits = this.habits.removeMany(habits);
-        return this.clone({ habits: updatedHabits });
+    removeHabits(habits: Habit[]): this {
+        this._habits = this._habits.removeMany(habits);
+        return this;
     }
 
-    removeHabitsById(habitIds: string[]): Circle {
-        const updatedHabits = this.habits.removeManyById(habitIds);
-        return this.clone({ habits: updatedHabits });
+    removeHabitsById(habitIds: string[]): this {
+        this._habits = this._habits.removeManyById(habitIds);
+        return this;
     }
 
-    removeMember(user: User): Circle {
-        const updatedMembers = this.members.remove(user);
-        return this.clone({ members: updatedMembers });
+    removeMember(user: User): this {
+        this._members = this._members.remove(user);
+        return this;
     }
 
-    removeMembers(users: User[]): Circle {
-        const updatedMembers = this.members.removeMany(users);
-        return this.clone({ members: updatedMembers });
+    removeMembers(users: User[]): this {
+        this._members = this._members.removeMany(users);
+        return this;
     }
 
-    removeMembersById(userIds: string[]): Circle {
-        const updatedMembers = this.members.removeManyById(userIds);
-        return this.clone({ members: updatedMembers });
+    removeMembersById(userIds: string[]): this {
+        this._members = this._members.removeManyById(userIds);
+        return this;
     }
 
-    setOwner(user: User): Circle {
-        const updatedMembers = this.members.setOwner(user);
-        return this.clone({ members: updatedMembers });
+    setOwner(user: User): this {
+        this._members = this._members.setOwner(user);
+        return this;
     }
 
-    get name(): CircleName {
-        return this.props.name;
-    }
-
-    get members(): CircleMembers {
-        return this.props.members;
-    }
-
-    get habits(): CircleHabits {
-        return this.props.habits;
-    }
-
-    static rehydrate(input: CircleProps): Circle {
+    static rehydrate(
+        id: string,
+        createdAt: Date,
+        name: CircleName,
+        members: CircleMembers,
+        habits: CircleHabits,
+        photoKey?: string
+    ): Circle {
         /* Used exclusively by repositories to reconstitue from persistence */
-        const props: CircleProps = {
-            id: input.id,
-            createdAt: input.createdAt,
-            name: input.name,
-            members: input.members,
-            habits: input.habits,
-            photoKey: input.photoKey
-        }
-
-        return new Circle(props);
-    }
-    
-    private clone(changes: Partial<CircleProps>): Circle {
-        return new Circle({ ...this.props, ...changes });
+        return new Circle(
+            id,
+            createdAt,
+            name,
+            members,
+            habits,
+            photoKey
+        );
     }
 }
