@@ -4,16 +4,14 @@ import { CircleNameInvariants } from "../invariants/circle-name.invariant";
 export class CircleName {
     private constructor(
         readonly value: string
-    ) {}
+    ) {
+        Object.freeze(this);
+    }
 
-    static create(value: string) {
+    static create(value: string): CircleName {
         const normalized = StringUtils.normalize(value);
         CircleNameInvariants.enforce(normalized);
         return new CircleName(normalized);
-    }
-
-    get(): string {
-        return this.value;
     }
 
     toString() {
@@ -25,6 +23,7 @@ export class CircleName {
     }
 
     static rehydrate(value: string) {
+        CircleNameInvariants.enforce(value);
         return new CircleName(value);
     }
 }

@@ -4,7 +4,9 @@ import { CircleHabitsInvariants } from "../invariants/circle-habits.invariant";
 export class CircleHabits {
     constructor(
         readonly habits: Habit[]
-    ) {}
+    ) {
+        Object.freeze(habits);
+    }
 
     static create(habits: Habit[]): CircleHabits {
         CircleHabitsInvariants.enforce(habits);
@@ -17,14 +19,12 @@ export class CircleHabits {
 
     add(habit: Habit): CircleHabits {
         const updatedHabits = [...this.habits, habit];
-        CircleHabitsInvariants.enforce(updatedHabits);
-        return new CircleHabits(updatedHabits);
+        return CircleHabits.create(updatedHabits);
     }
 
     addMany(habits: Habit[]): CircleHabits {
         const updatedHabits = [...this.habits, ...habits];
-        CircleHabitsInvariants.enforce(updatedHabits);
-        return new CircleHabits(updatedHabits);
+        return CircleHabits.create(updatedHabits)
     }
 
     containsById(habitId: string): boolean {
@@ -32,25 +32,22 @@ export class CircleHabits {
     }
 
     remove(habit: Habit): CircleHabits {
-        const updatedHabits = this.habits.filter(h => !h.equals(habit))
-        CircleHabitsInvariants.enforce(updatedHabits);
-        return new CircleHabits(updatedHabits);
+        const updatedHabits = this.habits.filter(h => !h.equals(habit));
+        return CircleHabits.create(updatedHabits);
     }
 
     removeMany(habits: Habit[]): CircleHabits {
         const updatedHabits = this.habits.filter(
             habit => !habits.some(h => h.equals(habit))
-        )
-        CircleHabitsInvariants.enforce(updatedHabits);
-        return new CircleHabits(updatedHabits);
+        );
+        return CircleHabits.create(updatedHabits);
     }
 
     removeManyById(habitIds: string[]): CircleHabits {
         const updatedHabits = this.habits.filter(
             h => !habitIds.some(id => h.id === id)
         );
-        CircleHabitsInvariants.enforce(updatedHabits);
-        return new CircleHabits(updatedHabits);
+        return CircleHabits.create(updatedHabits);
     }
 
     toString(): string {
@@ -83,6 +80,6 @@ export class CircleHabits {
     }
 
     static rehydrate(habits: Habit[]): CircleHabits {
-        return new CircleHabits(habits);
+        return CircleHabits.create(habits);
     }
 }

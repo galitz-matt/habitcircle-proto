@@ -5,7 +5,9 @@ export class CircleMembers {
     private constructor(
         readonly owner: User,
         readonly members: User[]
-    ) {}
+    ) {
+        Object.freeze(this);
+    }
 
     static create(owner: User, members: User[]): CircleMembers {
         CircleMembersInvariants.enforce(owner, members);
@@ -18,14 +20,12 @@ export class CircleMembers {
 
     add(user: User): CircleMembers {
         const updatedMembers = [...this.members, user];
-        CircleMembersInvariants.enforce(this.owner, updatedMembers);
-        return new CircleMembers(this.owner, updatedMembers);
+        return CircleMembers.create(this.owner, updatedMembers);
     }
 
     addMany(users: User[]): CircleMembers {
         const updatedMembers = [...this.members, ...users];
-        CircleMembersInvariants.enforce(this.owner, updatedMembers);
-        return new CircleMembers(this.owner, updatedMembers)
+        return CircleMembers.create(this.owner, updatedMembers);
     }
 
     contains(user: User): boolean {
@@ -38,29 +38,27 @@ export class CircleMembers {
 
     remove(user: User): CircleMembers {
         const updatedMembers = this.members.filter(u => !u.equals(user));
-        CircleMembersInvariants.enforce(this.owner, updatedMembers);
-        return new CircleMembers(this.owner, updatedMembers);
+        return CircleMembers.create(this.owner, updatedMembers);
     }
 
     removeMany(users: User[]): CircleMembers {
         const updatedMembers = this.members.filter(
             m => !users.some(u => u.equals(m))
         );
-        CircleMembersInvariants.enforce(this.owner, updatedMembers);
-        return new CircleMembers(this.owner, updatedMembers);
+        return CircleMembers.create(this.owner, updatedMembers);
     }
 
     removeManyById(userIds: string[]): CircleMembers {
         const updatedMembers = this.members.filter(
             m => !userIds.some(id => id === m.id)
-        )
-        CircleMembersInvariants.enforce(this.owner, updatedMembers);
-        return new CircleMembers(this.owner, updatedMembers);
+        );
+        return CircleMembers.create(this.owner, updatedMembers);
     }
 
     setOwner(user: User): CircleMembers {
         if (user.id === this.owner.id) throw new Error("User is already owner.");
         if (!this.contains(user)) throw new Error("User is not in circle.");
+
         return new CircleMembers(user, this.members)
     }
 
@@ -94,6 +92,6 @@ export class CircleMembers {
     }
 
     static rehydrate(owner: User, members: User[]): CircleMembers {
-        return new CircleMembers(owner, members);
+        return CircleMembers.create(owner, members);
     }
 }
