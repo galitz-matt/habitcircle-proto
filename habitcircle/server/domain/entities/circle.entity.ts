@@ -4,6 +4,7 @@ import { User } from "@/server/domain/entities/user.entity"
 import { CircleName } from "@/server/domain/value-objects/circle-name.value-object";
 import { CircleMembers } from "@/server/domain/value-objects/circle-members.value-object";
 import { CircleHabits } from "@/server/domain/value-objects/circle-habits.value-object";
+import { DomainError } from "@/lib/errors";
 
 export class Circle {
 
@@ -102,11 +103,17 @@ export class Circle {
     }
 
     removeMembers(users: User[]): this {
+        if (users.some(u => u.equals(this.owner)))
+            throw new DomainError("Cannot remove owner");
+
         this._members = this._members.removeMany(users);
         return this;
     }
 
     removeMembersById(userIds: string[]): this {
+        if (userIds.some(id => id === this.owner.id))
+            throw new DomainError("Cannot remove owner");
+
         this._members = this._members.removeManyById(userIds);
         return this;
     }
@@ -114,6 +121,10 @@ export class Circle {
     setOwner(user: User): this {
         this._members = this._members.setOwner(user);
         return this;
+    }
+
+    get owner() {
+        return this._members.owner;
     }
 
     static rehydrate(
