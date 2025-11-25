@@ -11,9 +11,7 @@ export class Completion {
         private _completedAt: Date,
         private readonly _userId: string,
         private readonly _habitId: string
-    ) {
-        Object.freeze(this);
-    }
+    ) {}
 
     static create(userId: string, habitId: string): Completion {
         const completedAt = new Date();

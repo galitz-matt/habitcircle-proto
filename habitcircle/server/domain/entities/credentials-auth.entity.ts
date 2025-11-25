@@ -15,9 +15,7 @@ export class CredentialsAuthentication implements Authentication {
         private _passwordVersion: number,
         private _failedAttempts: number,
         private _emailVerified: boolean
-    ) {
-        Object.freeze(this);
-    }
+    ) {}
 
     static create(password: Password): CredentialsAuthentication {
         return new CredentialsAuthentication(

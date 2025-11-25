@@ -2,72 +2,51 @@ import { DomainError } from "@/lib/errors";
 import { IdGenerator } from "@/lib/utils";
 import { FriendshipStatus } from "@/server/domain/types/friendship-status";
 
-export type FriendshipProps = {
-    id: string,
-    createdAt: Date,
-    requesterId: string,
-    addresseeId: string,
-    status: FriendshipStatus
-}
-
-export type CreateFriendshipInput = {
-    requesterId: string,
-    addresseeId: string
-}
-
 export class Friendship {
 
-    private constructor(readonly props: FriendshipProps) {}
+    private constructor(
+        private readonly _id: string,
+        private readonly _createdAt: Date,
+        readonly requesterId: string,
+        readonly addresseId: string,
+        private _status: FriendshipStatus
+    ) {}
 
-    static create(input: CreateFriendshipInput): Friendship {
-        if (input.requesterId === input.addresseeId)
+    static create(requesterId: string, addresseeId: string): Friendship {
+        if (requesterId === addresseeId)
             throw new DomainError("Cannot friend yourself");
 
-        const props: FriendshipProps = {
-            id: IdGenerator.new(),
-            createdAt: new Date(),
-            requesterId: input.requesterId,
-            addresseeId: input.addresseeId,
-            status: FriendshipStatus.PENDING
-        };
-
-        return new Friendship(props);
+        return new Friendship(
+            IdGenerator.new(),
+            new Date(),
+            requesterId,
+            addresseeId,
+            FriendshipStatus.PENDING
+        );
     }
 
-    accept(): Friendship {
-        return this.clone({ status: FriendshipStatus.ACCEPTED })
+    accept(): void {
+        this._status = FriendshipStatus.ACCEPTED;
     }
 
-    decline(): Friendship {
-        return this.clone({ status: FriendshipStatus.DECLINED })
-    }
-
-    get id() {
-        return this.props.id;
-    }
-
-    get createdAt() {
-        return this.props.createdAt;
-    }
-
-    get requesterId() {
-        return this.props.requesterId;
-    }
-
-    get addresseeId() {
-        return this.props.addresseeId;
-    }
-
-    get status(): FriendshipStatus {
-        return this.props.status;
+    decline(): void {
+        this._status = FriendshipStatus.DECLINED;
     }
 
     // Used by persistence layer
-    static rehydrate(props: FriendshipProps): Friendship {
-        return new Friendship(props);
-    }
-
-    private clone(changes: Partial<FriendshipProps>): Friendship {
-        return new Friendship({ ...this.props, ...changes });
+    static rehydrate(
+        id: string,
+        createdAt: Date,
+        requesterId: string,
+        addresseeId: string,
+        status: FriendshipStatus
+    ): Friendship {
+        return new Friendship(
+            id,
+            createdAt,
+            requesterId,
+            addresseeId,
+            status
+        );
     }
 }
