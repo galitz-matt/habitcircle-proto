@@ -1,58 +1,43 @@
 import { IdGenerator } from "@/lib/utils";
 import { HabitName } from "@/server/domain/value-objects/habit-name.value-object";
 
-export type HabitProps = {
-    id: string,
-    createdAt: Date,
-    name: HabitName,
-    circleId: string
-}
-
-export type CreateHabitInput = {
-    name: HabitName,
-    circleId: string
-}
-
 export class Habit {
-    private constructor(readonly props: HabitProps) {}
+    private constructor(
+        private readonly _id: string,
+        private readonly _createdAt: Date,
+        private _name: HabitName,
+        private readonly _circleId: string
+    ) {}
 
-    static create(input: CreateHabitInput): Habit {
-        const props: HabitProps = {
-            id: IdGenerator.new(),
-            createdAt: new Date(),
-            name: input.name,
-            circleId: input.circleId
-        }
-
-        return new Habit(props);
+    static create(name: HabitName, circleId: string): Habit {
+        return new Habit(
+            IdGenerator.new(),
+            new Date(),
+            name,
+            circleId
+        );
     }
 
     equals(other: Habit): boolean {
         return !!other && other.id == this.id;
     }
 
-    get id(): string {
-        return this.props.id;
+    get id() {
+        return this._id;
     }
 
-    get createdAt(): Date {
-        return this.props.createdAt;
-    }
-
-    get name(): HabitName {
-        return this.props.name;
-    }
-
-    get circleId(): string {
-        return this.props.circleId;
-    }
-
-    static rehydrate(props: HabitProps): Habit {
+    static rehydrate(
+        id: string,
+        createdAt: Date,
+        name: HabitName,
+        circleId: string
+    ): Habit {
         /* Used exclusively by repositories to reconstitue from persistence */
-        return new Habit(props);
-    }
-
-    private clone(changes: Partial<HabitProps>): Habit {
-        return new Habit({ ...this.props, ...changes });
+        return new Habit(
+            id,
+            createdAt,
+            name,
+            circleId
+        )
     }
 }
