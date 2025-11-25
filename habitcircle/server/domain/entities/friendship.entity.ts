@@ -25,14 +25,18 @@ export class Friendship {
         );
     }
 
-    accept(): void {
+    accept(actorUserId: string): void {
+        if (actorUserId !== this.addresseeId)
+            throw new DomainError("Only addressee can accept friendship")
         if (this._status !== FriendshipStatus.PENDING)
             throw new DomainError("Cannot accept non-pending friendship");
 
         this._status = FriendshipStatus.ACCEPTED;
     }
 
-    decline(): void {
+    decline(actorUserId: string): void {
+        if (actorUserId !== this.addresseeId)
+            throw new DomainError("Only addressee can accept friendship");
         if (this._status !== FriendshipStatus.PENDING)
             throw new DomainError("Cannot decline non-pending friendship");
 
@@ -49,7 +53,7 @@ export class Friendship {
     ): Friendship {
         return new Friendship(
             id,
-            createdAt,
+            new Date(createdAt.getTime()),
             requesterId,
             addresseeId,
             status
