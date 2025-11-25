@@ -41,7 +41,7 @@ export class Post {
     ): Post {
         return new Post(
             id,
-            createdAt,
+            new Date(createdAt.getTime()),
             userId,
             habitId,
             completionId,
