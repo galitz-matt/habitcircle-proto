@@ -1,5 +1,6 @@
 import { InviteStatus } from "@/server/domain/types/invite-status"
 import { IdGenerator } from "@/lib/utils"
+import { DomainError } from "@/lib/errors";
 
 export class CircleInvite {
 
@@ -17,6 +18,9 @@ export class CircleInvite {
         recipientId: string,
         circleId: string
     ): CircleInvite {
+        if (senderId === recipientId)
+            throw new DomainError("Sender cannot be same as recipient");
+
         return new CircleInvite(
             IdGenerator.new(),
             new Date(),
@@ -28,11 +32,17 @@ export class CircleInvite {
     }
 
     accept(): this {
+        if (this._status !== InviteStatus.PENDING)
+            throw new DomainError("Cannot accept nonpending circle invite");
+
         this._status = InviteStatus.ACCEPTED;
         return this;
     }
 
     decline(): this {
+        if (this._status !== InviteStatus.PENDING) 
+            throw new DomainError("Cannot decline nonpending invite");
+
         this._status = InviteStatus.DECLINED;
         return this;
     }
