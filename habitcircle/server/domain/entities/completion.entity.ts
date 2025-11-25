@@ -1,58 +1,45 @@
 import { IdGenerator } from "@/lib/utils";
 
-export type CompletionProps = {
-    id: string,
-    createdAt: Date,
-    completedAt: Date,
-    userId: string,
-    habitId: string
-}
-
 export type CreateCompletionInput = {
     userId: string,
     habitId: string,
 }
 
 export class Completion {
-    private constructor(readonly props: CompletionProps) {}
+    private constructor(
+        private readonly _id: string,
+        private _completedAt: Date,
+        private readonly _userId: string,
+        private readonly _habitId: string
+    ) {
+        Object.freeze(this);
+    }
 
-    static create(input: CreateCompletionInput): Completion {
+    static create(userId: string, habitId: string): Completion {
         const completedAt = new Date();
         completedAt.setHours(0, 0, 0, 0);
 
-        const props: CompletionProps = {
-            id: IdGenerator.new(),
-            createdAt: new Date(),
-            completedAt: completedAt,
-            userId: input.userId,
-            habitId: input.habitId
-        }
-
-        return new Completion(props);
+        return new Completion(
+            IdGenerator.new(),
+            new Date(),
+            userId,
+            habitId
+        )
     }
 
-    static rehydrate(props: CompletionProps): Completion {
+    static rehydrate(
+        id: string,
+        completedAt: Date,
+        userId: string,
+        habitId: string
+    ): Completion {
         /* Used exclusively by repositories to reconstitue from persistence */
-        return new Completion(props);
+        return new Completion(
+            id,
+            completedAt,
+            userId,
+            habitId
+        );
     }
 
-    get id() {
-        return this.props.id;
-    }
-
-    get createdAt() {
-        return this.props.createdAt;
-    }
-
-    get completedAt() {
-        return this.props.completedAt;
-    }
-
-    get userId() {
-        return this.props.userId;
-    }
-
-    get habitId() {
-        return this.props.habitId;
-    }
 }

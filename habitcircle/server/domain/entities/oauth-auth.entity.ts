@@ -10,7 +10,9 @@ export class OAuthAuthentication implements Authentication {
     private constructor(
         readonly identity: OAuthIdentity,
         private _tokens: OAuthTokens
-    ) {}
+    ) {
+        Object.freeze(this);
+    }
 
     static create(identity: OAuthIdentity, tokens: OAuthTokens): OAuthAuthentication {
         return new OAuthAuthentication(
