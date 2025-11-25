@@ -19,7 +19,7 @@ model User {
   createdAt             DateTime      @default(now())
   updatedAt             DateTime      @updatedAt
   username              String        @unique @db.Citext
-  emailAddress          String?       @unique @db.Citext
+  emailAddress          String        @unique @db.Citext
   biography             String?
   profilePictureKey     String?
 
