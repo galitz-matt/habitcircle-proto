@@ -4,7 +4,9 @@ import { HabitNameInvariants } from "../invariants/habit-name.invariant";
 export class HabitName {
     private constructor(
         readonly name: string
-    ) {}
+    ) {
+        Object.freeze(this);
+    }
 
     static create(name: string): HabitName {
         const normalized = StringUtils.normalize(name);
@@ -17,7 +19,7 @@ export class HabitName {
     }
 
     static rehydrate(name: string): HabitName {
-        return new HabitName(name);
+        return HabitName.create(name);
     }
 
     toString(): string {
