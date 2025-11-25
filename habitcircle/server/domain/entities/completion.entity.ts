@@ -8,7 +8,7 @@ export type CreateCompletionInput = {
 export class Completion {
     private constructor(
         private readonly _id: string,
-        private _completedAt: Date,
+        private readonly _completedAt: Date,
         private readonly _userId: string,
         private readonly _habitId: string
     ) {}
@@ -39,5 +39,4 @@ export class Completion {
             habitId
         );
     }
-
 }
