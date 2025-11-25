@@ -1,4 +1,4 @@
-import { IdGenerator } from "@/lib/utils";
+import { IdGenerator, StringUtils } from "@/lib/utils";
 import { Username } from "@/server/domain/value-objects/username.value-object";
 import { Biography } from "@/server/domain/value-objects/biography.value-object";
 
@@ -12,10 +12,12 @@ export class User {
     ) {}
 
     static create(username: Username, emailAddress: string) {
+        const normalizedEmail = StringUtils.normalize(emailAddress).toLowerCase();
+
         return new User(
             IdGenerator.new(),
             username,
-            emailAddress
+            normalizedEmail 
         );
     };
 
