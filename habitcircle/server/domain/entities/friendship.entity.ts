@@ -8,7 +8,7 @@ export class Friendship {
         private readonly _id: string,
         private readonly _createdAt: Date,
         readonly requesterId: string,
-        readonly addresseId: string,
+        readonly addresseeId: string,
         private _status: FriendshipStatus
     ) {}
 
