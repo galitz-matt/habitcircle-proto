@@ -31,20 +31,18 @@ export class CircleInvite {
         );
     }
 
-    accept(): this {
+    accept(): void {
         if (this._status !== InviteStatus.PENDING)
             throw new DomainError("Cannot accept nonpending circle invite");
 
         this._status = InviteStatus.ACCEPTED;
-        return this;
     }
 
-    decline(): this {
+    decline(): void {
         if (this._status !== InviteStatus.PENDING) 
             throw new DomainError("Cannot decline nonpending invite");
 
         this._status = InviteStatus.DECLINED;
-        return this;
     }
 
     static rehydrate(
