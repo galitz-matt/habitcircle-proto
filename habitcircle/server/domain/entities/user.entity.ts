@@ -1,88 +1,46 @@
 import { IdGenerator } from "@/lib/utils";
 import { Username } from "@/server/domain/value-objects/username.value-object";
-import { EmailAddress } from "@/server/domain/value-objects/email-address.value-object";
 import { Biography } from "@/server/domain/value-objects/biography.value-object";
 
-export type UserProps = {
-    id: string,
-    createdAt: Date,
-    username: Username,
-    emailAddress?: EmailAddress,
-    biography?: Biography,
-    profilePictureKey?: string
-}
-
-export type CreateUserInput = {
-    username: Username,
-    emailAddress?: EmailAddress
-}
-
 export class User {
-    private constructor(readonly props: UserProps) {}
+    private constructor(
+        private readonly _id: string,
+        private _username: Username,
+        private _emailAddress: string,
+        private _biography?: Biography,
+        private _profilePictureKey?: string
+    ) {}
 
-    static create(input: CreateUserInput) {
-        const props: UserProps = {
-            id: IdGenerator.new(),
-            createdAt: new Date(),
-            username: input.username,
-            emailAddress: input.emailAddress,
-            biography: undefined,
-            profilePictureKey: undefined
-        }
-
-        return new User(props);
+    static create(username: Username, emailAddress: string) {
+        return new User(
+            IdGenerator.new(),
+            username,
+            emailAddress
+        );
     };
 
     equals(other: User): boolean {
-        return !!other && this.id === other.id;
+        return !!other && this._id === other.id;
     }
-
-    getBiography(): string | undefined {
-        return this.biography?.toString();
-    }
-
-    getEmailAddress(): string | undefined {
-        return this.emailAddress?.toString();
-    }
-
-    getUsername(): string {
-        return this.username.toString();
-    }
-
-    getProfilePictureKey(): string | undefined {
-        return this.profilePictureKey?.toString();
-    }
-
-    static rehydrate(props: UserProps): User {
-        /* Used exclusively by repositories to reconstitue from persistence */
-        return new User(props);
-    }
-
+    
     get id(): string {
-        return this.props.id;
+        return this._id;
     }
 
-    get createdAt(): Date {
-        return this.props.createdAt;
-    }
-
-    get username(): Username {
-        return this.props.username;
-    }
-
-    get emailAddress(): EmailAddress | undefined {
-        return this.props.emailAddress;
-    }
-
-    get biography(): Biography | undefined {
-        return this.props.biography;
-    }
-
-    get profilePictureKey(): string | undefined {
-        return this.props.profilePictureKey;
-    }
-
-    private clone(changes: Partial<User>) {
-        return new User({ ...this.props, ...changes });
+    static rehydrate(
+        id: string,
+        username: Username,
+        emailAddress: string,
+        biography?: Biography,
+        profilePictureKey?: string
+    ): User {
+        /* Used exclusively by repositories to reconstitue from persistence */
+        return new User(
+            id,
+            username,
+            emailAddress,
+            biography,
+            profilePictureKey
+        );
     }
 }
