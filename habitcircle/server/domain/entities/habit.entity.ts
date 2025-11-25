@@ -39,7 +39,7 @@ export class Habit {
         /* Used exclusively by repositories to reconstitue from persistence */
         return new Habit(
             id,
-            createdAt,
+            new Date(createdAt.getTime()),
             name,
             circleId
         )
