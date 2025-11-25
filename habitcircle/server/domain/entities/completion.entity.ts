@@ -19,7 +19,7 @@ export class Completion {
 
         return new Completion(
             IdGenerator.new(),
-            new Date(),
+            completedAt,
             userId,
             habitId
         )
