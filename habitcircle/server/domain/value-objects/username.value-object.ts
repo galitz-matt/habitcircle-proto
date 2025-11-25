@@ -4,7 +4,9 @@ import { UsernameInvariants } from "../invariants/username.invariant";
 export class Username {
     private constructor(
         readonly value: string,
-    ) {}
+    ) {
+        Object.freeze(this);
+    }
 
     static create(value: string): Username {
         const normalized = StringUtils.normalize(value);
@@ -16,11 +18,8 @@ export class Username {
         return this.value;
     }
 
-    equals(other: Username): boolean {
-        return !!other && this.value.localeCompare(other.value, undefined, { sensitivity: "accent" }) === 0;
-    }
-
     static rehydrate(value: string): Username {
+        UsernameInvariants.enforce(value);
         return new Username(value);
     } 
 }
