@@ -1,19 +1,19 @@
-import { StringUtils } from "@/lib/utils";
 import { PostCaptionInvariants } from "../invariants/post-caption.invariant";
 
 export class PostCaption {
     private constructor(
         readonly caption: string
-    ) {}
+    ) {
+        Object.freeze(this);
+    }
 
     static create(caption: string): PostCaption {
-        const normalized = StringUtils.normalize(caption);
-        PostCaptionInvariants.enforce(normalized);
+        PostCaptionInvariants.enforce(caption);
         return new PostCaption(caption);
     }
 
     static rehydrate(caption: string): PostCaption {
-        return new PostCaption(caption);
+        return PostCaption.create(caption);
     }
 
     toString(): string {
