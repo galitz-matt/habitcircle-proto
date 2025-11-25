@@ -26,10 +26,16 @@ export class Friendship {
     }
 
     accept(): void {
+        if (this._status !== FriendshipStatus.PENDING)
+            throw new DomainError("Cannot accept nonpending friendship");
+
         this._status = FriendshipStatus.ACCEPTED;
     }
 
     decline(): void {
+        if (this._status !== FriendshipStatus.PENDING)
+            throw new DomainError("Cannot accept nonpending friendship");
+
         this._status = FriendshipStatus.DECLINED;
     }
 
