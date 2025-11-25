@@ -26,6 +26,10 @@ export class Habit {
         return this._id;
     }
 
+    get name() {
+        return this._name;
+    }
+
     static rehydrate(
         id: string,
         createdAt: Date,
