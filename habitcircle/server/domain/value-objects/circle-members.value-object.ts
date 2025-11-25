@@ -71,7 +71,7 @@ export class CircleMembers {
         let s = "{ "
         for (let i = 0; i < this.members.length; i++) {
             const member = this.members[i];
-            s += `${member.getUsername()}`;
+            s += `${member.username.toString()}`;
             if (i < this.members.length - 1) {
                 s += ", ";
             }

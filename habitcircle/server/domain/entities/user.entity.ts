@@ -27,6 +27,10 @@ export class User {
         return this._id;
     }
 
+    get username(): Username {
+        return this._username;
+    }
+
     static rehydrate(
         id: string,
         username: Username,
