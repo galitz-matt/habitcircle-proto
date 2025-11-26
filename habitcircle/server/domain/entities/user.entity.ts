@@ -36,7 +36,7 @@ export class User {
     static rehydrate(
         id: string,
         username: Username,
-        emailAddress: string,
+        emailAddress?: string,
         biography?: Biography,
         profilePictureKey?: string
     ): User {
