@@ -3,22 +3,23 @@ import { CircleHabitsInvariants } from "../invariants/circle-habits.invariant";
 
 export class CircleHabits {
     private constructor(
-        readonly habits: Set<Habit>
+        readonly habits: Map<string, Habit>
     ) {
         // NOTE: Habit is an Entity, so its internal state is mutable.
         // CircleHabits is a Value Object, so its *collection* is immutable.
-        this.habits = new Set(habits)
         Object.freeze(this.habits);
         Object.freeze(this);
     }
 
-    static create(habits: Set<Habit>): CircleHabits {
+    static create(habits: Habit[]): CircleHabits {
         CircleHabitsInvariants.enforce(habits);
-        return new CircleHabits(habits);
+        return new CircleHabits(
+            CircleHabits.toMap(habits)
+        );
     }
 
     getAll(): Habit[] {
-        return [...this.habits];
+        return [...this.habits.values()];
     }
 
     add(habit: Habit): CircleHabits {
@@ -26,14 +27,16 @@ export class CircleHabits {
     }
 
     addMany(habits: Habit[]): CircleHabits {
-        const updatedHabits = new Set([...this.habits, ...habits]);
-        return CircleHabits.create(updatedHabits);
+        return new CircleHabits(
+            new Map([
+                ...this.habits,
+                ...CircleHabits.toMap(habits)
+            ])
+        );
     }
 
     containsById(id: string): boolean {
-        for (const h of this.habits)
-            if (h.id === id) return true;
-        return false;
+        return this.habits.has(id);
     }
 
     remove(habitId: string): CircleHabits {
@@ -41,18 +44,19 @@ export class CircleHabits {
     }
 
     removeMany(habitIds: string[]): CircleHabits {
-        const idsToRemove = new Set(habitIds);
-        const updated = new Set<Habit>();
-
-        for (const h of this.habits) {
-            if (!idsToRemove.has(h.id))
-                updated.add(h);
-        }
-
-        return CircleHabits.create(updated);
+        const clone = new Map(this.habits);
+        for (const id of habitIds)
+            clone.delete(id);
+        return new CircleHabits(clone);
     }
 
-    static rehydrate(habits: Set<Habit>): CircleHabits {
+    static rehydrate(habits: Habit[]): CircleHabits {
         return CircleHabits.create(habits);
+    }
+
+    private static toMap(habits: Habit[]): Map<string, Habit> {
+        return new Map(
+            habits.map(h => [h.id, h])
+        );
     }
 }

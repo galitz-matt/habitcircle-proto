@@ -26,6 +26,10 @@ export class Habit {
         return this._id;
     }
 
+    get circleId() {
+        return this._circleId;
+    }
+
     get name() {
         return this._name;
     }
