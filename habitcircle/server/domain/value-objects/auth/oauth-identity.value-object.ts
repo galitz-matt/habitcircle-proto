@@ -1,5 +1,4 @@
 import { StringUtils } from "@/lib/utils";
-import { OAuthIdentityDto } from "../../dtos/auth/oauth-identity.dto";
 
 export class OAuthIdentity {
     private constructor(
@@ -12,13 +11,6 @@ export class OAuthIdentity {
     static create(provider: string, providerAccountId: string): OAuthIdentity {
         const normalizedProvider = StringUtils.normalize(provider).toLowerCase();
         return new OAuthIdentity(normalizedProvider, providerAccountId);
-    }
-
-    toInfo(): OAuthIdentityDto {
-        return {
-            provider: this.provider,
-            providerAccountId: this.providerAccountId
-        };
     }
 
     equals(other: OAuthIdentity): boolean {
