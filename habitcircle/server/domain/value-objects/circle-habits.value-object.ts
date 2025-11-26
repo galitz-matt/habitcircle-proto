@@ -27,12 +27,10 @@ export class CircleHabits {
     }
 
     addMany(habits: Habit[]): CircleHabits {
-        return new CircleHabits(
-            new Map([
-                ...this.habits,
-                ...CircleHabits.toMap(habits)
-            ])
-        );
+        return CircleHabits.create([
+            ...this.habits.values(),
+            ...habits
+        ]);
     }
 
     containsById(id: string): boolean {
