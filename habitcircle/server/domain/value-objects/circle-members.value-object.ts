@@ -1,63 +1,57 @@
-import { DomainError } from "@/lib/errors";
 import { User } from "../entities/user.entity";
 import { CircleMembersInvariants } from "../invariants/circle-members.invariant";
 
 export class CircleMembers {
     private constructor(
         readonly owner: User,
-        readonly members: User[]
+        readonly members: Map<string, User>
     ) {
-        const clone = [...members];
-        Object.freeze(clone);
-        this.members = clone;
+        this.members = new Map(members);
+        Object.freeze(members);
         Object.freeze(this);
     }
 
     static create(owner: User, members: User[]): CircleMembers {
         CircleMembersInvariants.enforce(owner, members);
-        return new CircleMembers(owner, members);
+        return new CircleMembers(
+            owner, 
+            CircleMembers.toMap(members)
+        );
     }
 
     getAll(): User[] {
-        return [...this.members];
+        return [...this.members.values()];
     }
 
     add(user: User): CircleMembers {
-        const updatedMembers = [...this.members, user];
-        return CircleMembers.create(this.owner, updatedMembers);
+        return this.addMany([user]);
     }
 
     addMany(users: User[]): CircleMembers {
-        const updatedMembers = [...this.members, ...users];
-        return CircleMembers.create(this.owner, updatedMembers);
+        return CircleMembers.create(
+            this.owner,
+            [...this.members.values(), ...users]
+        );
     }
 
     contains(user: User): boolean {
-        return this.members.some(m => m.equals(user));
+        return this.containsById(user.id);
     }
 
     containsById(userId: string): boolean {
-        return this.members.some(m => m.id === userId);
+        return this.members.has(userId);
     }
 
     removeMany(users: User[]): CircleMembers {
-        if (users.some(u => u.equals(this.owner)))
-            throw new DomainError("Cannot remove owner. Use setOwner first.")
-
-        const updatedMembers = this.members.filter(
-            m => !users.some(u => u.equals(m))
-        );
-        return CircleMembers.create(this.owner, updatedMembers);
+        return this.removeManyById(users.map(u => u.id));
     }
 
     removeManyById(userIds: string[]): CircleMembers {
-        if (userIds.includes(this.owner.id))
-            throw new DomainError("Cannot remove owner. Use setOwner first.");
-
-        const updatedMembers = this.members.filter(
-            m => !userIds.some(id => id === m.id)
-        );
-        return CircleMembers.create(this.owner, updatedMembers);
+        const clone = new Map(this.members);
+        for (const id of userIds)
+            clone.delete(id);
+        
+        return new CircleMembers(this.owner, clone);
     }
 
     setOwner(user: User): CircleMembers {
@@ -67,36 +61,15 @@ export class CircleMembers {
         return new CircleMembers(user, this.members)
     }
 
-    toString(): string {
-        let s = "{ "
-        for (let i = 0; i < this.members.length; i++) {
-            const member = this.members[i];
-            s += `${member.username.toString()}`;
-            if (i < this.members.length - 1) {
-                s += ", ";
-            }
-        }
-        s += " }"
-        return s
-    }
-
-    equals(other: CircleMembers): boolean {
-        if (other.members === this.members) return true;
-        if (other.members.length != this.members.length) return false;
-
-        const thisIds = new Set(this.members.map(u => u.id));
-        const otherIds = new Set(other.members.map(u => u.id));
-
-        if (thisIds.size !== otherIds.size) return false;
-
-        for (const id of thisIds) {
-            if (!otherIds.has(id)) return false;
-        }
-
-        return true;
-    }
 
     static rehydrate(owner: User, members: User[]): CircleMembers {
+        CircleMembersInvariants.enforce(owner, members);
         return CircleMembers.create(owner, members);
+    }
+
+    private static toMap(users: User[]): Map<string, User> {
+        return new Map(
+            users.map(u => [u.id, u])
+        );
     }
 }
