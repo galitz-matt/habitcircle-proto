@@ -6,7 +6,7 @@ export class User {
     private constructor(
         private readonly _id: string,
         private _username: Username,
-        private _emailAddress: string,
+        private _emailAddress?: string,
         private _biography?: Biography,
         private _profilePictureKey?: string
     ) {}
