@@ -118,7 +118,19 @@ export class Circle {
         return this;
     }
 
-    get owner() {
+    get id(): string {
+        return this._id;
+    }
+
+    get createdAt(): Date {
+        return this._createdAt;
+    }
+
+    get photoKey(): string | undefined {
+        return this._photoKey;
+    }
+
+    get owner(): User {
         return this._members.owner;
     }
 
