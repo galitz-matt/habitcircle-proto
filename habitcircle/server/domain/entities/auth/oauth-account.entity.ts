@@ -31,9 +31,6 @@ export class OAuthAccount {
     }
 
     refreshTokens(accessToken: string, expiresAt: Date): this {
-        if (typeof this._auth.refreshTokens !== "function")
-            throw new DomainError("This authentication method cannot refresh tokens.")
-            
         this._auth.refreshTokens(accessToken, expiresAt);
         return this;
     }
@@ -44,6 +41,26 @@ export class OAuthAccount {
 
     get userId(): string {
         return this._userId;
+    }
+
+    get provider(): string {
+        return this._auth.identity.provider;
+    }
+
+    get providerAccountId(): string {
+        return this._auth.identity.providerAccountId;
+    }
+
+    get accessToken(): string | undefined {
+        return this._auth.tokens.accessToken;
+    }
+
+    get refreshToken(): string | undefined {
+        return this._auth.tokens.refreshToken;
+    }
+
+    get expiresAt(): Date | undefined {
+        return this._auth.tokens.expiresAt;
     }
 
     static rehydrate(
