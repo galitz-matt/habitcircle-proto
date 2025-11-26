@@ -1,14 +1,10 @@
 import { Password } from "@/server/domain/value-objects/auth/password.value-object";
-import { DomainAuthType } from "@/server/domain/types/auth-type";
-import { Authentication } from "./authentication.interface";
-import { AuthenticationDto } from "../dtos/auth/authentication.dto";
 
 const VERSION_ZERO = 0;
 const NO_ATTEMPTS = 0;
 const NOT_VERIFIED = false;
 
-export class CredentialsAuthentication implements Authentication {
-    readonly type = DomainAuthType.CREDENTIALS;
+export class CredentialsAuthentication {
     
     private constructor(
         private _password: Password,
@@ -24,15 +20,6 @@ export class CredentialsAuthentication implements Authentication {
             NO_ATTEMPTS,
             NOT_VERIFIED
         );
-    }
-
-    getAuthInfo(): AuthenticationDto {
-        return {
-            type: this.type,
-            passwordVersion: this._passwordVersion,
-            failedAttempts: this._failedAttempts,
-            emailVerified: this._emailVerified
-        }
     }
 
     changePassword(hash: string): this {

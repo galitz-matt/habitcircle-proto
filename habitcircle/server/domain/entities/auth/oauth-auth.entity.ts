@@ -1,11 +1,7 @@
 import { OAuthIdentity } from "@/server/domain/value-objects/auth/oauth-identity.value-object";
-import { OAuthTokens } from "../value-objects/auth/oauth-tokens.value-object";
-import { DomainAuthType } from "@/server/domain/types/auth-type";
-import { Authentication } from "./authentication.interface";
-import { AuthenticationDto } from "../dtos/auth/authentication.dto";
+import { OAuthTokens } from "../../value-objects/auth/oauth-tokens.value-object";
 
-export class OAuthAuthentication implements Authentication {
-    readonly type = DomainAuthType.OAUTH;
+export class OAuthAuthentication {
 
     private constructor(
         readonly identity: OAuthIdentity,
@@ -17,14 +13,6 @@ export class OAuthAuthentication implements Authentication {
             identity,
             tokens
         )
-    }
-
-    getAuthInfo(): AuthenticationDto {
-        return {
-            type: this.type,
-            identity: this.identity.toInfo(),
-            token: this._tokens.toInfo()
-        }
     }
 
     refreshTokens(accessToken: string, expiresAt: Date): this {
