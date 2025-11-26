@@ -1,4 +1,3 @@
-import { OAuthTokenDto } from "@/server/domain/dtos/auth/oauth-token.dto";
 import { OAuthTokensInvariants } from "../../invariants/auth/oauth-tokens.invariant";
 
 export class OAuthTokens {
