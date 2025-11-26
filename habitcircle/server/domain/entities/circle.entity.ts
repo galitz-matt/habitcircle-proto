@@ -83,18 +83,13 @@ export class Circle {
         return this.getOwner().id === userId;
     }
 
-    removeHabit(habit: Habit): this {
-        this._habits = this._habits.remove(habit);
+    removeHabit(habitId: string): this {
+        this._habits = this._habits.remove(habitId);
         return this;
     }
 
-    removeHabits(habits: Habit[]): this {
-        this._habits = this._habits.removeMany(habits);
-        return this;
-    }
-
-    removeHabitsById(habitIds: string[]): this {
-        this._habits = this._habits.removeManyById(habitIds);
+    removeHabits(habitIds: string[]): this {
+        this._habits = this._habits.removeMany(habitIds);
         return this;
     }
 
