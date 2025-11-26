@@ -47,6 +47,22 @@ export class CredentialsAuthentication {
         return this._password.equals(password);
     }
 
+    get password(): Password {
+        return this._password;
+    }
+
+    get passwordVersion(): number {
+        return this._passwordVersion;
+    }
+
+    get failedAttempts(): number {
+        return this._failedAttempts;
+    }
+
+    get emailVerified(): boolean {
+        return this._emailVerified;
+    }
+
     static rehydrate(
         password: Password,
         passwordVersion: number,

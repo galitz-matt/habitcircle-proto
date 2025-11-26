@@ -36,6 +36,22 @@ export class CredentialsAccount {
         return this._userId;
     }
 
+    get passwordHash(): string {
+        return this._auth.password.toString();
+    }
+
+    get passwordVersion(): number {
+        return this._auth.passwordVersion;
+    }
+
+    get failedAttempts(): number {
+        return this._auth.failedAttempts;
+    }
+
+    get emailVerified(): boolean {
+        return this._auth.emailVerified;
+    }
+
     static rehydrate(
         id: string,
         userId: string,
