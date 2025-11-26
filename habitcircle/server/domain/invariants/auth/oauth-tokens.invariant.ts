@@ -2,7 +2,7 @@ import { DomainError } from "@/lib/errors";
 
 export class OAuthTokensInvariants {
     static enforce(
-        accessToken: string,
+        accessToken?: string,
         refreshToken?: string,
         expiresAt?: Date
     ): void {

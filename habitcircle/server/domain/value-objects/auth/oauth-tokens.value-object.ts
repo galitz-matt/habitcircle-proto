@@ -3,7 +3,7 @@ import { OAuthTokensInvariants } from "../../invariants/auth/oauth-tokens.invari
 
 export class OAuthTokens {
     private constructor(
-        readonly accessToken: string,
+        readonly accessToken?: string,
         readonly refreshToken?: string,
         readonly expiresAt?: Date
     ) {
@@ -11,7 +11,7 @@ export class OAuthTokens {
     }
 
     static create(
-        accessToken: string,
+        accessToken?: string,
         refreshToken?: string,
         expiresAt?: Date
     ): OAuthTokens {
@@ -34,16 +34,8 @@ export class OAuthTokens {
         return OAuthTokens.create(accessToken, this.refreshToken, expiresAt ?? this.expiresAt);
     }
 
-    toInfo(): OAuthTokenDto {
-        return {
-            accessToken: this.accessToken,
-            refreshToken: this.refreshToken ?? undefined,
-            expiresAt: this.expiresAt ?? undefined
-        }
-    }
-
     static rehydrate(
-        accessToken: string, 
+        accessToken?: string, 
         refreshToken?: string, 
         expiresAt?: Date
     ): OAuthTokens {
