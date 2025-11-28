@@ -33,6 +33,18 @@ export class User {
         return this._username;
     }
 
+    get emailAddress(): string | undefined {
+        return this._emailAddress;
+    }
+
+    get biography(): Biography | undefined {
+        return this._biography;
+    }
+
+    get profilePictureKey(): string | undefined {
+        return this._profilePictureKey;
+    }
+
     static rehydrate(
         id: string,
         username: Username,
