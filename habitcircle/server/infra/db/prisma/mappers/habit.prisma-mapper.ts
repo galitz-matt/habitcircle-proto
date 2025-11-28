@@ -1,13 +1,16 @@
 import { Habit } from "@/server/domain/entities/habit.entity";
 import { Habit as HabitRecord } from "@/prisma/generated"
 import { HabitPersistenceDto } from "@/server/infra/db/dtos/habit-persistence.dto"
+import { HabitName } from "@/server/domain/value-objects/habit-name.value-object";
 
 export class HabitPrismaMapper {
     static toDomain(record: HabitRecord): Habit {
         return Habit.rehydrate(
             record.id,
             record.createdAt,
-            record.name,
+            HabitName.rehydrate(
+                record.name
+            ),
             record.circleId
         );
     }
@@ -16,7 +19,7 @@ export class HabitPrismaMapper {
         return {
             id: habit.id,
             createdAt: habit.createdAt,
-            name: habit.getName(),
+            name: habit.name.value,
             circleId: habit.circleId
         }
     }
