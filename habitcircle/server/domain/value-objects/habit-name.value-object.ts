@@ -3,7 +3,7 @@ import { HabitNameInvariants } from "../invariants/habit-name.invariant";
 
 export class HabitName {
     private constructor(
-        readonly name: string
+        readonly value: string
     ) {
         Object.freeze(this);
     }
@@ -15,7 +15,7 @@ export class HabitName {
     }
 
     equals(other: HabitName): boolean {
-        return !!other && this.name === other.name;
+        return !!other && this.value === other.value;
     }
 
     static rehydrate(name: string): HabitName {
@@ -23,7 +23,7 @@ export class HabitName {
     }
 
     toString(): string {
-        return this.name;
+        return this.value;
     }
 
 }
