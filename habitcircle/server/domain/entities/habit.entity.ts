@@ -26,6 +26,10 @@ export class Habit {
         return this._id;
     }
 
+    get createdAt() {
+        return this._createdAt;
+    }
+
     get circleId() {
         return this._circleId;
     }
