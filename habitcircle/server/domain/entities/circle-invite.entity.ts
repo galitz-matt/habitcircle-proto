@@ -7,8 +7,8 @@ export class CircleInvite {
     private constructor(
         private readonly _id: string,
         private readonly _createdAt: Date,
-        private readonly _senderId: string,
-        private readonly _recipientId: string,
+        readonly senderId: string,
+        readonly recipientId: string,
         private readonly _circleId: string,
         private _status: DomainInviteStatus
     ) {}
@@ -43,6 +43,22 @@ export class CircleInvite {
             throw new DomainError("Cannot decline nonpending invite");
 
         this._status = DomainInviteStatus.DECLINED;
+    }
+
+    get id() {
+        return this._id;
+    }
+
+    get createdAt() {
+        return this._createdAt;
+    }
+
+    get circleId() {
+        return this._circleId;
+    }
+
+    get status() {
+        return this._status;
     }
 
     static rehydrate(
