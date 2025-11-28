@@ -1,4 +1,4 @@
-export enum InviteStatus {
+export enum DomainInviteStatus {
     PENDING,
     ACCEPTED,
     DECLINED

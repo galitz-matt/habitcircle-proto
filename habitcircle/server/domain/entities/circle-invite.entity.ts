@@ -1,4 +1,4 @@
-import { InviteStatus } from "@/server/domain/types/invite-status"
+import { DomainInviteStatus } from "@/server/domain/types/invite-status"
 import { IdGenerator } from "@/lib/utils"
 import { DomainError } from "@/lib/errors";
 
@@ -10,7 +10,7 @@ export class CircleInvite {
         private readonly _senderId: string,
         private readonly _recipientId: string,
         private readonly _circleId: string,
-        private _status: InviteStatus
+        private _status: DomainInviteStatus
     ) {}
 
     static create(
@@ -27,22 +27,22 @@ export class CircleInvite {
             senderId,
             recipientId,
             circleId,
-            InviteStatus.PENDING
+            DomainInviteStatus.PENDING
         );
     }
 
     accept(): void {
-        if (this._status !== InviteStatus.PENDING)
+        if (this._status !== DomainInviteStatus.PENDING)
             throw new DomainError("Cannot accept nonpending circle invite");
 
-        this._status = InviteStatus.ACCEPTED;
+        this._status = DomainInviteStatus.ACCEPTED;
     }
 
     decline(): void {
-        if (this._status !== InviteStatus.PENDING) 
+        if (this._status !== DomainInviteStatus.PENDING) 
             throw new DomainError("Cannot decline nonpending invite");
 
-        this._status = InviteStatus.DECLINED;
+        this._status = DomainInviteStatus.DECLINED;
     }
 
     static rehydrate(
@@ -51,7 +51,7 @@ export class CircleInvite {
         senderId: string,
         recipientId: string,
         circleId: string,
-        status: InviteStatus
+        status: DomainInviteStatus
     ): CircleInvite {
         return new CircleInvite(
             id,
