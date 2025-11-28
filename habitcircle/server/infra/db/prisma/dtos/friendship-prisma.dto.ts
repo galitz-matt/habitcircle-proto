@@ -1,6 +1,6 @@
 import { FriendshipStatus } from "../generated"
 
-export type FriendshipPersistenceDto = {
+export type FriendshipPrismaDto = {
     id: string,
     createdAt: Date,
     requesterId: string,

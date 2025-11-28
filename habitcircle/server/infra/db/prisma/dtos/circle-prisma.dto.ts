@@ -1,4 +1,4 @@
-export type CirclePersistenceDto = {
+export type CirclePrismaDto = {
     id: string;
     name: string;
     createdAt: Date;

@@ -1,7 +1,7 @@
 import { Friendship } from "@/server/domain/entities/friendship.entity";
 import { Friendship as FriendshipRecord, FriendshipStatus } from "../generated";
 import { DomainFriendshipStatus } from "@/server/domain/types/friendship-status";
-import { FriendshipPersistenceDto } from "../dtos/friendship.dto";
+import { FriendshipPrismaDto } from "../dtos/friendship-prisma.dto";
 
 export class FriendshipPrismaMapper {
     toDomain(record: FriendshipRecord): Friendship {
@@ -14,7 +14,7 @@ export class FriendshipPrismaMapper {
         )
     }
 
-    toPersistence(friendship: Friendship): FriendshipPersistenceDto {
+    toPersistence(friendship: Friendship): FriendshipPrismaDto {
         return {
             id: friendship.id,
             createdAt: friendship.createdAt,

@@ -1,6 +1,6 @@
 import { Habit } from "@/server/domain/entities/habit.entity";
 import { Habit as HabitRecord } from "@/prisma/generated"
-import { HabitPersistenceDto } from "@/server/infra/db/prisma/dtos/habit-persistence.dto"
+import { HabitPrismaDto } from "@/server/infra/db/prisma/dtos/habit-prisma.dto"
 import { HabitName } from "@/server/domain/value-objects/habit-name.value-object";
 
 export class HabitPrismaMapper {
@@ -15,7 +15,7 @@ export class HabitPrismaMapper {
         );
     }
 
-    static toPersistence(habit: Habit): HabitPersistenceDto {
+    static toPersistence(habit: Habit): HabitPrismaDto {
         return {
             id: habit.id,
             createdAt: habit.createdAt,

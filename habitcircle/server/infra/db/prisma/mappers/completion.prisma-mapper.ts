@@ -1,6 +1,6 @@
 import { Completion } from "@/server/domain/entities/completion.entity";
 import { Completion as CompletionRecord } from "@/prisma/generated";
-import { CompletionPersistenceDto } from "../dtos/completion-persistence.dto";
+import { CompletionPrismaDto } from "../dtos/completion-prisma.dto";
 
 export class CompletionPrismaMapper {
     static toDomain(record: CompletionRecord): Completion {
@@ -12,7 +12,7 @@ export class CompletionPrismaMapper {
         );
     }
 
-    static toPersistence(completion: Completion): CompletionPersistenceDto {
+    static toPersistence(completion: Completion): CompletionPrismaDto {
         return {
             id: completion.id,
             completedAt: completion.completedAt,

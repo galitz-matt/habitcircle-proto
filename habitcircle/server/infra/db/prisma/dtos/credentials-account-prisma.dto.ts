@@ -1,4 +1,4 @@
-export type CredentialsAccountPersistenceDto = {
+export type CredentialsAccountPrismaDto = {
     id: string,
     userId: string,
     password: string,

@@ -1,4 +1,4 @@
-export type OAuthAccountPersistenceDto = {
+export type OAuthAccountPrismaDto = {
     id: string,
     userId: string,
     provider: string,

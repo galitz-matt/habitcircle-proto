@@ -2,7 +2,7 @@ import { CredentialsAccount } from "@/server/domain/entities/auth/credentials-ac
 import { CredentialsAccount as CredentialsAccountRecord } from "../generated";
 import { CredentialsAuthentication } from "@/server/domain/entities/auth/credentials-auth.entity";
 import { Password } from "@/server/domain/value-objects/auth/password.value-object";
-import { CredentialsAccountPersistenceDto } from "../dtos/credentials-account-persistence.dto";
+import { CredentialsAccountPrismaDto } from "../dtos/credentials-account-prisma.dto";
 
 export class CredentialsAccountPrismaMapper {
     toDomain(record: CredentialsAccountRecord): CredentialsAccount {
@@ -18,7 +18,7 @@ export class CredentialsAccountPrismaMapper {
         );
     } 
 
-    toPersistence(account: CredentialsAccount): CredentialsAccountPersistenceDto {
+    toPersistence(account: CredentialsAccount): CredentialsAccountPrismaDto {
         return {
             id: account.id,
             userId: account.userId,

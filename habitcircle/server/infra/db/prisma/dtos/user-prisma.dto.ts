@@ -1,4 +1,4 @@
-export type UserPersistenceDto = {
+export type UserPrismaDto = {
     id: string,
     username: string,
     emailAddress: string | null,

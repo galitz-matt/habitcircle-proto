@@ -3,7 +3,7 @@ import { OAuthAccount as OAuthAccountRecord } from "../generated";
 import { OAuthAuthentication } from "@/server/domain/entities/auth/oauth-auth.entity";
 import { OAuthIdentity } from "@/server/domain/value-objects/auth/oauth-identity.value-object";
 import { OAuthTokens } from "@/server/domain/value-objects/auth/oauth-tokens.value-object";
-import { OAuthAccountPersistenceDto } from "../dtos/oauth-account-persistence.dto";
+import { OAuthAccountPersistenceDto } from "../dtos/oauth-account-prisma.dto";
 
 export class OAuthAccountPrismaMapper {
     toDomain(record: OAuthAccountRecord): OAuthAccount {
