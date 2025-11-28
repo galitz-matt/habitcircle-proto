@@ -1,6 +1,6 @@
 import { Completion } from "@/server/domain/entities/completion.entity";
 import { Completion as CompletionRecord } from "@/prisma/generated";
-import { CompletionPersistenceDto } from "../../dtos/completion-persistence.dto";
+import { CompletionPersistenceDto } from "../dtos/completion-persistence.dto";
 
 export class CompletionPrismaMapper {
     static toDomain(record: CompletionRecord): Completion {

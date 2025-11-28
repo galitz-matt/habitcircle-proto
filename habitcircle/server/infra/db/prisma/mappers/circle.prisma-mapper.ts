@@ -2,7 +2,7 @@ import { Circle } from "@/server/domain/entities/circle.entity";
 import { User } from "@/server/domain/entities/user.entity";
 import { Habit } from "@/server/domain/entities/habit.entity";
 import type { Prisma } from "@/prisma/generated"
-import { CirclePersistenceDto } from "@/server/infra/db/dtos/circle-persistence.dto";
+import { CirclePersistenceDto } from "@/server/infra/db/prisma/dtos/circle-persistence.dto";
 import { Username } from "@/server/domain/value-objects/username.value-object";
 import { Biography } from "@/server/domain/value-objects/biography.value-object";
 import { HabitName } from "@/server/domain/value-objects/habit-name.value-object";

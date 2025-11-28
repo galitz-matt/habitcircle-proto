@@ -43,6 +43,18 @@ export class Friendship {
         this._status = DomainFriendshipStatus.DECLINED;
     }
 
+    get id(): string {
+        return this._id
+    }
+
+    get createdAt(): Date {
+        return new Date(this._createdAt);
+    }
+
+    get status(): DomainFriendshipStatus {
+        return this._status;
+    }
+
     // Used by persistence layer
     static rehydrate(
         id: string,
