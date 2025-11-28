@@ -1,6 +1,6 @@
 import { DomainError } from "@/lib/errors";
 import { IdGenerator } from "@/lib/utils";
-import { FriendshipStatus } from "@/server/domain/types/friendship-status";
+import { DomainFriendshipStatus } from "@/server/domain/types/friendship-status";
 
 export class Friendship {
 
@@ -9,7 +9,7 @@ export class Friendship {
         private readonly _createdAt: Date,
         readonly requesterId: string,
         readonly addresseeId: string,
-        private _status: FriendshipStatus
+        private _status: DomainFriendshipStatus
     ) {}
 
     static create(requesterId: string, addresseeId: string): Friendship {
@@ -21,26 +21,26 @@ export class Friendship {
             new Date(),
             requesterId,
             addresseeId,
-            FriendshipStatus.PENDING
+            DomainFriendshipStatus.PENDING
         );
     }
 
     accept(actorUserId: string): void {
         if (actorUserId !== this.addresseeId)
             throw new DomainError("Only addressee can accept friendship")
-        if (this._status !== FriendshipStatus.PENDING)
+        if (this._status !== DomainFriendshipStatus.PENDING)
             throw new DomainError("Cannot accept non-pending friendship");
 
-        this._status = FriendshipStatus.ACCEPTED;
+        this._status = DomainFriendshipStatus.ACCEPTED;
     }
 
     decline(actorUserId: string): void {
         if (actorUserId !== this.addresseeId)
             throw new DomainError("Only addressee can accept friendship");
-        if (this._status !== FriendshipStatus.PENDING)
+        if (this._status !== DomainFriendshipStatus.PENDING)
             throw new DomainError("Cannot decline non-pending friendship");
 
-        this._status = FriendshipStatus.DECLINED;
+        this._status = DomainFriendshipStatus.DECLINED;
     }
 
     // Used by persistence layer
@@ -49,7 +49,7 @@ export class Friendship {
         createdAt: Date,
         requesterId: string,
         addresseeId: string,
-        status: FriendshipStatus
+        status: DomainFriendshipStatus
     ): Friendship {
         return new Friendship(
             id,
