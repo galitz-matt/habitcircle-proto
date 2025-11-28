@@ -6,7 +6,6 @@ export class CompletionPrismaMapper {
     static toDomain(record: CompletionRecord): Completion {
         return Completion.rehydrate(
             record.id,
-            record.createdAt,
             record.completedAt,
             record.userId,
             record.habitId
@@ -16,7 +15,6 @@ export class CompletionPrismaMapper {
     static toPersistence(completion: Completion): CompletionPersistenceDto {
         return {
             id: completion.id,
-            createdAt: completion.createdAt,
             completedAt: completion.completedAt,
             userId: completion.userId,
             habitId: completion.habitId
