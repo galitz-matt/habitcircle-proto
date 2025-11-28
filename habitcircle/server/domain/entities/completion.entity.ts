@@ -25,6 +25,22 @@ export class Completion {
         )
     }
 
+    get id() {
+        return this._id;
+    }
+
+    get completedAt() {
+        return new Date(this._completedAt);
+    }
+
+    get userId() {
+        return this._userId;
+    }
+
+    get habitId() {
+        return this._habitId;
+    }
+
     static rehydrate(
         id: string,
         completedAt: Date,
