@@ -3,7 +3,7 @@ import { OAuthAccount as OAuthAccountRecord } from "../generated";
 import { OAuthAuthentication } from "@/server/domain/entities/auth/oauth-auth.entity";
 import { OAuthIdentity } from "@/server/domain/value-objects/auth/oauth-identity.value-object";
 import { OAuthTokens } from "@/server/domain/value-objects/auth/oauth-tokens.value-object";
-import { OAuthAccountPersistenceDto } from "../dtos/oauth-account-prisma.dto";
+import { OAuthAccountPrismaDto } from "../dtos/oauth-account-prisma.dto";
 
 export class OAuthAccountPrismaMapper {
     toDomain(record: OAuthAccountRecord): OAuthAccount {
@@ -24,7 +24,7 @@ export class OAuthAccountPrismaMapper {
         )
     }
 
-    toPersistence(oauthAccount: OAuthAccount): OAuthAccountPersistenceDto {
+    toPersistence(oauthAccount: OAuthAccount): OAuthAccountPrismaDto {
         return {
             id: oauthAccount.id,
             userId: oauthAccount.userId,
