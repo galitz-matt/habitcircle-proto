@@ -1,7 +1,7 @@
 import type { Circle } from "@/server/domain/entities/circle.entity";
 import { CircleRepository } from "@/server/application/repositories/circle.repository";
-import { CirclePrismaMapper } from "@/server/infrastructure/db/prisma/mappers/circle.prisma-mapper";
-import { HabitPrismaMapper } from "@/server/infrastructure/db/prisma/mappers/habit.prisma-mapper";
+import { CirclePrismaMapper } from "@/server/infra/db/prisma/mappers/circle.prisma-mapper";
+import { HabitPrismaMapper } from "@/server/infra/db/prisma/mappers/habit.prisma-mapper";
 import type { PrismaClient } from "@/prisma/generated";
 import { NotFoundError } from "@/lib/errors";
 
@@ -55,17 +55,17 @@ export class CirclePrismaRepository implements CircleRepository {
             create: {
                 ...circleRecord,
                 owner: { connect: { id: circle.getOwner().id } },
-                members: { connect: circle.members.getAll().map(m => ({ id: m.id })) },
+                members: { connect: circle.getMembers().map(m => ({ id: m.id })) },
                 habits: {
-                    create: circle.habits.getAll().map(h => HabitPrismaMapper.toPersistence(h)) 
+                    create: circle.getHabits().map(h => HabitPrismaMapper.toPersistence(h)) 
                 }
             },
             update: {
                 ...circleRecord,
                 owner: { connect: { id: circle.getOwner().id }},
-                members: { set: circle.members.getAll().map(m => ({ id: m.id })) },
+                members: { set: circle.getMembers().map(m => ({ id: m.id })) },
                 habits: { 
-                    upsert: circle.habits.getAll().map(h => ({
+                    upsert: circle.getHabits().map(h => ({
                         where: { id: h.id },
                         create: HabitPrismaMapper.toPersistence(h),
                         update: HabitPrismaMapper.toPersistence(h)
