@@ -7,7 +7,7 @@ export class CircleMembers {
         readonly members: Map<string, User>
     ) {
         this.members = new Map(members);
-        Object.freeze(members);
+        Object.freeze(this.members);
         Object.freeze(this);
     }
 
@@ -63,7 +63,6 @@ export class CircleMembers {
 
 
     static rehydrate(owner: User, members: User[]): CircleMembers {
-        CircleMembersInvariants.enforce(owner, members);
         return CircleMembers.create(owner, members);
     }
 
