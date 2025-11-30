@@ -78,6 +78,7 @@ model OAuthAccount {
 model Friendship {
   id                String            @id @default(cuid())
   createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @default(now())
   requester         User              @relation("UserSentFriendships", fields: [requesterId], references: [id])
   requesterId       String
   addressee         User              @relation("UserReceivedFriendships", fields: [addresseeId], references: [id])
@@ -96,6 +97,7 @@ enum FriendshipStatus {
 model CircleInvite {
   id                String          @id @default(cuid())
   createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @default(now())
   sender            User            @relation("CircleInvitesSender", fields: [senderId], references: [id])
   senderId          String
   recipient         User            @relation("CircleInvitesRecipient", fields: [recipientId], references: [id])
