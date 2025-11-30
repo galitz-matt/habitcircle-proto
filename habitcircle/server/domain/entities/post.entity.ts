@@ -30,6 +30,34 @@ export class Post {
         )
     }
 
+    get id(): string {
+        return this._id;
+    }
+
+    get createdAt(): Date {
+        return this._createdAt;
+    }
+
+    get userId(): string {
+        return this._userId;
+    }
+
+    get habitId(): string {
+        return this._habitId;
+    }
+
+    get completionId(): string {
+        return this._completionId;
+    }
+
+    get photoKey(): string | undefined {
+        return this._photoKey;
+    }
+
+    get caption(): PostCaption | undefined {
+        return this._caption;
+    }
+
     static rehydrate(
         id: string,
         createdAt: Date,
