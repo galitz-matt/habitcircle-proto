@@ -6,7 +6,7 @@ import { OAuthTokens } from "@/server/domain/value-objects/auth/oauth-tokens.val
 import { OAuthAccountPrismaDto } from "../dtos/oauth-account-prisma.dto";
 
 export class OAuthAccountPrismaMapper {
-    toDomain(record: OAuthAccountRecord): OAuthAccount {
+    static toDomain(record: OAuthAccountRecord): OAuthAccount {
         return OAuthAccount.rehydrate(
             record.id,
             record.userId,
@@ -24,7 +24,7 @@ export class OAuthAccountPrismaMapper {
         )
     }
 
-    toPersistence(oauthAccount: OAuthAccount): OAuthAccountPrismaDto {
+    static toPersistence(oauthAccount: OAuthAccount): OAuthAccountPrismaDto {
         return {
             id: oauthAccount.id,
             userId: oauthAccount.userId,

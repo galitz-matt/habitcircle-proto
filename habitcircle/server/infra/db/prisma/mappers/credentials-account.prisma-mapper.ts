@@ -5,7 +5,7 @@ import { Password } from "@/server/domain/value-objects/auth/password.value-obje
 import { CredentialsAccountPrismaDto } from "../dtos/credentials-account-prisma.dto";
 
 export class CredentialsAccountPrismaMapper {
-    toDomain(record: CredentialsAccountRecord): CredentialsAccount {
+    static toDomain(record: CredentialsAccountRecord): CredentialsAccount {
         return CredentialsAccount.rehydrate(
             record.id,
             record.userId,
@@ -18,11 +18,11 @@ export class CredentialsAccountPrismaMapper {
         );
     } 
 
-    toPersistence(account: CredentialsAccount): CredentialsAccountPrismaDto {
+    static toPersistence(account: CredentialsAccount): CredentialsAccountPrismaDto {
         return {
             id: account.id,
             userId: account.userId,
-            password: account.passwordHash,
+            hashedPassword: account.passwordHash,
             passwordVersion: account.passwordVersion,
             failedAttempts: account.failedAttempts,
             emailVerified: account.emailVerified
