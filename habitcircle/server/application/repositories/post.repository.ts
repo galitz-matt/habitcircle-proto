@@ -5,6 +5,7 @@ export interface PostRepository {
     findByCompletionId(completionId: string): Promise<Post | null>;
     findByUserId(userId: string): Promise<Post[]>;
     findByHabitId(habitId: string): Promise<Post[]>;
-    save(post: Post): Promise<void>;
-    delete(id: string): Promise<void>;
+    create(post: Post): Promise<void>;
+    update(post: Post): Promise<void>;
+    delete(post: Post): Promise<void>;
 }

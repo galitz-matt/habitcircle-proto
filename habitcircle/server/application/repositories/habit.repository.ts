@@ -1,8 +1,9 @@
-import { Habit } from "@/server/domain/entities/habit.entity";
+import type { Habit } from "@/server/domain/entities/habit.entity";
 
 export interface HabitRepository {
     findById(id: string): Promise<Habit | null>;
     findByCircleId(circleId: string): Promise<Habit[]>;
-    save(habit: Habit): Promise<void>;
-    delete(id: string): Promise<void>;
+    create(habit: Habit): Promise<void>;
+    update(habit: Habit): Promise<void>;
+    delete(habit: Habit): Promise<void>;
 }
