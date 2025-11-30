@@ -54,7 +54,7 @@ export class CirclePrismaRepository implements CircleRepository {
             where: { id: circle.id },
             create: {
                 ...circleRecord,
-                owner: { connect: { id: circle.getOwner().id } },
+                owner: { connect: { id: circle.owner.id } },
                 members: { connect: circle.getMembers().map(m => ({ id: m.id })) },
                 habits: {
                     create: circle.getHabits().map(h => HabitPrismaMapper.toPersistence(h)) 
@@ -62,7 +62,7 @@ export class CirclePrismaRepository implements CircleRepository {
             },
             update: {
                 ...circleRecord,
-                owner: { connect: { id: circle.getOwner().id }},
+                owner: { connect: { id: circle.owner.id }},
                 members: { set: circle.getMembers().map(m => ({ id: m.id })) },
                 habits: { 
                     upsert: circle.getHabits().map(h => ({
