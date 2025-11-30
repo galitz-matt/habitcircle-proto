@@ -1,8 +1,9 @@
 import type { PrismaClient } from "@/prisma/generated";
 import { UserRepository } from "@/server/application/repositories/user.repository";
-import { UserPrismaMapper } from "@/server/infrastructure/db/prisma/mappers/user.prisma-mapper";
+import { UserPrismaMapper } from "@/server/infra/db/prisma/mappers/user.prisma-mapper";
 import type { User } from "@/server/domain/entities/user.entity";
 import { NotFoundError } from "@/lib/errors";
+import type { Username } from "@/server/domain/value-objects/username.value-object";
 
 export class UserPrismaRepository implements UserRepository {
     constructor(private readonly prisma: PrismaClient) {}
@@ -16,11 +17,12 @@ export class UserPrismaRepository implements UserRepository {
         return UserPrismaMapper.toDomain(userRecord);
     }
 
-    async findByUsername(username: string): Promise<User> {
+    async findByUsername(username: Username): Promise<User | null> {
         const userRecord = await this.prisma.user.findUnique({
-            where: { username: username}
+            where: { username: username.toString() }
         })
-        if (!userRecord) throw new NotFoundError(`User with username ${username} not found`);
+        if (!userRecord)
+            return null;
 
         return UserPrismaMapper.toDomain(userRecord);
     }
@@ -38,7 +40,6 @@ export class UserPrismaRepository implements UserRepository {
             create: userRecord,
             update: {
                 username: userRecord.username,
-                password: userRecord.password
             },
         }).catch((err) => {
             if (err.code === "P2002") {

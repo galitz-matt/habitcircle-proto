@@ -47,7 +47,8 @@ export class CirclePrismaMapper {
             record.id,
             record.createdAt,
             CircleName.rehydrate(record.name),
-            CircleMembers.rehydrate(owner, members),
+            owner,
+            CircleMembers.rehydrate(members),
             CircleHabits.rehydrate(habits)
         );
     }
@@ -56,6 +57,7 @@ export class CirclePrismaMapper {
         return {
             id: circle.id,
             name: circle.getName(),
+            ownerId: circle.owner.id,
             createdAt: circle.createdAt,
             photoKey: circle.photoKey ?? null
         };

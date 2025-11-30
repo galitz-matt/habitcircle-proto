@@ -12,6 +12,7 @@ export class Circle {
         private readonly _id: string,
         private readonly _createdAt: Date,
         private _name: CircleName,
+        private _owner: User,
         private _members: CircleMembers,
         private _habits: CircleHabits,
         private _photoKey?: string
@@ -19,6 +20,7 @@ export class Circle {
 
     static create(
         name: CircleName,
+        owner: User,
         members: CircleMembers,
         habits: CircleHabits,
         photoKey?: string
@@ -27,6 +29,7 @@ export class Circle {
             IdGenerator.new(),
             new Date(),
             name,
+            owner,
             members,
             habits,
             photoKey
@@ -63,10 +66,6 @@ export class Circle {
         return this._name.toString();
     }
 
-    getOwner(): User {
-        return this._members.owner;
-    }
-
     hasHabitById(habitId: string) {
         return this._habits.containsById(habitId);
     }
@@ -80,7 +79,7 @@ export class Circle {
     }
 
     isOwnedBy(userId: string): boolean {
-        return this.getOwner().id === userId;
+        return this._owner.id === userId;
     }
 
     removeHabit(habitId: string): this {
@@ -94,19 +93,20 @@ export class Circle {
     }
 
     removeMember(user: User): this {
+        if (!this.hasMember(user))
+            throw new DomainError("User is not member of Circle");
+
         return this.removeMembers([user]);
     }
 
     removeMembers(users: User[]): this {
-        if (users.some(u => u.equals(this.owner)))
-            throw new DomainError("Cannot remove owner");
-
-        this._members = this._members.removeMany(users);
-        return this;
+        return this.removeMembersById(
+            users.map(u => u.id)
+        );
     }
 
     removeMembersById(userIds: string[]): this {
-        if (userIds.some(id => id === this.owner.id))
+        if (userIds.some(id => id === this._owner.id))
             throw new DomainError("Cannot remove owner");
 
         this._members = this._members.removeManyById(userIds);
@@ -114,7 +114,15 @@ export class Circle {
     }
 
     setOwner(user: User): this {
-        this._members = this._members.setOwner(user);
+        if (this._owner.equals(user))
+            throw new DomainError("User is already owner");
+        if (!this.hasMember(user))
+            throw new DomainError("User is not a member of the circle");
+
+        this.addMember(this._owner)
+        this.removeMember(user)
+
+        this._owner = user;
         return this;
     }
 
@@ -131,13 +139,14 @@ export class Circle {
     }
 
     get owner(): User {
-        return this._members.owner;
+        return this._owner;
     }
 
     static rehydrate(
         id: string,
         createdAt: Date,
         name: CircleName,
+        owner: User,
         members: CircleMembers,
         habits: CircleHabits,
         photoKey?: string
@@ -147,6 +156,7 @@ export class Circle {
             id,
             createdAt,
             name,
+            owner,
             members,
             habits,
             photoKey

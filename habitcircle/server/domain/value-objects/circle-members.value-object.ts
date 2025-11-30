@@ -3,7 +3,6 @@ import { CircleMembersInvariants } from "../invariants/circle-members.invariant"
 
 export class CircleMembers {
     private constructor(
-        readonly owner: User,
         readonly members: Map<string, User>
     ) {
         this.members = new Map(members);
@@ -11,10 +10,9 @@ export class CircleMembers {
         Object.freeze(this);
     }
 
-    static create(owner: User, members: User[]): CircleMembers {
-        CircleMembersInvariants.enforce(owner, members);
+    static create(members: User[]): CircleMembers {
+        CircleMembersInvariants.enforce(members);
         return new CircleMembers(
-            owner, 
             CircleMembers.toMap(members)
         );
     }
@@ -29,7 +27,6 @@ export class CircleMembers {
 
     addMany(users: User[]): CircleMembers {
         return CircleMembers.create(
-            this.owner,
             [...this.members.values(), ...users]
         );
     }
@@ -42,28 +39,19 @@ export class CircleMembers {
         return this.members.has(userId);
     }
 
-    removeMany(users: User[]): CircleMembers {
-        return this.removeManyById(users.map(u => u.id));
-    }
-
     removeManyById(userIds: string[]): CircleMembers {
         const clone = new Map(this.members);
         for (const id of userIds)
             clone.delete(id);
         
-        return new CircleMembers(this.owner, clone);
-    }
-
-    setOwner(user: User): CircleMembers {
-        if (user.id === this.owner.id) throw new Error("User is already owner.");
-        if (!this.contains(user)) throw new Error("User is not in circle.");
-
-        return new CircleMembers(user, this.members)
+        return new CircleMembers(clone);
     }
 
 
-    static rehydrate(owner: User, members: User[]): CircleMembers {
-        return CircleMembers.create(owner, members);
+    static rehydrate(members: User[]): CircleMembers {
+        return new CircleMembers(
+            CircleMembers.toMap(members)
+        );
     }
 
     private static toMap(users: User[]): Map<string, User> {

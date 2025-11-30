@@ -3,15 +3,8 @@ import { DomainError } from "@/lib/errors";
 
 export class CircleMembersInvariants {
     
-    static enforce(owner: User, members: User[]): void {
-        this.ensureOwnerIncluded(owner, members);
+    static enforce(members: User[]): void {
         this.ensureNoDuplicates(members);
-    }
-
-    static ensureOwnerIncluded(owner: User, members: User[]): void {
-        if (!members.includes(owner)) {
-            throw new DomainError("Owner must be included in Circle members");
-        }
     }
 
     static ensureNoDuplicates(members: User[]): void  {
