@@ -4,7 +4,7 @@ import type { Username } from "@/server/domain/value-objects/username.value-obje
 export interface UserRepository {
     findById(id: string): Promise<User | null>;
     findByUsername(username: Username): Promise<User | null>;
-    findAll(): Promise<User[]>;
-    save(user: User): Promise<void>;
-    delete(id: string): Promise<void>;
+    create(user: User): Promise<void>;
+    update(user: User): Promise<void>;
+    delete(user: User): Promise<void>;
 }

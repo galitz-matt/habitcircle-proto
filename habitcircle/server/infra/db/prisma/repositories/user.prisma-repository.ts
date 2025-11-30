@@ -2,58 +2,53 @@ import type { PrismaClient } from "@/prisma/generated";
 import { UserRepository } from "@/server/application/repositories/user.repository";
 import { UserPrismaMapper } from "@/server/infra/db/prisma/mappers/user.prisma-mapper";
 import type { User } from "@/server/domain/entities/user.entity";
-import { NotFoundError } from "@/lib/errors";
 import type { Username } from "@/server/domain/value-objects/username.value-object";
+import { NotFoundError } from "@/lib/errors";
 
 export class UserPrismaRepository implements UserRepository {
     constructor(private readonly prisma: PrismaClient) {}
 
-    async findById(id: string): Promise<User> {
+    async findById(id: string): Promise<User | null> {
         const userRecord = await this.prisma.user.findUnique({
             where: { id: id }
-        })
-        if (!userRecord) throw new NotFoundError(`User with id ${id} not found`);
-
-        return UserPrismaMapper.toDomain(userRecord);
+        });
+        return userRecord ? UserPrismaMapper.toDomain(userRecord) : null; 
     }
 
     async findByUsername(username: Username): Promise<User | null> {
         const userRecord = await this.prisma.user.findUnique({
             where: { username: username.toString() }
-        })
-        if (!userRecord)
-            return null;
-
-        return UserPrismaMapper.toDomain(userRecord);
+        });
+        return userRecord ? UserPrismaMapper.toDomain(userRecord) : null;
     }
 
-    async findAll(): Promise<User[]> {
-        const userRecords = await this.prisma.user.findMany();
-        return userRecords.map(UserPrismaMapper.toDomain);
-    }
-
-    async save(user: User): Promise<void> {
+    async create(user: User): Promise<void> {
         const userRecord = UserPrismaMapper.toPersistence(user);
 
-        await this.prisma.user.upsert({
-            where: { id: userRecord.id },
-            create: userRecord,
-            update: {
-                username: userRecord.username,
-            },
-        }).catch((err) => {
-            if (err.code === "P2002") {
-                throw new Error(`Username "${userRecord.username}" is taken`);
-            }
-            throw err;
+        await this.prisma.user.create({
+            data: userRecord
         });
     }
 
-    async delete(id: string): Promise<void> {
+    async update(user: User): Promise<void> {
+        const userRecord = UserPrismaMapper.toPersistence(user);
+
+        await this.prisma.user.update({
+            where: {
+                id: userRecord.id,
+            },
+            data: {
+                ...userRecord,
+                updatedAt: new Date(),
+            }
+        });
+    }
+
+    async delete(user: User): Promise<void> {
         await this.prisma.user.delete({
-            where: { id: id }
+            where: { id: user.id }
         }).catch((err) => {
-            if (err.code === "P2025") throw new Error(`User with id ${id} not found`);
+            if (err.code === "P2025") throw new NotFoundError(`User with id ${user.id} not found`);
             throw err;
         });
     }
