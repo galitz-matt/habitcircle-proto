@@ -23,22 +23,22 @@ export class UserPrismaRepository implements UserRepository {
     }
 
     async create(user: User): Promise<void> {
-        const userRecord = UserPrismaMapper.toPersistence(user);
+        const userDto = UserPrismaMapper.toPersistence(user);
 
         await this.prisma.user.create({
-            data: userRecord
+            data: userDto
         });
     }
 
     async update(user: User): Promise<void> {
-        const userRecord = UserPrismaMapper.toPersistence(user);
+        const userDto = UserPrismaMapper.toPersistence(user);
 
         await this.prisma.user.update({
             where: {
-                id: userRecord.id,
+                id: userDto.id,
             },
             data: {
-                ...userRecord,
+                ...userDto,
                 updatedAt: new Date(),
             }
         });
