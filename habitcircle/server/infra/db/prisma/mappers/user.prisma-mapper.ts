@@ -9,6 +9,7 @@ export class UserPrismaMapper {
     static toDomain(record: UserRecord): User {
         return User.rehydrate(
             record.id,
+            record.createdAt,
             Username.rehydrate(record.username),
             record.emailAddress ?? undefined,
             record.biography ? Biography.rehydrate(record.biography) : undefined,
@@ -19,6 +20,7 @@ export class UserPrismaMapper {
     static toPersistence(user: User): UserPrismaDto {
         return {
             id: user.id,
+            createdAt: user.createdAt,
             username: user.username.toString(),
             emailAddress: user.emailAddress ?? null,
             biography: user.biography?.toString() ?? null,

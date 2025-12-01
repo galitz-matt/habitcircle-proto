@@ -5,6 +5,7 @@ import { Biography } from "@/server/domain/value-objects/biography.value-object"
 export class User {
     private constructor(
         private readonly _id: string,
+        private _createdAt: Date,
         private _username: Username,
         private _emailAddress?: string,
         private _biography?: Biography,
@@ -16,6 +17,7 @@ export class User {
 
         return new User(
             IdGenerator.new(),
+            new Date(),
             username,
             normalizedEmail 
         );
@@ -27,6 +29,10 @@ export class User {
     
     get id(): string {
         return this._id;
+    }
+
+    get createdAt(): Date {
+        return new Date(this._createdAt);
     }
 
     get username(): Username {
@@ -47,6 +53,7 @@ export class User {
 
     static rehydrate(
         id: string,
+        createdAt: Date,
         username: Username,
         emailAddress?: string,
         biography?: Biography,
@@ -55,6 +62,7 @@ export class User {
         /* Used exclusively by repositories to reconstitue from persistence */
         return new User(
             id,
+            createdAt,
             username,
             emailAddress,
             biography,
