@@ -38,7 +38,6 @@ export class CirclePrismaMapper {
             id: circle.id,
             name: circle.getName(),
             ownerId: circle.owner.id,
-            createdAt: circle.createdAt,
             photoKey: circle.photoKey ?? null
         };
     }
