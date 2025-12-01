@@ -79,9 +79,9 @@ model Friendship {
   id                String            @id @default(cuid())
   createdAt         DateTime          @default(now())
   updatedAt         DateTime          @default(now())
-  requester         User              @relation("UserSentFriendships", fields: [requesterId], references: [id])
+  requester         User              @relation("UserSentFriendships", fields: [requesterId], references: [id], onDelete: Cascade)
   requesterId       String
-  addressee         User              @relation("UserReceivedFriendships", fields: [addresseeId], references: [id])
+  addressee         User              @relation("UserReceivedFriendships", fields: [addresseeId], references: [id], onDelete: Cascade)
   addresseeId       String          
   status            FriendshipStatus  @default(PENDING)
 
@@ -98,11 +98,11 @@ model CircleInvite {
   id                String          @id @default(cuid())
   createdAt         DateTime        @default(now())
   updatedAt         DateTime        @default(now())
-  sender            User            @relation("CircleInvitesSender", fields: [senderId], references: [id])
+  sender            User            @relation("CircleInvitesSender", fields: [senderId], references: [id], onDelete: Cascade)
   senderId          String
-  recipient         User            @relation("CircleInvitesRecipient", fields: [recipientId], references: [id])
+  recipient         User            @relation("CircleInvitesRecipient", fields: [recipientId], references: [id], onDelete: Cascade)
   recipientId       String
-  circle            Circle          @relation(fields: [circleId], references: [id])
+  circle            Circle          @relation(fields: [circleId], references: [id], onDelete: Cascade)
   circleId          String
   status            InviteStatus    @default(PENDING)
 }
@@ -117,11 +117,11 @@ model Post {
   id                String        @id @default(cuid())
   createdAt         DateTime      @default(now())
   updatedAt         DateTime      @updatedAt
-  user              User          @relation("UserPosts", fields: [userId], references: [id])
+  user              User          @relation("UserPosts", fields: [userId], references: [id], onDelete: Cascade)
   userId            String        
-  habit             Habit         @relation("HabitPosts", fields: [habitId], references: [id])
+  habit             Habit         @relation("HabitPosts", fields: [habitId], references: [id], onDelete: Cascade)
   habitId           String
-  completion        Completion    @relation(fields: [completionId], references: [id])
+  completion        Completion    @relation(fields: [completionId], references: [id], onDelete: Cascade)
   completionId      String       
   photoKey          String?
   caption           String?
@@ -134,7 +134,7 @@ model Habit {
   createdAt         DateTime      @default(now())
   updatedAt         DateTime      @updatedAt
   name              String
-  circle            Circle        @relation("CircleHabits", fields: [circleId], references: [id])
+  circle            Circle        @relation("CircleHabits", fields: [circleId], references: [id], onDelete: Cascade)
   circleId          String
   completions       Completion[]  @relation("CompletionHabit")
   posts             Post[]        @relation("HabitPosts")
@@ -157,9 +157,9 @@ model Completion {
   id                String        @id @default(cuid())
   createdAt         DateTime      @default(now())
   completedAt       DateTime
-  user              User          @relation("CompletionUser", fields: [userId], references: [id])
+  user              User          @relation("CompletionUser", fields: [userId], references: [id], onDelete: Cascade)
   userId            String
-  habit             Habit         @relation("CompletionHabit", fields: [habitId], references: [id])
+  habit             Habit         @relation("CompletionHabit", fields: [habitId], references: [id], onDelete: Cascade)
   habitId           String
   post              Post?
 
