@@ -1,6 +1,6 @@
 import { User } from "@/server/domain/entities/user.entity";
 import type { Prisma } from "@/prisma/generated";
-import { UserPrismaDto } from "../dtos/user-prisma.dto";
+import { UserAggregatePrismaDto, UserPrismaDto } from "../dtos/user-prisma.dto";
 import { Username } from "@/server/domain/value-objects/username.value-object";
 import { Biography } from "@/server/domain/value-objects/biography.value-object";
 import { OAuthAccountPrismaMapper } from "./oauth-account.prisma-mapper";
@@ -32,14 +32,22 @@ export class UserPrismaMapper {
         );
     }
 
-    static toPersistence(user: User): UserPrismaDto {
+    static toPersistence(user: User): UserAggregatePrismaDto {
         return {
-            id: user.id,
-            createdAt: user.createdAt,
-            username: user.username.toString(),
-            emailAddress: user.emailAddress ?? null,
-            biography: user.biography?.toString() ?? null,
-            profilePictureKey: user.profilePictureKey ?? null,
+            user: <UserPrismaDto> {
+                id: user.id,
+                createdAt: user.createdAt,
+                username: user.username.toString(),
+                emailAddress: user.emailAddress ?? null,
+                biography: user.biography?.toString() ?? null,
+                profilePictureKey: user.profilePictureKey ?? null,
+            },
+            credentialsAccount: user.credentialsAccount
+                ? CredentialsAccountPrismaMapper.toPersistence(user.credentialsAccount)
+                : null,
+            oauthAccounts: user.oauthAccounts.map(
+                oa => OAuthAccountPrismaMapper.toPersistence(oa)
+            )
         };
     }
 }
