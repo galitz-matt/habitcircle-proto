@@ -1,4 +1,4 @@
-import { CircleInvite } from "@/server/domain/entities/circle-invite.entity";
+import { CircleInvite } from "@/server/domain/entities/circle/circle-invite.entity";
 import { CircleInvite as CircleInviteRecord, InviteStatus } from "../generated";
 import { DomainInviteStatus } from "@/server/domain/types/invite-status";
 import { CircleInvitePrismaDto } from "../dtos/circle-invite-prisma.dto";

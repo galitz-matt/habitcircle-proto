@@ -1,9 +1,9 @@
-import { Circle } from "@/server/domain/entities/circle.entity";
+import { Circle } from "@/server/domain/entities/circle/circle.entity";
 import type { Prisma } from "@/prisma/generated"
 import { CirclePrismaDto } from "@/server/infra/db/prisma/dtos/circle-prisma.dto";
-import { CircleName } from "@/server/domain/value-objects/circle-name.value-object";
-import { CircleMembers } from "@/server/domain/value-objects/circle-members.value-object";
-import { CircleHabits } from "@/server/domain/value-objects/circle-habits.value-object";
+import { CircleName } from "@/server/domain/value-objects/circle/circle-name.value-object";
+import { CircleMembers } from "@/server/domain/value-objects/circle/circle-members.value-object";
+import { CircleHabits } from "@/server/domain/value-objects/circle/circle-habits.value-object";
 import { UserPrismaMapper } from "./user.prisma-mapper";
 import { HabitPrismaMapper } from "./habit.prisma-mapper";
 
@@ -13,10 +13,10 @@ type CircleRecordWithRelations = Prisma.CircleGetPayload<{
 
 export class CirclePrismaMapper {
     static toDomain(record: CircleRecordWithRelations): Circle {
-        const owner = UserPrismaMapper.toDomain(record.owner);
+        const owner = UserPrismaMapper.toCircleMember(record.owner);
 
         const members = record.members.map((m) =>
-            UserPrismaMapper.toDomain(m)
+            UserPrismaMapper.toCircleMember(m)
         );
 
         const habits = record.habits.map((h) =>
@@ -28,7 +28,7 @@ export class CirclePrismaMapper {
             record.createdAt,
             CircleName.rehydrate(record.name),
             owner,
-            CircleMembers.rehydrate(members),
+            CircleMembers.rehydrateFromCircleMembers(members),
             CircleHabits.rehydrate(habits)
         );
     }
@@ -37,7 +37,7 @@ export class CirclePrismaMapper {
         return {
             id: circle.id,
             name: circle.getName(),
-            ownerId: circle.owner.id,
+            ownerId: circle.owner.userId,
             photoKey: circle.photoKey ?? null
         };
     }
