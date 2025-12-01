@@ -1,10 +1,10 @@
 import { IdGenerator } from "@/lib/utils";
 import { Habit } from "@/server/domain/entities/habit.entity";
-import { User } from "@/server/domain/entities/user.entity"
-import { CircleName } from "@/server/domain/value-objects/circle-name.value-object";
-import { CircleMembers } from "@/server/domain/value-objects/circle-members.value-object";
-import { CircleHabits } from "@/server/domain/value-objects/circle-habits.value-object";
+import { CircleName } from "@/server/domain/value-objects/circle/circle-name.value-object";
+import { CircleMembers } from "@/server/domain/value-objects/circle/circle-members.value-object";
+import { CircleHabits } from "@/server/domain/value-objects/circle/circle-habits.value-object";
 import { DomainError } from "@/lib/errors";
+import { CircleMember } from "../../value-objects/circle/circle-member.value-object";
 
 export class Circle {
 
@@ -12,7 +12,7 @@ export class Circle {
         private readonly _id: string,
         private readonly _createdAt: Date,
         private _name: CircleName,
-        private _owner: User,
+        private _owner: CircleMember,
         private _members: CircleMembers,
         private _habits: CircleHabits,
         private _photoKey?: string
@@ -20,7 +20,7 @@ export class Circle {
 
     static create(
         name: CircleName,
-        owner: User,
+        owner: CircleMember,
         members: CircleMembers,
         habits: CircleHabits,
         photoKey?: string
@@ -37,20 +37,31 @@ export class Circle {
     }
 
     addHabit(habit: Habit): this {
+        if (this.hasHabitById(habit.id))
+            throw new DomainError("Habit already in circle");
         return this.addHabits([habit]);
     }
 
     addHabits(habits: Habit[]): this {
+        for (const h of habits) {
+            if (this.hasHabitById(h.id))
+                throw new DomainError(`Habit with id ${h.id} already in circle`);
+        }
         this._habits = this._habits.addMany(habits);
         return this;
     }
 
-    addMember(user: User): this {
-        return this.addMembers([user]);
+    addMember(member: CircleMember): this {
+        return this.addMembers([member]);
     }
 
-    addMembers(users: User[]): this {
-        this._members = this._members.addMany(users);
+    addMembers(members: CircleMember[]): this {
+        for (const m of members) {
+            if (this.hasMember(m))
+                throw new DomainError(`User with id ${m.userId} already in circle`);
+        }
+        
+        this._members = this._members.addMany(members);
         return this;
     }
 
@@ -58,7 +69,7 @@ export class Circle {
         return this._habits.getAll();
     }
 
-    getMembers(): User[] {
+    getMembers(): CircleMember[] {
         return this._members.getAll();
     }
 
@@ -70,8 +81,8 @@ export class Circle {
         return this._habits.containsById(habitId);
     }
 
-    hasMember(user: User): boolean {
-        return this._members.contains(user);
+    hasMember(member: CircleMember): boolean {
+        return this._members.contains(member);
     }
 
     hasMemberById(userId: string): boolean {
@@ -79,7 +90,7 @@ export class Circle {
     }
 
     isOwnedBy(userId: string): boolean {
-        return this._owner.id === userId;
+        return this._owner.userId === userId;
     }
 
     removeHabit(habitId: string): this {
@@ -88,41 +99,46 @@ export class Circle {
     }
 
     removeHabits(habitIds: string[]): this {
+        for (const id of habitIds) {
+            if (!this.hasHabitById(id))
+                throw new DomainError(`Habit with id ${id} not in Circle`);
+        }
         this._habits = this._habits.removeMany(habitIds);
         return this;
     }
 
-    removeMember(user: User): this {
-        if (!this.hasMember(user))
-            throw new DomainError("User is not member of Circle");
-
-        return this.removeMembers([user]);
+    removeMember(member: CircleMember): this {
+        return this.removeMembers([member]);
     }
 
-    removeMembers(users: User[]): this {
+    removeMembers(members: CircleMember[]): this {
         return this.removeMembersById(
-            users.map(u => u.id)
+            members.map(m => m.userId)
         );
     }
 
     removeMembersById(userIds: string[]): this {
-        if (userIds.some(id => id === this._owner.id))
-            throw new DomainError("Cannot remove owner");
+        for (const id of userIds) {
+            if (!this.hasMemberById(id))
+                throw new DomainError(`User with ${id} is not a member of the circle`)
+            if (id === this._owner.userId)
+                throw new DomainError("Cannot remove owner");
+        }
 
         this._members = this._members.removeManyById(userIds);
         return this;
     }
 
-    setOwner(user: User): this {
-        if (this._owner.equals(user))
+    setOwner(member: CircleMember): this {
+        if (this._owner.userId === member.userId)
             throw new DomainError("User is already owner");
-        if (!this.hasMember(user))
+        if (!this.hasMember(member))
             throw new DomainError("User is not a member of the circle");
 
-        this.addMember(this._owner)
-        this.removeMember(user)
+        this._members = this._members.removeManyById([member.userId])
+                            .addMany([this._owner]);
 
-        this._owner = user;
+        this._owner = member;
         return this;
     }
 
@@ -138,7 +154,7 @@ export class Circle {
         return this._photoKey;
     }
 
-    get owner(): User {
+    get owner(): CircleMember {
         return this._owner;
     }
 
@@ -146,7 +162,7 @@ export class Circle {
         id: string,
         createdAt: Date,
         name: CircleName,
-        owner: User,
+        owner: CircleMember,
         members: CircleMembers,
         habits: CircleHabits,
         photoKey?: string
