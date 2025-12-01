@@ -1,5 +1,5 @@
-import { Habit } from "../entities/habit.entity";
-import { CircleHabitsInvariants } from "../invariants/circle-habits.invariant";
+import { Habit } from "@/server/domain/entities/habit.entity";
+import { CircleHabitsInvariants } from "@/server/domain/invariants/circle-habits.invariant";
 
 export class CircleHabits {
     private constructor(

@@ -1,5 +1,5 @@
 import { StringUtils } from "@/lib/utils";
-import { CircleNameInvariants } from "../invariants/circle-name.invariant";
+import { CircleNameInvariants } from "@/server/domain/invariants/circle-name.invariant";
 
 export class CircleName {
     private constructor(
