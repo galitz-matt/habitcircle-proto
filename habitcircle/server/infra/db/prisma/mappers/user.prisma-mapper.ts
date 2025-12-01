@@ -40,10 +40,6 @@ export class UserPrismaMapper {
             emailAddress: user.emailAddress ?? null,
             biography: user.biography?.toString() ?? null,
             profilePictureKey: user.profilePictureKey ?? null,
-            oauthAccounts: user.oauthAccounts.map(oa => OAuthAccountPrismaMapper.toPersistence(oa)),
-            credentialsAccount: user.credentialsAccount
-                ? CredentialsAccountPrismaMapper.toPersistence(user.credentialsAccount)
-                : null,
         };
     }
 }
