@@ -1,38 +1,34 @@
-import { User } from "../entities/user.entity";
-import { CircleMembersInvariants } from "../invariants/circle-members.invariant";
+import { CircleMembersInvariants } from "@/server/domain/invariants/circle-members.invariant";
+import { CircleMember } from "@/server/domain/value-objects/circle/circle-member.value-object";
 
 export class CircleMembers {
     private constructor(
-        readonly members: Map<string, User>
+        readonly members: Map<string, CircleMember>
     ) {
         this.members = new Map(members);
         Object.freeze(this.members);
         Object.freeze(this);
     }
 
-    static create(members: User[]): CircleMembers {
+    static create(members: CircleMember[]): CircleMembers {
         CircleMembersInvariants.enforce(members);
         return new CircleMembers(
             CircleMembers.toMap(members)
         );
     }
 
-    getAll(): User[] {
+    getAll(): CircleMember[] {
         return [...this.members.values()];
     }
 
-    add(user: User): CircleMembers {
-        return this.addMany([user]);
-    }
-
-    addMany(users: User[]): CircleMembers {
+    addMany(members: CircleMember[]): CircleMembers {
         return CircleMembers.create(
-            [...this.members.values(), ...users]
+            [...this.members.values(), ...members]
         );
     }
 
-    contains(user: User): boolean {
-        return this.containsById(user.id);
+    contains(member: CircleMember): boolean {
+        return this.containsById(member.userId);
     }
 
     containsById(userId: string): boolean {
@@ -48,15 +44,21 @@ export class CircleMembers {
     }
 
 
-    static rehydrate(members: User[]): CircleMembers {
+    static rehydrate(members: CircleMember[]): CircleMembers {
         return new CircleMembers(
             CircleMembers.toMap(members)
         );
     }
 
-    private static toMap(users: User[]): Map<string, User> {
+    static rehydrateFromCircleMembers(members: CircleMember[]): CircleMembers {
+        return new CircleMembers(
+            CircleMembers.toMap(members)
+        );
+    }
+
+    private static toMap(members: CircleMember[]): Map<string, CircleMember> {
         return new Map(
-            users.map(u => [u.id, u])
+            members.map(m => [m.userId, m])
         );
     }
 }
