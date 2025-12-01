@@ -1,4 +1,4 @@
-import { Circle } from "@/server/domain/entities/circle.entity";
+import { Circle } from "@/server/domain/entities/circle/circle.entity";
 import { CircleDto } from "@/server/application/dtos/circle.dto";
 
 export class CircleDtoMapper {

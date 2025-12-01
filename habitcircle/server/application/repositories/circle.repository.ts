@@ -1,4 +1,4 @@
-import type { Circle } from "@/server/domain/entities/circle.entity";
+import type { Circle } from "@/server/domain/entities/circle/circle.entity";
 import type { CircleName } from "@/server/domain/value-objects/circle-name.value-object";
 
 export interface CircleRepository {

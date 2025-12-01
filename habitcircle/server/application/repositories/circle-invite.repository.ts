@@ -1,4 +1,4 @@
-import { CircleInvite } from "@/server/domain/entities/circle-invite.entity";
+import { CircleInvite } from "@/server/domain/entities/circle/circle-invite.entity";
 
 export interface CircleInviteRepository {
     findById(id: string): Promise<CircleInvite | null>;
