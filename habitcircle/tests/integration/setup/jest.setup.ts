@@ -17,7 +17,7 @@ beforeAll(async () => {
   if (!migrated) {
     console.log("Running migrations...");
     try {
-      execSync("npx prisma migrate deploy --schema=prisma/schema.prisma", {
+      execSync("npx prisma migrate deploy --schema=server/infra/db/prisma/schema.prisma", {
         stdio: "inherit",
       });
       migrated = true;
