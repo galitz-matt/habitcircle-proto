@@ -7,5 +7,5 @@ export interface CompletionRepository {
     findByHabitId(habitId: string): Promise<Completion[]>;
     create(completion: Completion): Promise<void>;
     update(completion: Completion): Promise<void>;
-    delete(completion: Completion): Promise<void>;
+    delete(id: string): Promise<void>;
 }

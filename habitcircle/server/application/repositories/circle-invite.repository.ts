@@ -6,5 +6,5 @@ export interface CircleInviteRepository {
     findBySenderId(senderId: string): Promise<CircleInvite[]>;
     create(circleInvite: CircleInvite): Promise<void>;
     update(circleInvite: CircleInvite): Promise<void>;
-    delete(circleInvite: CircleInvite): Promise<void>;
+    delete(id: string): Promise<void>;
 }

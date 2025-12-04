@@ -6,5 +6,5 @@ export interface FriendshipRepository {
     findByAddresseeId(addresseeId: string): Promise<Friendship[]>;
     create(friendship: Friendship): Promise<void>;
     update(friendship: Friendship): Promise<void>;
-    delete(friendship: Friendship): Promise<void>
+    delete(id: string): Promise<void>
 }

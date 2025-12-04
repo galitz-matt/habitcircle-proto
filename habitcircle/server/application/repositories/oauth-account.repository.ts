@@ -5,5 +5,5 @@ export interface OAuthAccountRepository {
     findByUserId(userId: string): Promise<OAuthAccount[]>;
     create(account: OAuthAccount): Promise<void>;
     update(account: OAuthAccount): Promise<void>;
-    delete(account: OAuthAccount): Promise<void>;
+    delete(id: string): Promise<void>;
 }

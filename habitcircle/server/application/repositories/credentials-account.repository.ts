@@ -5,5 +5,5 @@ export interface CredentialsAccountRepository {
     findByUserId(userId: string): Promise<CredentialsAccount | null>;
     create(account: CredentialsAccount): Promise<void>;
     update(account: CredentialsAccount): Promise<void>;
-    delete(account: CredentialsAccount): Promise<void>;
+    delete(id: string): Promise<void>;
 }

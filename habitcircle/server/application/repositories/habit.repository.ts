@@ -5,5 +5,5 @@ export interface HabitRepository {
     findByCircleId(circleId: string): Promise<Habit[]>;
     create(habit: Habit): Promise<void>;
     update(habit: Habit): Promise<void>;
-    delete(habit: Habit): Promise<void>;
+    delete(id: string): Promise<void>;
 }
