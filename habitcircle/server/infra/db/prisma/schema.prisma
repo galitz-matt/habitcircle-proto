@@ -105,6 +105,8 @@ model CircleInvite {
   circle            Circle          @relation(fields: [circleId], references: [id], onDelete: Cascade)
   circleId          String
   status            InviteStatus    @default(PENDING)
+
+  @@unique([senderId, recipientId, circleId])
 }
 
 enum InviteStatus {
