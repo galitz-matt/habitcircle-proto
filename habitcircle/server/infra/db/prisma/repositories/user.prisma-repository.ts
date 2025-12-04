@@ -88,12 +88,12 @@ export class UserPrismaRepository implements UserRepository {
         });
     }
 
-    async delete(user: User): Promise<void> {
+    async delete(id: string): Promise<void> {
         await this.prisma.user.delete({
-            where: { id: user.id }
+            where: { id }
         }).catch((err) => {
             if (err.code === "P2025") 
-                throw new NotFoundError(`User with id ${user.id} not found`);
+                throw new NotFoundError(`User with id ${id} not found`);
             throw err;
         });
     }
