@@ -1,94 +1,64 @@
-import type { Circle } from "@/server/domain/entities/circle.entity";
+import type { Circle } from "@/server/domain/entities/circle/circle.entity";
 import { CircleRepository } from "@/server/application/repositories/circle.repository";
 import { CirclePrismaMapper } from "@/server/infra/db/prisma/mappers/circle.prisma-mapper";
-import { HabitPrismaMapper } from "@/server/infra/db/prisma/mappers/habit.prisma-mapper";
 import type { PrismaClient } from "@/prisma/generated";
-import { NotFoundError } from "@/lib/errors";
+import { DuplicateError, NotFoundError } from "@/lib/errors";
+import { CircleName } from "@/server/domain/value-objects/circle/circle-name.value-object";
 
 export class CirclePrismaRepository implements CircleRepository {
     constructor(private readonly prisma: PrismaClient) {}
 
-    async findById(id: string): Promise<Circle> {
+    async findById(id: string): Promise<Circle | null> {
         const circleRecord = await this.prisma.circle.findUnique({
-            where: { id : id },
+            where: { id },
             include: { owner: true, members: true, habits: true }
         });
-        if (!circleRecord) throw new NotFoundError(`Circle with id ${id} not found`);
-
-        return CirclePrismaMapper.toDomain(circleRecord);
+        return circleRecord ? CirclePrismaMapper.toDomain(circleRecord) : null;
     }
 
-    async findByName(name: string): Promise<Circle[]> {
+    async findByCircleName(name: CircleName): Promise<Circle[]> {
         const circleRecords = await this.prisma.circle.findMany({
-            where: { name: name },
-            include: { owner: true, members: true, habits: true }
-        });
-
-        return circleRecords?.map(CirclePrismaMapper.toDomain) ?? [];
-    }
-
-    async findByUserId(userId: string): Promise<Circle[]> {
-        const userRecord = await this.prisma.user.findUnique({
-            where: { id: userId },
-            include: { 
-                joinedCircles: {
-                    include: { owner: true, members: true, habits: true }
-                } 
-            }
-        });
-
-        return userRecord?.joinedCircles.map(CirclePrismaMapper.toDomain) ?? [];
-    }
-
-    async findAll(): Promise<Circle[]> {
-        const circleRecords = await this.prisma.circle.findMany({
+            where: { name: name.toString() },
             include: { owner: true, members: true, habits: true }
         });
         return circleRecords.map(CirclePrismaMapper.toDomain);
     }
 
-    async save(circle: Circle): Promise<void> {
-        const circleRecord = CirclePrismaMapper.toPersistence(circle);
-
-        await this.prisma.circle.upsert({
-            where: { id: circle.id },
-            create: {
-                ...circleRecord,
-                owner: { connect: { id: circle.owner.id } },
-                members: { connect: circle.getMembers().map(m => ({ id: m.id })) },
-                habits: {
-                    create: circle.getHabits().map(h => HabitPrismaMapper.toPersistence(h)) 
-                }
-            },
-            update: {
-                ...circleRecord,
-                owner: { connect: { id: circle.owner.id }},
-                members: { set: circle.getMembers().map(m => ({ id: m.id })) },
-                habits: { 
-                    upsert: circle.getHabits().map(h => ({
-                        where: { id: h.id },
-                        create: HabitPrismaMapper.toPersistence(h),
-                        update: HabitPrismaMapper.toPersistence(h)
-                    }))
-                }
-            }
+    async create(circle: Circle): Promise<void> {
+        const circleDto = CirclePrismaMapper.toPersistence(circle);
+        await this.prisma.circle.create({
+            data: circleDto,
         }).catch((err) => {
             if (err.code === "P2002") {
-                throw new Error(`Circle w/ name "${circleRecord.name}" already exists`);
+                const target = err.meta?.target?.[0]
+                throw new DuplicateError(`Circle already exists with duplicate ${target}`);
             }
             throw err;
         });
     }
 
-    async delete(id: string): Promise<void> {
-        await this.prisma.habit.deleteMany({
-            where: { circleId: id },
-        });
-        
-        await this.prisma.circle.delete({
-            where: { id: id }
+    async update(circle: Circle): Promise<void> {
+        const circleDto = CirclePrismaMapper.toPersistence(circle);
+        const { id, ...mutableFields } = circleDto
+        await this.prisma.circle.update({
+            where: { id },
+            data: {
+                ...mutableFields,
+                updatedAt: new Date(),
+            },
         }).catch((err) => {
-            if (err.code === "P2025") throw new NotFoundError(`Circle with id ${id} not found`);
+            if (err.code === "P2025")
+                throw new NotFoundError(`Circle with id ${id} not found`);
+            throw err;
+        });
+    }
+
+    async delete(id: string): Promise<void> {
+        await this.prisma.circle.delete({
+            where: { id }
+        }).catch((err) => {
+            if (err.code === "P2025")
+                throw new NotFoundError(`Circle with id ${id} not found`);
             throw err;
         });
     }
