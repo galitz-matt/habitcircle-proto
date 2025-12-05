@@ -5,6 +5,8 @@ const tsJestTransformCfg = createDefaultPreset().transform;
 /** @type {import("jest").Config} **/
 const config = {
   testEnvironment: "node",
+  verbose: true,
+  silent: false,
   transform: {
     ...tsJestTransformCfg,
   },
