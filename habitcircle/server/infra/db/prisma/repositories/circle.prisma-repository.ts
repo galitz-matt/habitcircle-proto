@@ -27,7 +27,15 @@ export class CirclePrismaRepository implements CircleRepository {
     async create(circle: Circle): Promise<void> {
         const circleDto = CirclePrismaMapper.toPersistence(circle);
         await this.prisma.circle.create({
-            data: circleDto,
+            data: {
+                ...circleDto,
+                members: {
+                    connect: circle.getMembers().map(m => ({ id: m.userId }))
+                },
+                habits: {
+                    connect: circle.getHabits().map(h => ({ id: h.id }))
+                }
+            },
         }).catch((err) => {
             if (err.code === "P2002") {
                 const target = err.meta?.target?.[0]
@@ -45,6 +53,12 @@ export class CirclePrismaRepository implements CircleRepository {
             data: {
                 ...mutableFields,
                 updatedAt: new Date(),
+                members: {
+                    set: circle.getMembers().map(m => ({ id: m.userId }))
+                },
+                habits: {
+                    set: circle.getHabits().map(h => ({ id: h.id }))
+                }
             },
         }).catch((err) => {
             if (err.code === "P2025")
