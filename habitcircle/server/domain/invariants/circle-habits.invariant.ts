@@ -21,7 +21,7 @@ export class CircleHabitsInvariants {
         for (const habit of habits)
             circleIds.add(habit.circleId);
 
-        if (circleIds.size !== 1)
+        if (circleIds.size > 1)
             throw new DomainError("CircleHabits cannot contain cross-circle habits");
     }   
 }
