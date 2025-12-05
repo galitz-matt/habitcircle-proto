@@ -10,7 +10,7 @@ let migrated = false;
 
 
 export const prisma = new PrismaClient({
-  log: process.env.LOG_PRISMA === "true" ? ["warn", "error"] : [],
+  log: process.env.LOG_PRISMA === "true" ? ["query", "info", "warn", "error"] : [],
 });
 
 beforeAll(async () => {
