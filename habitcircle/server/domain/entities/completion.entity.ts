@@ -29,6 +29,8 @@ export class Completion {
     }
 
     attachPost(post: Post): this {
+        if (this._post)
+            throw new DomainError("Completion already has an associated post");
         if (post.completionId !== this.id)
             throw new DomainError("Post completionId does not match this completion")
 
