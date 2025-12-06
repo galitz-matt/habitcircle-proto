@@ -4,6 +4,7 @@ import { CirclePrismaMapper } from "@/server/infra/db/prisma/mappers/circle.pris
 import type { PrismaClient } from "@/prisma/generated";
 import { DuplicateError, NotFoundError } from "@/lib/errors";
 import { CircleName } from "@/server/domain/value-objects/circle/circle-name.value-object";
+import { HabitPrismaMapper } from "../mappers/habit.prisma-mapper";
 
 export class CirclePrismaRepository implements CircleRepository {
     constructor(private readonly prisma: PrismaClient) {}
@@ -33,7 +34,7 @@ export class CirclePrismaRepository implements CircleRepository {
                     connect: circle.getMembers().map(m => ({ id: m.userId }))
                 },
                 habits: {
-                    connect: circle.getHabits().map(h => ({ id: h.id }))
+                    create: circle.getHabits().map(h => HabitPrismaMapper.toPersistence(h))
                 }
             },
         }).catch((err) => {
@@ -57,8 +58,9 @@ export class CirclePrismaRepository implements CircleRepository {
                     set: circle.getMembers().map(m => ({ id: m.userId }))
                 },
                 habits: {
-                    set: circle.getHabits().map(h => ({ id: h.id }))
-                }
+                    deleteMany: {},
+                    create: circle.getHabits().map(HabitPrismaMapper.toPersistence)
+                },
             },
         }).catch((err) => {
             if (err.code === "P2025")
