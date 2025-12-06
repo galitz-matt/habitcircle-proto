@@ -20,7 +20,6 @@ export class HabitPrismaMapper {
             id: habit.id,
             createdAt: habit.createdAt,
             name: habit.name.value,
-            circleId: habit.circleId
         }
     }
 }
