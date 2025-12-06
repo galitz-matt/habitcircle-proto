@@ -38,23 +38,23 @@ export class Completion {
         return this;
     }
 
-    get id() {
+    get id(): string {
         return this._id;
     }
 
-    get completedAt() {
+    get completedAt(): Date {
         return new Date(this._completedAt);
     }
 
-    get userId() {
+    get userId(): string {
         return this._userId;
     }
 
-    get habitId() {
+    get habitId(): string {
         return this._habitId;
     }
 
-    get post() {
+    get post(): Post | undefined {
         return this._post;
     }
 
