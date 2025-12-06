@@ -49,6 +49,14 @@ export class CirclePrismaRepository implements CircleRepository {
     async update(circle: Circle): Promise<void> {
         const circleDto = CirclePrismaMapper.toPersistence(circle);
         const { id, ...mutableFields } = circleDto
+
+        const existingHabits = await this.prisma.habit.findMany({ where: { circleId: id} });
+        const incomingHabits = circle.getHabits();
+
+        const toCreate = incomingHabits.filter(h => !existingHabits.some(e => e.id === h.id));
+        const toUpdate = incomingHabits.filter(h => existingHabits.some(e => e.id === h.id));
+        const toDelete = existingHabits.filter(e => !incomingHabits.some(h => h.id === e.id));
+
         await this.prisma.circle.update({
             where: { id },
             data: {
@@ -58,8 +66,14 @@ export class CirclePrismaRepository implements CircleRepository {
                     set: circle.getMembers().map(m => ({ id: m.userId }))
                 },
                 habits: {
-                    deleteMany: {},
-                    create: circle.getHabits().map(HabitPrismaMapper.toPersistence)
+                    create: toCreate.map(HabitPrismaMapper.toPersistence),
+                    update: toUpdate.map(h => ({
+                        where: { id: h.id },
+                        data: HabitPrismaMapper.toPersistence(h)
+                    })),
+                    deleteMany: { 
+                        id: { in: toDelete.map(h => h.id) } 
+                    }
                 },
             },
         }).catch((err) => {
