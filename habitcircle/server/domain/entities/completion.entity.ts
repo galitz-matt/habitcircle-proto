@@ -1,4 +1,6 @@
 import { IdGenerator } from "@/lib/utils";
+import { Post } from "./post.entity";
+import { DomainError } from "@/lib/errors";
 
 export type CreateCompletionInput = {
     userId: string,
@@ -10,7 +12,8 @@ export class Completion {
         private readonly _id: string,
         private readonly _completedAt: Date,
         private readonly _userId: string,
-        private readonly _habitId: string
+        private readonly _habitId: string,
+        private _post?: Post
     ) {}
 
     static create(userId: string, habitId: string): Completion {
@@ -23,6 +26,14 @@ export class Completion {
             userId,
             habitId
         )
+    }
+
+    attachPost(post: Post): this {
+        if (post.completionId !== this.id)
+            throw new DomainError("Post completionId does not match this completion")
+
+        this._post = post;
+        return this;
     }
 
     get id() {
@@ -39,6 +50,10 @@ export class Completion {
 
     get habitId() {
         return this._habitId;
+    }
+
+    get post() {
+        return this._post;
     }
 
     static rehydrate(
