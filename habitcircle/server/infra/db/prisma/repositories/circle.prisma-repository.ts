@@ -1,10 +1,9 @@
 import type { Circle } from "@/server/domain/entities/circle/circle.entity";
 import { CircleRepository } from "@/server/application/repositories/circle.repository";
 import { CirclePrismaMapper } from "@/server/infra/db/prisma/mappers/circle.prisma-mapper";
-import type { PrismaClient } from "@/prisma/generated";
+import { PrismaClient } from "@/prisma/generated";
 import { DuplicateError, NotFoundError } from "@/lib/errors";
 import { CircleName } from "@/server/domain/value-objects/circle/circle-name.value-object";
-import { HabitPrismaMapper } from "../mappers/habit.prisma-mapper";
 
 export class CirclePrismaRepository implements CircleRepository {
     constructor(private readonly prisma: PrismaClient) {}
@@ -26,16 +25,19 @@ export class CirclePrismaRepository implements CircleRepository {
     }
 
     async create(circle: Circle): Promise<void> {
-        const circleDto = CirclePrismaMapper.toPersistence(circle);
+        const dto = CirclePrismaMapper.toPersistenceForCreate(circle);
+
         await this.prisma.circle.create({
             data: {
-                ...circleDto,
+                ...dto.scalars,
+                ownerId: dto.ownerId,
                 members: {
-                    connect: circle.getMembers().map(m => ({ id: m.userId }))
+                    connect: dto.memberIds
                 },
                 habits: {
-                    create: circle.getHabits().map(h => HabitPrismaMapper.toPersistence(h))
+                    create: dto.habits
                 }
+                
             },
         }).catch((err) => {
             if (err.code === "P2002") {
@@ -47,38 +49,22 @@ export class CirclePrismaRepository implements CircleRepository {
     }
 
     async update(circle: Circle): Promise<void> {
-        const circleDto = CirclePrismaMapper.toPersistence(circle);
-        const { id, ...mutableFields } = circleDto
-
-        const existingHabits = await this.prisma.habit.findMany({ where: { circleId: id} });
-        const incomingHabits = circle.getHabits();
-
-        const toCreate = incomingHabits.filter(h => !existingHabits.some(e => e.id === h.id));
-        const toUpdate = incomingHabits.filter(h => existingHabits.some(e => e.id === h.id));
-        const toDelete = existingHabits.filter(e => !incomingHabits.some(h => h.id === e.id));
+        const existingHabits = await this.prisma.habit.findMany({ where: { circleId: circle.id} });
+        const dto = CirclePrismaMapper.toPersistenceForUpdate(circle, existingHabits);
 
         await this.prisma.circle.update({
-            where: { id },
+            where: { id: dto.scalars.id },
             data: {
-                ...mutableFields,
-                updatedAt: new Date(),
-                members: {
-                    set: circle.getMembers().map(m => ({ id: m.userId }))
-                },
+                ...dto.scalars,
+                members: { set: dto.memberIds },
                 habits: {
-                    create: toCreate.map(HabitPrismaMapper.toPersistence),
-                    update: toUpdate.map(h => ({
-                        where: { id: h.id },
-                        data: HabitPrismaMapper.toPersistence(h)
-                    })),
-                    deleteMany: { 
-                        id: { in: toDelete.map(h => h.id) } 
-                    }
-                },
+                    upsert: dto.habitsToUpsert,
+                    deleteMany: dto.habitIdsToDelete
+                }
             },
         }).catch((err) => {
             if (err.code === "P2025")
-                throw new NotFoundError(`Circle with id ${id} not found`);
+                throw new NotFoundError(`Circle with id ${circle.id} not found`);
             throw err;
         });
     }

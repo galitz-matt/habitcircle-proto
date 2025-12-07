@@ -1,6 +1,6 @@
 import { Circle } from "@/server/domain/entities/circle/circle.entity";
 import type { Habit as HabitRecord, Prisma } from "@/prisma/generated"
-import { CirclePrismaDto } from "@/server/infra/db/prisma/dtos/circle-prisma.dto";
+import { CircleCreatePrismaDto, CircleUpdatePrismaDto } from "@/server/infra/db/prisma/dtos/circle-prisma.dto";
 import { CircleName } from "@/server/domain/value-objects/circle/circle-name.value-object";
 import { CircleMembers } from "@/server/domain/value-objects/circle/circle-members.value-object";
 import { CircleHabits } from "@/server/domain/value-objects/circle/circle-habits.value-object";
@@ -33,9 +33,7 @@ export class CirclePrismaMapper {
         );
     }
 
-    static toPersistence(circle: Circle): CirclePrismaDto {
-        const habits = circle.getHabits().map(HabitPrismaMapper.toPersistence);
-
+    static toPersistenceForCreate(circle: Circle): CircleCreatePrismaDto {
         return {
             scalars: {
                 id: circle.id,
@@ -43,21 +41,15 @@ export class CirclePrismaMapper {
                 photoKey: circle.photoKey ?? null
             },
             ownerId: circle.owner.userId,
-            memberIds: circle.getMembers().map(m => m.userId),
-            habits: {
-                upsert: habits.map(h => ({
-                    id: h.id,
-                    name: h.name
-                })),
-                deleteIds: []
-            }
+            memberIds: circle.getMembers().map(m => ({ id: m.userId })),
+            habits: circle.getHabits().map(HabitPrismaMapper.toPersistence)
         };
     }
 
     static toPersistenceForUpdate(
         circle: Circle,
         existingHabits: HabitRecord[]
-    ): CirclePrismaDto {
+    ): CircleUpdatePrismaDto {
         const incoming = circle.getHabits().map(HabitPrismaMapper.toPersistence);
 
         const deleteIds = existingHabits
@@ -71,14 +63,15 @@ export class CirclePrismaMapper {
                 photoKey: circle.photoKey ?? null,
             },
             ownerId: circle.owner.userId,
-            memberIds: circle.getMembers().map(m => m.userId),
-            habits: {
-                upsert: incoming.map(h => ({
-                    id: h.id,
-                    name: h.name
-                })),
-                deleteIds
-            }
+            memberIds: circle.getMembers().map(m => ({ id: m.userId })),
+            habitsToUpsert: incoming.map(h => ({
+                where: { id: h.id },
+                create: h,
+                update: {
+                    name: h.name,
+                }
+            })),
+            habitIdsToDelete: { id: { in: deleteIds }}
         };
     }
 }
