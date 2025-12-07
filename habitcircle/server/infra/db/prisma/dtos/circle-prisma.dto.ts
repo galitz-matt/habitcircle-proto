@@ -1,6 +1,19 @@
 export type CirclePrismaDto = {
-    id: string;
-    name: string;
+    scalars: {
+        id: string;
+        name: string;
+        photoKey: string | null
+    };
+
     ownerId: string;
-    photoKey: string | null;
+
+    memberIds: string[];
+
+    habits: {
+        upsert: {
+            id: string;
+            name: string;
+        }[];
+        deleteIds: string[]
+    }
 };

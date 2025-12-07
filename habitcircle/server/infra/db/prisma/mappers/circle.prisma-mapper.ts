@@ -1,5 +1,5 @@
 import { Circle } from "@/server/domain/entities/circle/circle.entity";
-import type { Prisma } from "@/prisma/generated"
+import type { Habit as HabitRecord, Prisma } from "@/prisma/generated"
 import { CirclePrismaDto } from "@/server/infra/db/prisma/dtos/circle-prisma.dto";
 import { CircleName } from "@/server/domain/value-objects/circle/circle-name.value-object";
 import { CircleMembers } from "@/server/domain/value-objects/circle/circle-members.value-object";
@@ -34,11 +34,51 @@ export class CirclePrismaMapper {
     }
 
     static toPersistence(circle: Circle): CirclePrismaDto {
+        const habits = circle.getHabits().map(HabitPrismaMapper.toPersistence);
+
         return {
-            id: circle.id,
-            name: circle.getName(),
+            scalars: {
+                id: circle.id,
+                name: circle.getName(),
+                photoKey: circle.photoKey ?? null
+            },
             ownerId: circle.owner.userId,
-            photoKey: circle.photoKey ?? null
+            memberIds: circle.getMembers().map(m => m.userId),
+            habits: {
+                upsert: habits.map(h => ({
+                    id: h.id,
+                    name: h.name
+                })),
+                deleteIds: []
+            }
+        };
+    }
+
+    static toPersistenceForUpdate(
+        circle: Circle,
+        existingHabits: HabitRecord[]
+    ): CirclePrismaDto {
+        const incoming = circle.getHabits().map(HabitPrismaMapper.toPersistence);
+
+        const deleteIds = existingHabits
+            .filter(e => !incoming.some(i => i.id === e.id))
+            .map(h => h.id)
+
+        return {
+            scalars: {
+                id: circle.id,
+                name: circle.getName(),
+                photoKey: circle.photoKey ?? null,
+            },
+            ownerId: circle.owner.userId,
+            memberIds: circle.getMembers().map(m => m.userId),
+            habits: {
+                upsert: incoming.map(h => ({
+                    id: h.id,
+                    name: h.name
+                })),
+                deleteIds
+            }
         };
     }
 }
