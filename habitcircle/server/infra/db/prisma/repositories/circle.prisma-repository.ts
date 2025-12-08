@@ -35,7 +35,7 @@ export class CirclePrismaRepository implements CircleRepository {
                     connect: dto.memberIds
                 },
                 habits: {
-                    create: dto.habits
+                    create: dto.habitsToCreate
                 }
                 
             },

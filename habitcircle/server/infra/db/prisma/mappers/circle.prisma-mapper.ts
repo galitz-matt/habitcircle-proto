@@ -42,7 +42,7 @@ export class CirclePrismaMapper {
             },
             ownerId: circle.owner.userId,
             memberIds: circle.getMembers().map(m => ({ id: m.userId })),
-            habits: circle.getHabits().map(HabitPrismaMapper.toPersistence)
+            habitsToCreate: circle.getHabits().map(HabitPrismaMapper.toPersistence)
         };
     }
 
