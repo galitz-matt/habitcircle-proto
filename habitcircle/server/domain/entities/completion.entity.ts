@@ -62,14 +62,16 @@ export class Completion {
         id: string,
         completedAt: Date,
         userId: string,
-        habitId: string
+        habitId: string,
+        post?: Post,
     ): Completion {
         /* Used exclusively by repositories to reconstitue from persistence */
         return new Completion(
             id,
             completedAt,
             userId,
-            habitId
+            habitId,
+            post
         );
     }
 }
