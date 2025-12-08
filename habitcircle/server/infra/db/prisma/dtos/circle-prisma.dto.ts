@@ -11,7 +11,7 @@ type CircleBasePrismaDto = {
 }
 
 export type CircleCreatePrismaDto = CircleBasePrismaDto & {
-    habits: HabitPrismaDto[];
+    habitsToCreate: HabitPrismaDto[];
 };
 
 export type CircleUpdatePrismaDto = CircleBasePrismaDto & {
