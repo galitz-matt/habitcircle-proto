@@ -23,8 +23,8 @@ export class PostPrismaMapper {
             userId: post.userId,
             habitId: post.habitId,
             completionId: post.completionId,
-            photoKey: post.photoKey ?? null,
-            caption: post.caption?.toString() ?? null
+            photoKey: post.photoKey,
+            caption: post.caption?.toString()
         };
     }
 }
