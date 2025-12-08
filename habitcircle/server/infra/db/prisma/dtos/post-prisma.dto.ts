@@ -4,6 +4,6 @@ export type PostPrismaDto = {
     userId: string;
     habitId: string;
     completionId: string;
-    photoKey: string | null;
-    caption: string | null;
+    photoKey: string | undefined;
+    caption: string | undefined;
 }
