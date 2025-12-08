@@ -16,6 +16,7 @@ export class CompletionPrismaRepository implements CompletionRepository {
                     completedAt: completedAt,
                 },
             },
+            include: { post: true }
         });
 
         return completionRecord ? CompletionPrismaMapper.toDomain(completionRecord): null;
@@ -26,7 +27,8 @@ export class CompletionPrismaRepository implements CompletionRepository {
             where: { 
                 userId: userId, 
                 habitId: habitId
-            }
+            },
+            include: { post: true }
         });
 
         return completionRecords.map(CompletionPrismaMapper.toDomain);
@@ -34,7 +36,8 @@ export class CompletionPrismaRepository implements CompletionRepository {
 
     async findByUserId(userId: string): Promise<Completion[]> {
         const completionRecords = await this.prisma.completion.findMany({
-            where: { userId: userId }
+            where: { userId },
+            include: { post: true }
         });
 
         return completionRecords.map(CompletionPrismaMapper.toDomain);
@@ -42,17 +45,23 @@ export class CompletionPrismaRepository implements CompletionRepository {
 
     async findByHabitId(habitId: string): Promise<Completion[]> {
         const completionRecords = await this.prisma.completion.findMany({
-            where: { habitId: habitId }
+            where: { habitId },
+            include: { post: true }
         });
 
         return completionRecords.map(CompletionPrismaMapper.toDomain)
     }
 
     async create(completion: Completion): Promise<void> {
-        const completionDto = CompletionPrismaMapper.toPersistence(completion);
+        const dto = CompletionPrismaMapper.toPersistence(completion);
 
         await this.prisma.completion.create({
-            data: completionDto,
+            data: {
+                ...dto.scalars,
+                ...(dto.post
+                    ? { post: { create: dto.post }}
+                    : {})
+            }
         }).catch((err) => {
             if (err.code === "P2002") {
                 const target = err.meta?.target?.[0];
@@ -63,15 +72,38 @@ export class CompletionPrismaRepository implements CompletionRepository {
     }
 
     async update(completion: Completion): Promise<void> {
-        const completionDto = CompletionPrismaMapper.toPersistence(completion);
-        const { id, ...mutableFields } = completionDto
+        const dto = CompletionPrismaMapper.toPersistence(completion);
+
+        if (!dto.post) {
+            // Delete post if exists
+            await this.prisma.post.deleteMany({
+                where: { completionId: dto.scalars.id }
+            });
+            await this.prisma.completion.update({
+                where: { id: dto.scalars.id },
+                data: { completedAt: dto.scalars.completedAt }
+            });
+            return;
+        }
 
         await this.prisma.completion.update({
-            where: { id },
-            data: mutableFields,
+            where: { id: dto.scalars.id },            
+            data: {
+                completedAt: dto.scalars.completedAt,
+                post: {
+                    upsert: {
+                        where: { id: dto.post.id },
+                        create: dto.post,
+                        update: {
+                            caption: dto.post.caption,
+                            photoKey: dto.post.photoKey
+                        }
+                    }
+                }
+            },
         }).catch((err) => {
             if (err.code === "P2025") 
-                throw new NotFoundError(`Completion with id ${id} not found`);
+                throw new NotFoundError(`Completion with id ${dto.scalars.id} not found`);
             throw err;
         });
     }
