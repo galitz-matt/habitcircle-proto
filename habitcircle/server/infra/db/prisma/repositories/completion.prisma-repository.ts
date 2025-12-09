@@ -74,32 +74,22 @@ export class CompletionPrismaRepository implements CompletionRepository {
     async update(completion: Completion): Promise<void> {
         const dto = CompletionPrismaMapper.toPersistence(completion);
 
-        if (!dto.post) {
-            // Delete post if exists
-            await this.prisma.post.deleteMany({
-                where: { completionId: dto.scalars.id }
-            });
-            await this.prisma.completion.update({
-                where: { id: dto.scalars.id },
-                data: { completedAt: dto.scalars.completedAt }
-            });
-            return;
-        }
-
         await this.prisma.completion.update({
             where: { id: dto.scalars.id },            
             data: {
                 completedAt: dto.scalars.completedAt,
-                post: {
-                    upsert: {
-                        where: { id: dto.post.id },
-                        create: dto.post,
-                        update: {
-                            caption: dto.post.caption,
-                            photoKey: dto.post.photoKey
+                post: dto.post 
+                    ? {
+                        upsert: {
+                            where: { id: dto.post.id },
+                            create: dto.post,
+                            update: {
+                                caption: dto.post.caption,
+                                photoKey: dto.post.photoKey
+                            }
                         }
                     }
-                }
+                    : { delete: true }
             },
         }).catch((err) => {
             if (err.code === "P2025") 
