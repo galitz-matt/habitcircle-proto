@@ -25,19 +25,18 @@ export class CirclePrismaRepository implements CircleRepository {
     }
 
     async create(circle: Circle): Promise<void> {
-        const dto = CirclePrismaMapper.toPersistenceForCreate(circle);
+        const dto = CirclePrismaMapper.toPersistence(circle);
 
         await this.prisma.circle.create({
             data: {
                 ...dto.scalars,
-                ownerId: dto.ownerId,
+                ownerId: dto.relations.ownerId,
                 members: {
-                    connect: dto.memberIds
+                    connect: dto.relations.memberIds.map(id => ({ id }))
                 },
                 habits: {
-                    create: dto.habitsToCreate
+                    create: dto.relations.habits
                 }
-                
             },
         }).catch((err) => {
             if (err.code === "P2002") {
@@ -49,17 +48,32 @@ export class CirclePrismaRepository implements CircleRepository {
     }
 
     async update(circle: Circle): Promise<void> {
+        const dto = CirclePrismaMapper.toPersistence(circle);
+
         const existingHabits = await this.prisma.habit.findMany({ where: { circleId: circle.id} });
-        const dto = CirclePrismaMapper.toPersistenceForUpdate(circle, existingHabits);
+        const incomingHabitIds = new Set(dto.relations.habits.map(h => h.id));
+        const habitIdsToDelete = existingHabits.filter(e => !incomingHabitIds.has(e.id))
+                                               .map(e => e.id)
 
         await this.prisma.circle.update({
             where: { id: dto.scalars.id },
             data: {
                 ...dto.scalars,
-                members: { set: dto.memberIds },
+                ownerId: dto.relations.ownerId,
+                members: { 
+                    set: dto.relations.memberIds.map(id => ({ id }))
+                },
                 habits: {
-                    upsert: dto.habitsToUpsert,
-                    deleteMany: dto.habitIdsToDelete
+                    upsert: dto.relations.habits.map(h => ({
+                        where: { id: h.id },
+                        create: h,
+                        update: {
+                            name: h.name
+                        }
+                    })),
+                    deleteMany: { 
+                        id: { in: habitIdsToDelete } 
+                    }
                 }
             },
         }).catch((err) => {

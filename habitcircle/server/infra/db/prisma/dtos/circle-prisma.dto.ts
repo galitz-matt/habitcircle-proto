@@ -1,24 +1,14 @@
-import { HabitMutablePropsPrismaDto, HabitPrismaDto } from "./habit-prisma.dto";
+import { HabitPrismaDto } from "./habit-prisma.dto";
 
-type CircleBasePrismaDto = {
+export type CirclePrismaDto = {
     scalars: {
         id: string;
         name: string;
-        photoKey: string | null;
-    };
-    ownerId: string;
-    memberIds: { id: string }[];
+        photoKey?: string;
+    }
+    relations: {
+        ownerId: string;
+        memberIds: string[];
+        habits: HabitPrismaDto[];
+    }
 }
-
-export type CircleCreatePrismaDto = CircleBasePrismaDto & {
-    habitsToCreate: HabitPrismaDto[];
-};
-
-export type CircleUpdatePrismaDto = CircleBasePrismaDto & {
-    habitsToUpsert: {
-        where: { id: string };
-        create: HabitPrismaDto;
-        update: HabitMutablePropsPrismaDto;
-    }[];
-    habitIdsToDelete: { id: { in: string[] } }
-};
