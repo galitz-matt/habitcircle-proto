@@ -1,5 +1,5 @@
 import { Circle } from "@/server/domain/entities/circle/circle.entity";
-import type { Habit as HabitRecord, Prisma } from "@/prisma/generated"
+import type { Prisma } from "@/prisma/generated"
 import { CirclePrismaDto } from "@/server/infra/db/prisma/dtos/circle-prisma.dto";
 import { CircleName } from "@/server/domain/value-objects/circle/circle-name.value-object";
 import { CircleMembers } from "@/server/domain/value-objects/circle/circle-members.value-object";
