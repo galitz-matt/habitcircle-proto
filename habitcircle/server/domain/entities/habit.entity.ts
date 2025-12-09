@@ -22,6 +22,10 @@ export class Habit {
         return !!other && other.id == this.id;
     }
 
+    getName() {
+        return this._name.value;
+    }
+
     get id() {
         return this._id;
     }

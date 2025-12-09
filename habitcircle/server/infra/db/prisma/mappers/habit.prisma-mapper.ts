@@ -19,7 +19,7 @@ export class HabitPrismaMapper {
         return {
             id: habit.id,
             createdAt: habit.createdAt,
-            name: habit.name.value,
+            name: habit.getName(),
         }
     }
 }
