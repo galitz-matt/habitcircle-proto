@@ -25,9 +25,9 @@ export class CompletionPrismaMapper {
             scalars: {
                 id: completion.id,
                 completedAt: completion.completedAt,
-                userId: completion.userId,
-                habitId: completion.habitId,
             },
+            userId: completion.userId,
+            habitId: completion.habitId,
             post: completion.post 
                 ? PostPrismaMapper.toPersistence(completion.post) 
                 : undefined
