@@ -26,14 +26,12 @@ export class OAuthAccountPrismaMapper {
 
     static toPersistence(oauthAccount: OAuthAccount): OAuthAccountPrismaDto {
         return {
-                scalars: {
-                id: oauthAccount.id,
-                provider: oauthAccount.provider,
-                providerAccountId: oauthAccount.providerAccountId,
-                accessToken: oauthAccount.accessToken,
-                refreshToken: oauthAccount.refreshToken,
-                expiresAt: oauthAccount.expiresAt
-            }
+            id: oauthAccount.id,
+            provider: oauthAccount.provider,
+            providerAccountId: oauthAccount.providerAccountId,
+            accessToken: oauthAccount.accessToken,
+            refreshToken: oauthAccount.refreshToken,
+            expiresAt: oauthAccount.expiresAt
         }
     }
 }
