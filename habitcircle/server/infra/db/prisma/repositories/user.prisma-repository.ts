@@ -25,17 +25,17 @@ export class UserPrismaRepository implements UserRepository {
     }
 
     async create(user: User): Promise<void> {
-        const { user: u, credentialsAccount, oauthAccounts } = UserPrismaMapper.toPersistence(user);
+        const dto = UserPrismaMapper.toPersistence(user);
 
         await this.prisma.user.create({
             data: {
-                ...u,
-                credentialsAccount: credentialsAccount
-                    ? { create: credentialsAccount }
+                ...dto.scalars,
+                credentialsAccount: dto.credentialsAccount
+                    ? { create: dto.credentialsAccount }
                     : undefined,
-                oauthAccounts: {
-                    create: oauthAccounts
-                }
+                oauthAccounts: dto.oauthAccounts.length > 0
+                    ? { create: dto.oauthAccounts }
+                    : undefined
             }
         }).catch((err) => {
             if (err.code === "P2002") {
@@ -47,45 +47,50 @@ export class UserPrismaRepository implements UserRepository {
     }
 
     async update(user: User): Promise<void> {
-        const { user: u, credentialsAccount, oauthAccounts } = UserPrismaMapper.toPersistence(user);
+        const dto = UserPrismaMapper.toPersistence(user);
 
-        const data = {
-            username: u.username,
-            emailAddress: u.emailAddress,
-            biography: u.biography,
-            profilePictureKey: u.profilePictureKey,
-            updatedAt: new Date(),
+        await this.prisma.$transaction(async (tx) => {
+            await tx.user.update({
+                where: { id: dto.scalars.id },
+                data: {
+                    username: dto.scalars.username,
+                    emailAddress: dto.scalars.emailAddress,
+                    biography: dto.scalars.biography,
+                    profilePictureKey: dto.scalars.profilePictureKey
+                }
+            });
 
-            credentialsAccount: {},
-            oauthAccounts: {},
-        };
+            if (dto.credentialsAccount) {
+                await tx.credentialsAccount.upsert({
+                    where: { userId: dto.scalars.id },
+                    create: {
+                        ...dto.credentialsAccount,
+                        user: { connect: { id: dto.scalars.id }}
+                    },
+                    update: {
+                        hashedPassword: dto.credentialsAccount.hashedPassword,
+                        passwordVersion: dto.credentialsAccount.passwordVersion,
+                        emailVerified: dto.credentialsAccount.emailVerified,
+                        failedAttempts: dto.credentialsAccount.failedAttempts
+                    }
+                });
+            }
 
-        if (credentialsAccount) {
-            data.credentialsAccount = {
-                upsert: {
-                    create: credentialsAccount,
-                    update: credentialsAccount
-                },
-            };
-        } else {
-            data.credentialsAccount = {
-                delete: true,
-            };
-        }
-
-        data.oauthAccounts = {
-            deleteMany: {},
-            create: oauthAccounts,
-        };
-
-        await this.prisma.user.update({
-            where: { id: u.id },
-            data,
-        }).catch((err) => {
-            if (err.code === "P2025")
-                throw new NotFoundError(`User with id ${u.id} not found`);
-            throw err;
-        });
+            for (const oa of dto.oauthAccounts) {
+                await tx.oAuthAccount.upsert({
+                    where: { id: oa.id },
+                    create: {
+                        ...oa,
+                        user: { connect: { id: dto.scalars.id } }
+                    },
+                    update: {
+                        accessToken: oa.accessToken,
+                        refreshToken: oa.refreshToken,
+                        expiresAt: oa.expiresAt
+                    }
+                })
+            }
+        })
     }
 
     async delete(id: string): Promise<void> {

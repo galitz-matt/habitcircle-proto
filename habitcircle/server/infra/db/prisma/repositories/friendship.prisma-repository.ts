@@ -42,19 +42,18 @@ export class FriendshipPrismaRepository implements FriendshipRepository {
     }
 
     async update(friendship: Friendship): Promise<void> {
-        const friendshipDto = FriendshipPrismaMapper.toPersistence(friendship);
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const { id, createdAt, ...mutableFields } = friendshipDto;
+        const dto = FriendshipPrismaMapper.toPersistence(friendship);
 
         await this.prisma.friendship.update({
-            where: { id },
+            where: { id: dto.scalars.id },
             data: {
-                ...mutableFields,
-                updatedAt: new Date(),
+                ...dto.scalars,
+                addressee: { connect: { id: dto.addresseeId } },
+                requester: { connect: { id: dto.requesterId } }
             },
         }).catch((err) => {
             if (err.code === "P2025")
-                throw new NotFoundError(`Friendship with id ${id} not found`);
+                throw new NotFoundError(`Friendship with id ${dto.scalars.id} not found`);
             throw err;
         });
     }

@@ -30,12 +30,12 @@ export class CirclePrismaRepository implements CircleRepository {
         await this.prisma.circle.create({
             data: {
                 ...dto.scalars,
-                ownerId: dto.relations.ownerId,
+                ownerId: dto.ownerId,
                 members: {
-                    connect: dto.relations.memberIds.map(id => ({ id }))
+                    connect: dto.memberIds.map(id => ({ id }))
                 },
                 habits: {
-                    create: dto.relations.habits
+                    create: dto.habits
                 }
             },
         }).catch((err) => {
@@ -51,7 +51,7 @@ export class CirclePrismaRepository implements CircleRepository {
         const dto = CirclePrismaMapper.toPersistence(circle);
 
         const existingHabits = await this.prisma.habit.findMany({ where: { circleId: circle.id} });
-        const incomingHabitIds = new Set(dto.relations.habits.map(h => h.id));
+        const incomingHabitIds = new Set(dto.habits.map(h => h.id));
         const habitIdsToDelete = existingHabits.filter(e => !incomingHabitIds.has(e.id))
                                                .map(e => e.id)
 
@@ -59,12 +59,12 @@ export class CirclePrismaRepository implements CircleRepository {
             where: { id: dto.scalars.id },
             data: {
                 ...dto.scalars,
-                ownerId: dto.relations.ownerId,
+                ownerId: dto.ownerId,
                 members: { 
-                    set: dto.relations.memberIds.map(id => ({ id }))
+                    set: dto.memberIds.map(id => ({ id }))
                 },
                 habits: {
-                    upsert: dto.relations.habits.map(h => ({
+                    upsert: dto.habits.map(h => ({
                         where: { id: h.id },
                         create: h,
                         update: {

@@ -58,9 +58,17 @@ export class CompletionPrismaRepository implements CompletionRepository {
         await this.prisma.completion.create({
             data: {
                 ...dto.scalars,
-                ...(dto.post
-                    ? { post: { create: dto.post }}
-                    : {})
+                user: { connect: { id: dto.userId }},
+                habit: { connect: { id: dto.habitId }},
+                post: dto.post 
+                    ? { 
+                        create: { 
+                            ...dto.post,
+                            user: { connect: { id: dto.userId } },
+                            habit: { connect: { id: dto.habitId }}
+                        } 
+                    }
+                    : undefined
             }
         }).catch((err) => {
             if (err.code === "P2002") {
@@ -82,7 +90,11 @@ export class CompletionPrismaRepository implements CompletionRepository {
                     ? {
                         upsert: {
                             where: { id: dto.post.id },
-                            create: dto.post,
+                            create: {
+                                ...dto.post,
+                                user: { connect: { id: dto.userId } },
+                                habit: { connect: { id: dto.habitId } }
+                            },
                             update: {
                                 caption: dto.post.caption,
                                 photoKey: dto.post.photoKey

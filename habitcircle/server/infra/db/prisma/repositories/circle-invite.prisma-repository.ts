@@ -47,9 +47,9 @@ export class CircleInvitePrismaRepository implements CircleInviteRepository {
         const circleInviteDto = CircleInvitePrismaMapper.toPersistence(circleInvite);
 
         await this.prisma.circleInvite.update({
-            where: { id: circleInviteDto.id },
+            where: { id: circleInviteDto.scalars.id },
             data: {
-                status: circleInviteDto.status,
+                status: circleInviteDto.scalars.status,
                 updatedAt: new Date(),
             },
         }).catch((err) => {
