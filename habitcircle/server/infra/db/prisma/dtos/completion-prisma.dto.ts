@@ -4,8 +4,8 @@ export type CompletionPrismaDto = {
     scalars: {
         id: string;
         completedAt: Date;
-        userId: string;
-        habitId: string;
     };
+    userId: string;
+    habitId: string;
     post?: PostPrismaDto;
 }
