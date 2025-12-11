@@ -2,9 +2,8 @@ export type CredentialsAccountPrismaDto = {
     scalars: {
         id: string;
         hashedPassword: string;
-        passwordVersion: string;
+        passwordVersion: number;
         failedAttempts: number;
         emailVerified: boolean;
     }
-    userId: string;
 }

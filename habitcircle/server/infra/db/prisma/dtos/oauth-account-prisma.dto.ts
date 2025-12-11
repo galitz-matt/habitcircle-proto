@@ -7,5 +7,4 @@ export type OAuthAccountPrismaDto = {
         refreshToken?: string;
         expiresAt?: Date;
     }
-    userId: string
 }
