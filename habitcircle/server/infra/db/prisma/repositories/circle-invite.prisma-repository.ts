@@ -29,14 +29,18 @@ export class CircleInvitePrismaRepository implements CircleInviteRepository {
     }
 
     async create(circleInvite: CircleInvite): Promise<void> {
-        const circleInviteDto = CircleInvitePrismaMapper.toPersistence(circleInvite);
-
+        const dto = CircleInvitePrismaMapper.toPersistence(circleInvite);
         await this.prisma.circleInvite.create({
-            data: circleInviteDto
+            data: {
+                ...dto.scalars,
+                sender: { connect: { id: dto.senderId } },
+                recipient: { connect: { id: dto.recipientId } },
+                circle: { connect: { id: dto.circleId } }
+            }
         }).catch((err) => {
             if (err.code === "P2002") {
                 throw new DuplicateError(
-                    `CircleInvite already exists with recipientId ${circleInviteDto.recipientId} and senderId ${circleInviteDto.senderId}`
+                    `CircleInvite already exists with recipientId ${dto.recipientId} and senderId ${dto.senderId}`
                 );
             }
             throw err;
@@ -50,7 +54,6 @@ export class CircleInvitePrismaRepository implements CircleInviteRepository {
             where: { id: circleInviteDto.scalars.id },
             data: {
                 status: circleInviteDto.scalars.status,
-                updatedAt: new Date(),
             },
         }).catch((err) => {
             if (err.code === "P2025")

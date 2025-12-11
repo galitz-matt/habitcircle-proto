@@ -29,9 +29,13 @@ export class FriendshipPrismaRepository implements FriendshipRepository {
     }
 
     async create(friendship: Friendship): Promise<void> {
-        const friendshipDto = FriendshipPrismaMapper.toPersistence(friendship);
+        const dto = FriendshipPrismaMapper.toPersistence(friendship);
         await this.prisma.friendship.create({
-            data: friendshipDto,
+            data: {
+                ...dto.scalars,
+                requester: { connect: { id: dto.requesterId } },
+                addressee: { connect: { id: dto.addresseeId } }
+            },
         }).catch((err) => {
             if (err.code === "P2002") {
                 const target = err.meta?.target?.[0];
@@ -47,9 +51,7 @@ export class FriendshipPrismaRepository implements FriendshipRepository {
         await this.prisma.friendship.update({
             where: { id: dto.scalars.id },
             data: {
-                ...dto.scalars,
-                addressee: { connect: { id: dto.addresseeId } },
-                requester: { connect: { id: dto.requesterId } }
+                status: dto.scalars.status
             },
         }).catch((err) => {
             if (err.code === "P2025")
