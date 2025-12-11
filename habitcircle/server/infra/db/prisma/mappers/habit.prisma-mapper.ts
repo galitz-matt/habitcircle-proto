@@ -17,8 +17,10 @@ export class HabitPrismaMapper {
 
     static toPersistence(habit: Habit): HabitPrismaDto {
         return {
-            id: habit.id,
-            name: habit.getName(),
+            scalars: {
+                id: habit.id,
+                name: habit.getName(),
+            }
         }
     }
 }

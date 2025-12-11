@@ -40,11 +40,9 @@ export class CirclePrismaMapper {
                 name: circle.getName(),
                 photoKey: circle.photoKey,
             },
-            relations: {
-                ownerId: circle.owner.userId,
-                memberIds: circle.getMembers().map(m => m.userId),
-                habits: circle.getHabits().map(HabitPrismaMapper.toPersistence)
-            }
+            ownerId: circle.owner.userId,
+            memberIds: circle.getMembers().map(m => m.userId),
+            habits: circle.getHabits().map(HabitPrismaMapper.toPersistence)
         }
     }
 }

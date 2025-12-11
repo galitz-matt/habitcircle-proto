@@ -20,12 +20,13 @@ export class CredentialsAccountPrismaMapper {
 
     static toPersistence(account: CredentialsAccount): CredentialsAccountPrismaDto {
         return {
-            id: account.id,
-            userId: account.userId,
-            hashedPassword: account.passwordHash,
-            passwordVersion: account.passwordVersion,
-            failedAttempts: account.failedAttempts,
-            emailVerified: account.emailVerified
+            scalars: {
+                id: account.id,
+                hashedPassword: account.passwordHash,
+                passwordVersion: account.passwordVersion,
+                failedAttempts: account.failedAttempts,
+                emailVerified: account.emailVerified
+            }
         };
     }
 }

@@ -18,13 +18,14 @@ export class PostPrismaMapper {
 
     static toPersistence(post: Post): PostPrismaDto {
         return {
-            id: post.id,
-            createdAt: post.createdAt,
+            scalars: {
+                id: post.id,
+                photoKey: post.photoKey,
+                caption: post.caption?.toString()
+            },
             userId: post.userId,
             habitId: post.habitId,
             completionId: post.completionId,
-            photoKey: post.photoKey,
-            caption: post.caption?.toString()
         };
     }
 }

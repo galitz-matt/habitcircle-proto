@@ -17,12 +17,13 @@ export class CircleInvitePrismaMapper {
 
     static toPersistence(circleInvite: CircleInvite): CircleInvitePrismaDto {
         return {
-            id: circleInvite.id,
-            createdAt: circleInvite.createdAt,
+            scalars: {
+                id: circleInvite.id,
+                status: CircleInvitePrismaMapper.toPersistenceStatus(circleInvite.status)
+            },
             senderId: circleInvite.senderId,
             recipientId: circleInvite.recipientId,
             circleId: circleInvite.circleId,
-            status: CircleInvitePrismaMapper.toPersistenceStatus(circleInvite.status)
         };
     }
 

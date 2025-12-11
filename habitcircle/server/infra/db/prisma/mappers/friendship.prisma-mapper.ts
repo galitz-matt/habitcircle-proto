@@ -16,11 +16,12 @@ export class FriendshipPrismaMapper {
 
     static toPersistence(friendship: Friendship): FriendshipPrismaDto {
         return {
-            id: friendship.id,
-            createdAt: friendship.createdAt,
+            scalars: {
+                id: friendship.id,
+                status: FriendshipPrismaMapper.toPersistenceStatus(friendship.status)
+            },
             requesterId: friendship.requesterId,
             addresseeId: friendship.addresseeId,
-            status: FriendshipPrismaMapper.toPersistenceStatus(friendship.status)
         }
     }
 
