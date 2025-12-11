@@ -1,9 +1,11 @@
 export type OAuthAccountPrismaDto = {
-    id: string,
-    userId: string,
-    provider: string,
-    providerAccountId: string,
-    accessToken: string | null,
-    refreshToken: string | null,
-    expiresAt: Date | null
+    scalars: {
+        id: string;
+        provider: string;
+        providerAccountId: string;
+        accessToken?: string;
+        refreshToken?: string;
+        expiresAt?: Date;
+    }
+    userId: string
 }

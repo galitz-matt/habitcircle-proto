@@ -1,4 +1,6 @@
 export type HabitPrismaDto = {
-    id: string,
-    name: string,
+    scalars: {
+        id: string;
+        name: string;
+    }
 }

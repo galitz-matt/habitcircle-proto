@@ -1,9 +1,10 @@
 import { FriendshipStatus } from "../generated"
 
 export type FriendshipPrismaDto = {
-    id: string,
-    createdAt: Date,
-    requesterId: string,
-    addresseeId: string,
-    status: FriendshipStatus
+    scalars: {
+        id: string;
+        status: FriendshipStatus;
+    }
+    requesterId: string;
+    addresseeId: string;
 }

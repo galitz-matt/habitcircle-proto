@@ -6,9 +6,7 @@ export type CirclePrismaDto = {
         name: string;
         photoKey?: string;
     }
-    relations: {
-        ownerId: string;
-        memberIds: string[];
-        habits: HabitPrismaDto[];
-    }
+    ownerId: string;
+    memberIds: string[];
+    habits: HabitPrismaDto[];
 }

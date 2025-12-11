@@ -2,16 +2,13 @@ import type { CredentialsAccountPrismaDto } from "./credentials-account-prisma.d
 import { OAuthAccountPrismaDto } from "./oauth-account-prisma.dto";
 
 export type UserPrismaDto = {
-    id: string;
-    createdAt: Date;
-    username: string;
-    emailAddress: string | null;
-    biography: string | null;
-    profilePictureKey: string | null;
-}
-
-export type UserAggregatePrismaDto = {
-    user: UserPrismaDto,
-    credentialsAccount: CredentialsAccountPrismaDto | null,
+    scalars: {
+        id: string;
+        username: string;
+        emailAddress?: string;
+        biography?: string;
+        profilePictureKey?: string;
+    }
+    credentialsAccount?: CredentialsAccountPrismaDto
     oauthAccounts: OAuthAccountPrismaDto[]
 }
