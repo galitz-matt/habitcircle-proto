@@ -1,7 +1,6 @@
 import { CredentialsAccount } from "@/server/domain/entities/auth/credentials-account.entity";
 import { CredentialsAccount as CredentialsAccountRecord } from "../generated";
 import { CredentialsAuthentication } from "@/server/domain/entities/auth/credentials-auth.entity";
-import { Password } from "@/server/domain/value-objects/auth/password.value-object";
 import { CredentialsAccountPrismaDto } from "../dtos/credentials-account-prisma.dto";
 
 export class CredentialsAccountPrismaMapper {
@@ -10,7 +9,7 @@ export class CredentialsAccountPrismaMapper {
             record.id,
             record.userId,
             CredentialsAuthentication.rehydrate(
-                Password.rehydrate(record.hashedPassword),
+                record.hashedPassword,
                 record.passwordVersion,
                 record.failedAttempts,
                 record.emailVerified

@@ -1,6 +1,5 @@
 import { IdGenerator } from "@/lib/utils";
 import { DomainError } from "@/lib/errors";
-import { Password } from "../../value-objects/auth/password.value-object";
 import { CredentialsAuthentication } from "./credentials-auth.entity";
 
 export class CredentialsAccount {
@@ -13,7 +12,7 @@ export class CredentialsAccount {
 
     static create(
         userId: string, 
-        password: Password
+        password: string
     ): CredentialsAccount {
         const auth = CredentialsAuthentication.create(password);
 
@@ -37,7 +36,7 @@ export class CredentialsAccount {
     }
 
     get passwordHash(): string {
-        return this._auth.password.toString();
+        return this._auth.password;
     }
 
     get passwordVersion(): number {

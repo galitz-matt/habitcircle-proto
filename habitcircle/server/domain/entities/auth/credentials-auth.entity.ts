@@ -1,5 +1,3 @@
-import { Password } from "@/server/domain/value-objects/auth/password.value-object";
-
 const VERSION_ZERO = 0;
 const NO_ATTEMPTS = 0;
 const NOT_VERIFIED = false;
@@ -7,13 +5,13 @@ const NOT_VERIFIED = false;
 export class CredentialsAuthentication {
     
     private constructor(
-        private _password: Password,
+        private _password: string,
         private _passwordVersion: number,
         private _failedAttempts: number,
         private _emailVerified: boolean
     ) {}
 
-    static create(password: Password): CredentialsAuthentication {
+    static create(password: string): CredentialsAuthentication {
         return new CredentialsAuthentication(
             password,
             VERSION_ZERO,
@@ -22,8 +20,8 @@ export class CredentialsAuthentication {
         );
     }
 
-    changePassword(hash: string): this {
-        this._password = Password.fromHash(hash);
+    changePassword(password: string): this {
+        this._password = password;
         this._passwordVersion += 1;
         return this;
     }
@@ -43,11 +41,11 @@ export class CredentialsAuthentication {
         return this;
     }
 
-    verifyPassword(password: Password): boolean {
-        return this._password.equals(password);
+    verifyPassword(password: string): boolean {
+        return this._password === password;
     }
 
-    get password(): Password {
+    get password(): string {
         return this._password;
     }
 
@@ -64,7 +62,7 @@ export class CredentialsAuthentication {
     }
 
     static rehydrate(
-        password: Password,
+        password: string,
         passwordVersion: number,
         failedAttempts: number,
         emailVerified: boolean
