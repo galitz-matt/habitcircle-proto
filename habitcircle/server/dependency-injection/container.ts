@@ -3,8 +3,20 @@ import { CircleRepository } from "@/server/application/repositories/circle.repos
 import { UserRepository } from "@/server/application/repositories/user.repository";
 import { CirclePrismaRepository } from "@/server/infra/db/prisma/repositories/circle.prisma-repository";
 import { UserPrismaRepository } from "@/server/infra/db/prisma/repositories/user.prisma-repository";
+import { PrismaClient } from "@/prisma/generated";
+import type { AuthenticationReadModel } from "../application/read-models/authentication.read-model";
+import { AuthenticationPrismaReadModel } from "../infra/db/prisma/read-models/authentication.prisma-read-model";
+import type { HashingService } from "@/server/application/services/hashing.service";
+import { BcryptHashingService } from "@/server/infra/services/bcrypt-hashing.service";
+
+const saltRounds = Number(process.env.SALT_ROUNDS);
+
+container.register<AuthenticationReadModel>("AuthenticationReadModel", { useClass: AuthenticationPrismaReadModel })
 
 container.register<CircleRepository>("CircleRepository", { useClass: CirclePrismaRepository });
 container.register<UserRepository>("UserRepository", { useClass: UserPrismaRepository });
+container.register<HashingService>("HashingService", { useValue: new BcryptHashingService(saltRounds) });
+
+container.registerInstance(PrismaClient, new PrismaClient());
 
 export { container };
