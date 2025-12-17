@@ -1,8 +1,8 @@
 import { prisma } from "@/tests/integration/setup/jest.setup";
-import { CircleInvitePrismaRepository } from "@/server/infra/db/prisma/repositories/circle-invite.prisma-repository";
+import { CircleInvitePrismaRepository } from "@/server/infra/prisma/repositories/circle-invite.prisma-repository";
 import { CircleInvite } from "@/server/domain/entities/circle/circle-invite.entity";
 import { DomainInviteStatus } from "@/server/domain/types/invite-status";
-import { InviteStatus } from "@/server/infra/db/prisma/generated";
+import { InviteStatus } from "@/server/infra/prisma/generated";
 import { DuplicateError, NotFoundError } from "@/lib/errors";
 
 describe("CircleInvitePrismaRepository (integration)", () => {
