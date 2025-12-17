@@ -15,7 +15,7 @@ const config = {
     "^@/lib/(.*)$": "<rootDir>/lib/$1",
     "^@/graphql/(.*)$": "<rootDir>/graphql/$1",
     "^@/components/(.*)$": "<rootDir>/components/$1",
-    "^@/prisma/generated/(.*)$": "<rootDir>/server/infra/db/prisma/generated/$1",
+    "^@/prisma/generated/(.*)$": "<rootDir>/server/infra/prisma/generated/$1",
   }
 };
 

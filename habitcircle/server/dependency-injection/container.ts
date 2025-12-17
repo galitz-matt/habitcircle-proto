@@ -1,11 +1,11 @@
 import { container } from "tsyringe";
 import { CircleRepository } from "@/server/application/repositories/circle.repository";
 import { UserRepository } from "@/server/application/repositories/user.repository";
-import { CirclePrismaRepository } from "@/server/infra/db/prisma/repositories/circle.prisma-repository";
-import { UserPrismaRepository } from "@/server/infra/db/prisma/repositories/user.prisma-repository";
+import { CirclePrismaRepository } from "@/server/infra/prisma/repositories/circle.prisma-repository";
+import { UserPrismaRepository } from "@/server/infra/prisma/repositories/user.prisma-repository";
 import { PrismaClient } from "@/prisma/generated";
 import type { AuthenticationReadModel } from "../application/read-models/authentication.read-model";
-import { AuthenticationPrismaReadModel } from "../infra/db/prisma/read-models/authentication.prisma-read-model";
+import { AuthenticationPrismaReadModel } from "../infra/prisma/read-models/authentication.prisma-read-model";
 import type { HashingService } from "@/server/application/services/hashing.service";
 import { BcryptHashingService } from "@/server/infra/services/bcrypt-hashing.service";
 

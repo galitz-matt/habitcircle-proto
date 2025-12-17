@@ -1,0 +1,122 @@
+import type { PrismaClient } from "@/prisma/generated";
+import { DuplicateError, NotFoundError } from "@/lib/errors";
+import type { Completion } from "@/server/domain/entities/completion.entity";
+import { CompletionRepository } from "@/server/application/repositories/completion.repository";
+import { CompletionPrismaMapper } from "@/server/infra/prisma/mappers/completion.prisma-mapper";
+
+export class CompletionPrismaRepository implements CompletionRepository {
+    constructor(private readonly prisma: PrismaClient) {}
+
+    async findByUserHabitAndDate(userId: string, habitId: string, completedAt: Date): Promise<Completion | null> {
+        const completionRecord = await this.prisma.completion.findUnique({
+            where: {
+                userId_habitId_completedAt: {
+                    userId: userId,
+                    habitId: habitId,
+                    completedAt: completedAt,
+                },
+            },
+            include: { post: true }
+        });
+
+        return completionRecord ? CompletionPrismaMapper.toDomain(completionRecord): null;
+    }
+
+    async findByUserAndHabit(userId: string, habitId: string): Promise<Completion[]> {
+        const completionRecords = await this.prisma.completion.findMany({
+            where: { 
+                userId: userId, 
+                habitId: habitId
+            },
+            include: { post: true }
+        });
+
+        return completionRecords.map(CompletionPrismaMapper.toDomain);
+    }
+
+    async findByUserId(userId: string): Promise<Completion[]> {
+        const completionRecords = await this.prisma.completion.findMany({
+            where: { userId },
+            include: { post: true }
+        });
+
+        return completionRecords.map(CompletionPrismaMapper.toDomain);
+    }
+
+    async findByHabitId(habitId: string): Promise<Completion[]> {
+        const completionRecords = await this.prisma.completion.findMany({
+            where: { habitId },
+            include: { post: true }
+        });
+
+        return completionRecords.map(CompletionPrismaMapper.toDomain)
+    }
+
+    async create(completion: Completion): Promise<void> {
+        const dto = CompletionPrismaMapper.toPersistence(completion);
+
+        await this.prisma.completion.create({
+            data: {
+                ...dto.scalars,
+                user: { connect: { id: dto.userId }},
+                habit: { connect: { id: dto.habitId }},
+                post: dto.post 
+                    ? { 
+                        create: { 
+                            ...dto.post,
+                            user: { connect: { id: dto.userId } },
+                            habit: { connect: { id: dto.habitId }}
+                        } 
+                    }
+                    : undefined
+            }
+        }).catch((err) => {
+            if (err.code === "P2002") {
+                const target = err.meta?.target?.[0];
+                throw new DuplicateError(`Completion already exists with duplicate ${target}`);
+            }
+            throw err;
+        });
+    }
+
+    async update(completion: Completion): Promise<void> {
+        const dto = CompletionPrismaMapper.toPersistence(completion);
+
+        await this.prisma.completion.update({
+            where: { id: dto.scalars.id },            
+            data: {
+                completedAt: dto.scalars.completedAt,
+                post: dto.post 
+                    ? {
+                        upsert: {
+                            where: { id: dto.post.id },
+                            create: {
+                                ...dto.post,
+                                user: { connect: { id: dto.userId } },
+                                habit: { connect: { id: dto.habitId } }
+                            },
+                            update: {
+                                caption: dto.post.caption,
+                                photoKey: dto.post.photoKey
+                            }
+                        }
+                    }
+                    : { delete: true }
+            },
+        }).catch((err) => {
+            if (err.code === "P2025") 
+                throw new NotFoundError(`Completion with id ${dto.scalars.id} not found`);
+            throw err;
+        });
+    }
+
+    async delete(id: string): Promise<void> {
+        await this.prisma.completion.delete({
+            where: { id }
+        }).catch((err) => {
+            if (err.code === "P2025") 
+                throw new NotFoundError(`Completion with id ${id} not found`);
+            throw err;
+        });
+    }
+}

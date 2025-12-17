@@ -25,7 +25,7 @@
       "@/lib/*": ["lib/*"],
       "@/server/*": ["server/*"],
       "@/components/*": ["components/*"],
-      "@/prisma/generated": ["server/infra/db/prisma/generated"],
+      "@/prisma/generated": ["server/infra/prisma/generated"],
       "@/tests/*": ["tests/*"]
     }
   },
