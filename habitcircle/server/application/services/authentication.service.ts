@@ -4,12 +4,12 @@ import { HashingService } from "./hashing.service";
 import { LoginWithCredentialsResult } from "../dtos/results/login-with-credentials.result";
 import { Session } from "../models/session.model"
 import { SessionRepository } from "../repositories/session.repository";
-import { VerifySessionTokenResult } from "../dtos/results/verify-session-token.result";
+import { SessionTokenExistsResult } from "../dtos/results/session-token-exists.result";
 import { InvalidateSessionTokenResult } from "../dtos/results/invalidate-session-token.result";
 
+const TTL = 60 * 60 * 24
+
 export class AuthenticationService {
-    readonly TWENTY_FOUR_HOURS = 1000 * 60 * 60 * 60 * 24
-    readonly TTL = 60 * 60 * 24
 
     constructor(
         private readonly authReadModel: AuthenticationReadModel,
@@ -29,7 +29,7 @@ export class AuthenticationService {
         }
 
         const session = this.generateSession(credentials.userId);
-        await this.sessionRepo.create(session, this.TTL)
+        await this.sessionRepo.create(session, TTL)
 
         return {
             type: "Success",
@@ -37,19 +37,13 @@ export class AuthenticationService {
         }
     }
 
-    async verifySessionToken(token: string): Promise<VerifySessionTokenResult> {
+    async sessionTokenExists(token: string): Promise<SessionTokenExistsResult> {
         const session = await this.sessionRepo.findByToken(token);
         if (!session) {
             return { type: "InvalidToken" };
         }
 
-        const currentDate = new Date();
-        const tokenExpiration = new Date(session.expiresAt);
-        if (tokenExpiration < currentDate) {
-            return { type: "InvalidToken" };
-        }
-
-        return { type: "Success" };
+        return { type: "Success", userId: session.userId };
     }
 
     async invalidateSessionToken(token: string): Promise<InvalidateSessionTokenResult> {
@@ -62,7 +56,7 @@ export class AuthenticationService {
 
     private generateSession(userId: string): Session {
         const issuedAt = new Date();
-        const expiresAt = new Date(issuedAt.getTime() + this.TWENTY_FOUR_HOURS)
+        const expiresAt = new Date(issuedAt.getTime() + TTL * 1000)
 
         return {
             token: IdGenerator.new(),
