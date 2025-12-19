@@ -44,6 +44,10 @@ export class OAuthAccount {
         return this._userId;
     }
 
+    get lastUsedAt(): Date {
+        return this._lastUsedAt;
+    }
+
     get provider(): string {
         return this._auth.identity.provider;
     }
