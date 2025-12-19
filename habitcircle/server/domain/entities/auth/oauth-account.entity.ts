@@ -1,5 +1,4 @@
 import { IdGenerator } from "@/lib/utils";
-import { DomainError } from "@/lib/errors";
 import { OAuthIdentity } from "../../value-objects/auth/oauth-identity.value-object";
 import { OAuthTokens } from "../../value-objects/auth/oauth-tokens.value-object";
 import { OAuthAuthentication } from "./oauth-auth.entity";
@@ -9,19 +8,21 @@ export class OAuthAccount {
     private constructor(
         private readonly _id: string,
         private readonly _userId: string,
+        private readonly _lastUsedAt: Date,
         private readonly _auth: OAuthAuthentication
     ) {}
 
     static create(
         userId: string, 
         identity: OAuthIdentity,
-        tokens: OAuthTokens
+        tokens: OAuthTokens,
     ): OAuthAccount {
         const oauthAuth = OAuthAuthentication.create(identity, tokens);
 
         return new OAuthAccount(
             IdGenerator.new(),
             userId,
+            new Date(),
             oauthAuth
         );
     }
@@ -66,15 +67,14 @@ export class OAuthAccount {
     static rehydrate(
         id: string,
         userId: string,
+        lastUsedAt: Date,
         auth: OAuthAuthentication
     ): OAuthAccount {
-        if (!auth)
-            throw new DomainError("Authentication method must be defined");
-        
         return new OAuthAccount(
             id,
             userId,
-            auth
+            lastUsedAt,
+            auth,
         );
     }
 }
