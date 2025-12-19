@@ -40,6 +40,11 @@ export class User {
     equals(other: User): boolean {
         return !!other && this._id === other.id;
     }
+
+    addOAuthAccount(oauthAccount: OAuthAccount): this {
+        this._oauthAccounts.push(oauthAccount);
+        return this;
+    }
     
     get id(): string {
         return this._id;
