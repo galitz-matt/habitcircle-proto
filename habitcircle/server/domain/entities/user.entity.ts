@@ -15,13 +15,25 @@ export class User {
         private _profilePictureKey?: string,
         private _credentialsAccount?: CredentialsAccount,
     ) {}
+    
 
-    static create(username: Username) {
+    static create(
+        username: Username,
+        oauthAccounts?: OAuthAccount[],
+        emailAddress?: string,
+        biography?: Biography,
+        profilePictureKey?: string,
+        credentialsAccount?: CredentialsAccount,
+    ) {
         return new User(
             IdGenerator.new(),
             new Date(),
             username,
-            []
+            oauthAccounts ?? [],
+            emailAddress,
+            biography,
+            profilePictureKey,
+            credentialsAccount,
         );
     };
 
@@ -69,7 +81,7 @@ export class User {
         emailAddress?: string,
         biography?: Biography,
         profilePictureKey?: string,
-        credentialsAccount?: CredentialsAccount
+        credentialsAccount?: CredentialsAccount,
     ): User {
         /* Used exclusively by repositories to reconstitue from persistence */
         return new User(

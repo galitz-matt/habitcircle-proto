@@ -47,12 +47,10 @@ export class AuthenticationService {
     }
 
     async invalidateSessionToken(token: string): Promise<InvalidateSessionTokenResult> {
-        try {
-            await this.sessionRepo.delete(token);
-            return { type: "Success" };
-        } catch {
-            return { type: "InvalidToken" };
-        }
+        const invalidated = await this.sessionRepo.delete(token);
+        return invalidated
+            ? { type: "Success" }
+            : { type: "InvalidToken" };
     }
 
     private generateSession(userId: string): Session {
