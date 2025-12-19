@@ -16,8 +16,8 @@ export class SessionRedisRepository implements SessionRepository {
         return raw ? JSON.parse(raw) as Session : null;
     }
 
-    async delete(sessionToken: string): Promise<void> {
-        await redisClient.del(this.key(sessionToken));
+    async delete(sessionToken: string): Promise<number> {
+        return await redisClient.del(this.key(sessionToken));
     }
 
     private key(token: string) {
