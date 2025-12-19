@@ -1,6 +1,9 @@
 import { User } from "@/server/domain/entities/user.entity";
-import { User as UserRecord } from "@/prisma/generated";
-import type { Prisma } from "@/prisma/generated";
+import { 
+    User as UserRecord,
+    OAuthAccount as OAuthAccountRecord,
+    CredentialsAccount as CredentialsAccountRecord,
+} from "@/prisma/generated";
 import { UserPrismaDto } from "../dtos/user-prisma.dto";
 import { Username } from "@/server/domain/value-objects/username.value-object";
 import { Biography } from "@/server/domain/value-objects/biography.value-object";
@@ -8,12 +11,14 @@ import { OAuthAccountPrismaMapper } from "./oauth-account.prisma-mapper";
 import { CredentialsAccountPrismaMapper } from "./credentials-account.prisma-mapper";
 import { CircleMember } from "@/server/domain/value-objects/circle/circle-member.value-object";
 
-type UserRecordWithRelations = Prisma.UserGetPayload<{
-    include: { credentialsAccount: true, oauthAccounts: true }
-}>
+
+type UserPrismaRecord = UserRecord & {
+    oauthAccounts: OAuthAccountRecord[],
+    credentialsAccount: CredentialsAccountRecord | null
+}
 
 export class UserPrismaMapper {
-    static toDomain(record: UserRecordWithRelations): User {
+    static toDomain(record: UserPrismaRecord): User {
         const oauthAccounts = record.oauthAccounts.map(
             oa => OAuthAccountPrismaMapper.toDomain(oa)
         );
