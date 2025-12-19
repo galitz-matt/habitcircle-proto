@@ -10,6 +10,7 @@ export class OAuthAccountPrismaMapper {
         return OAuthAccount.rehydrate(
             record.id,
             record.userId,
+            record.lastUsedAt,
             OAuthAuthentication.rehydrate(
                 OAuthIdentity.rehydrate(
                     record.provider,
@@ -27,6 +28,7 @@ export class OAuthAccountPrismaMapper {
     static toPersistence(oauthAccount: OAuthAccount): OAuthAccountPrismaDto {
         return {
             id: oauthAccount.id,
+            lastUsedAt: oauthAccount.lastUsedAt,
             provider: oauthAccount.provider,
             providerAccountId: oauthAccount.providerAccountId,
             accessToken: oauthAccount.accessToken,
