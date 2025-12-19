@@ -1,3 +1,3 @@
 export type InvalidateSessionTokenResult =
     | { type: "Success" }
-    | { type: "TokenDoesNotExist" }
+    | { type: "InvalidToken" }
