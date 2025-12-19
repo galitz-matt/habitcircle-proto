@@ -1,3 +1,3 @@
-export type SessionTokenExistsResult = 
+export type ResolveSessionResult = 
     | { type: "Success", userId: string }
     | { type: "InvalidToken" }

@@ -4,7 +4,7 @@ import { HashingService } from "./hashing.service";
 import { LoginWithCredentialsResult } from "../dtos/results/login-with-credentials.result";
 import { Session } from "../models/session.model"
 import { SessionRepository } from "../repositories/session.repository";
-import { SessionTokenExistsResult } from "../dtos/results/session-token-exists.result";
+import { ResolveSessionResult } from "../dtos/results/resolve-session.result";
 import { InvalidateSessionTokenResult } from "../dtos/results/invalidate-session-token.result";
 
 const TTL = 60 * 60 * 24
@@ -37,7 +37,7 @@ export class AuthenticationService {
         }
     }
 
-    async sessionTokenExists(token: string): Promise<SessionTokenExistsResult> {
+    async resolveSession(token: string): Promise<ResolveSessionResult> {
         const session = await this.sessionRepo.findByToken(token);
         if (!session) {
             return { type: "InvalidToken" };
@@ -47,11 +47,12 @@ export class AuthenticationService {
     }
 
     async invalidateSessionToken(token: string): Promise<InvalidateSessionTokenResult> {
-        const deleted = await this.sessionRepo.delete(token);
-        if (deleted == 0) {
-            return { type: "TokenDoesNotExist" };
+        try {
+            await this.sessionRepo.delete(token);
+            return { type: "Success" };
+        } catch {
+            return { type: "InvalidToken" };
         }
-        return { type: "Success" }
     }
 
     private generateSession(userId: string): Session {
