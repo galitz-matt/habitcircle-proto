@@ -7,7 +7,6 @@ export class CredentialsAccountPrismaMapper {
     static toDomain(record: CredentialsAccountRecord): CredentialsAccount {
         return CredentialsAccount.rehydrate(
             record.id,
-            record.userId,
             CredentialsAuthentication.rehydrate(
                 record.hashedPassword,
                 record.passwordVersion,

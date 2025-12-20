@@ -9,7 +9,6 @@ export class OAuthAccountPrismaMapper {
     static toDomain(record: OAuthAccountRecord): OAuthAccount {
         return OAuthAccount.rehydrate(
             record.id,
-            record.userId,
             record.lastUsedAt,
             OAuthAuthentication.rehydrate(
                 OAuthIdentity.rehydrate(

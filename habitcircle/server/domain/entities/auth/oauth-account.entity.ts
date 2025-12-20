@@ -7,13 +7,11 @@ export class OAuthAccount {
 
     private constructor(
         private readonly _id: string,
-        private readonly _userId: string,
         private readonly _lastUsedAt: Date,
         private readonly _auth: OAuthAuthentication
     ) {}
 
     static create(
-        userId: string, 
         identity: OAuthIdentity,
         tokens: OAuthTokens,
     ): OAuthAccount {
@@ -21,14 +19,9 @@ export class OAuthAccount {
 
         return new OAuthAccount(
             IdGenerator.new(),
-            userId,
             new Date(),
             oauthAuth
         );
-    }
-
-    belongsTo(userId: string): boolean {
-        return this._userId === userId;
     }
 
     refreshTokens(accessToken: string, expiresAt: Date): this {
@@ -38,10 +31,6 @@ export class OAuthAccount {
 
     get id(): string {
         return this._id;
-    }
-
-    get userId(): string {
-        return this._userId;
     }
 
     get lastUsedAt(): Date {
@@ -70,13 +59,11 @@ export class OAuthAccount {
 
     static rehydrate(
         id: string,
-        userId: string,
         lastUsedAt: Date,
         auth: OAuthAuthentication
     ): OAuthAccount {
         return new OAuthAccount(
             id,
-            userId,
             lastUsedAt,
             auth,
         );

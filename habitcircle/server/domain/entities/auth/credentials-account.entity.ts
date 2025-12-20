@@ -6,33 +6,22 @@ export class CredentialsAccount {
 
     private constructor(
         private readonly _id: string,
-        private readonly _userId: string,
         private readonly _auth: CredentialsAuthentication
     ) {}
 
     static create(
-        userId: string, 
         password: string
     ): CredentialsAccount {
         const auth = CredentialsAuthentication.create(password);
 
         return new CredentialsAccount(
             IdGenerator.new(),
-            userId,
             auth 
         );
     }
 
-    belongsTo(userId: string): boolean {
-        return this._userId === userId;
-    }
-
     get id(): string {
         return this._id;
-    }
-
-    get userId(): string {
-        return this._userId;
     }
 
     get passwordHash(): string {
@@ -53,7 +42,6 @@ export class CredentialsAccount {
 
     static rehydrate(
         id: string,
-        userId: string,
         auth: CredentialsAuthentication
     ): CredentialsAccount {
         if (!auth)
@@ -61,7 +49,6 @@ export class CredentialsAccount {
         
         return new CredentialsAccount(
             id,
-            userId,
             auth
         );
     }
