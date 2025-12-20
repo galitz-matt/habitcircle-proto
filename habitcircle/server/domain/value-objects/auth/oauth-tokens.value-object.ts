@@ -18,6 +18,10 @@ export class OAuthTokens {
         return new OAuthTokens(accessToken, refreshToken, expiresAt);
     }
 
+    static empty() {
+        return new OAuthTokens();
+    }
+
     equals(other: OAuthTokens): boolean {
         return !!other
         && other.accessToken === this.accessToken
