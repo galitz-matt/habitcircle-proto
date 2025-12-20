@@ -4,6 +4,14 @@ import { Biography } from "@/server/domain/value-objects/biography.value-object"
 import { CredentialsAccount } from "./auth/credentials-account.entity";
 import { OAuthAccount } from "./auth/oauth-account.entity";
 
+type CreateUserOptions = {
+    emailAddress?: string;
+    biography?: Biography;
+    profilePictureKey?: string;
+    credentialsAccount?: CredentialsAccount;
+    oauthAccounts?: OAuthAccount[];
+}
+
 export class User {
     private constructor(
         private readonly _id: string,
@@ -15,25 +23,20 @@ export class User {
         private _profilePictureKey?: string,
         private _credentialsAccount?: CredentialsAccount,
     ) {}
-    
 
     static create(
         username: Username,
-        oauthAccounts?: OAuthAccount[],
-        emailAddress?: string,
-        biography?: Biography,
-        profilePictureKey?: string,
-        credentialsAccount?: CredentialsAccount,
+        options: CreateUserOptions
     ) {
         return new User(
             IdGenerator.new(),
             new Date(),
             username,
-            oauthAccounts ?? [],
-            emailAddress,
-            biography,
-            profilePictureKey,
-            credentialsAccount,
+            options.oauthAccounts ?? [],
+            options.emailAddress,
+            options.biography,
+            options.profilePictureKey,
+            options.credentialsAccount,
         );
     };
 
