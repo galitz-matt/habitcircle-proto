@@ -1,8 +1,15 @@
 import { UNEXPECTED_ERROR } from "./constants";
 import type { Result } from "./types";
+import { generateFromEmail, generateUsername } from "unique-username-generator";
 
 export const IdGenerator = {
     new: (): string => crypto.randomUUID()
+};
+
+export const UsernameGenerator = {
+    new: (): string => generateUsername("", 5, 40),
+    newFromEmail: (email: string): string => generateFromEmail(email, 3)
+                                        .substring(0, Math.min(40, email.length))
 };
 
 export const StringUtils = {
