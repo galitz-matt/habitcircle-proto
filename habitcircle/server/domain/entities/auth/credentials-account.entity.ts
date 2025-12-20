@@ -1,23 +1,50 @@
 import { IdGenerator } from "@/lib/utils";
-import { DomainError } from "@/lib/errors";
-import { CredentialsAuthentication } from "./credentials-auth.entity";
+
+const VERSION_ZERO = 0;
+const NO_ATTEMPTS = 0;
+const NOT_VERIFIED = false;
 
 export class CredentialsAccount {
 
     private constructor(
         private readonly _id: string,
-        private readonly _auth: CredentialsAuthentication
+        private _password: string,
+        private _passwordVersion: number,
+        private _failedAttempts: number,
+        private _emailVerified: boolean
     ) {}
 
     static create(
         password: string
     ): CredentialsAccount {
-        const auth = CredentialsAuthentication.create(password);
-
         return new CredentialsAccount(
             IdGenerator.new(),
-            auth 
+            password,
+            VERSION_ZERO,
+            NO_ATTEMPTS,
+            NOT_VERIFIED
         );
+    }
+
+    changePassword(password: string): this {
+        this._password = password;
+        this._passwordVersion += 1;
+        return this;
+    }
+
+    logFailedAttempt(): this {
+        this._failedAttempts += 1;
+        return this;
+    }
+
+    resetFailedAttempts(): this {
+        this._failedAttempts = 0;
+        return this;
+    }   
+
+    verifyEmail(): this {
+        this._emailVerified = true;
+        return this;
     }
 
     get id(): string {
@@ -25,31 +52,34 @@ export class CredentialsAccount {
     }
 
     get passwordHash(): string {
-        return this._auth.password;
+        return this._password;
     }
 
     get passwordVersion(): number {
-        return this._auth.passwordVersion;
+        return this._passwordVersion;
     }
 
     get failedAttempts(): number {
-        return this._auth.failedAttempts;
+        return this._failedAttempts;
     }
 
     get emailVerified(): boolean {
-        return this._auth.emailVerified;
+        return this._emailVerified;
     }
 
     static rehydrate(
         id: string,
-        auth: CredentialsAuthentication
+        password: string,
+        passwordVersion: number,
+        failedAttempts: number,
+        emailVerified: boolean
     ): CredentialsAccount {
-        if (!auth)
-            throw new DomainError("Authentication method must be defined");
-        
         return new CredentialsAccount(
             id,
-            auth
+            password,
+            passwordVersion,
+            failedAttempts,
+            emailVerified
         );
     }
 }
