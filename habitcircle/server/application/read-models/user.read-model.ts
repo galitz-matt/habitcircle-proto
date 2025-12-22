@@ -2,6 +2,6 @@ import type { OAuthIdentity } from "@/server/domain/value-objects/auth/oauth-ide
 import type { User } from "@/server/domain/entities/user.entity";
 
 export interface UserReadModel {
-    findUserByOAuthEmailAddress(emailAddress: string): Promise<User[]>;
+    findUsersByOAuthEmailAddress(emailAddress: string): Promise<User[]>;
     findUserByOAuthIdentity(oauthIdentity: OAuthIdentity): Promise<User | null>;
 }

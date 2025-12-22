@@ -7,7 +7,7 @@ import { OAuthIdentity } from "@/server/domain/value-objects/auth/oauth-identity
 export class UserPrismaReadModel implements UserReadModel {
     constructor(private readonly prisma: PrismaClient) {}
 
-    async findUserByOAuthEmailAddress(emailAddress: string): Promise<User[]> {
+    async findUsersByOAuthEmailAddress(emailAddress: string): Promise<User[]> {
         const users = await this.prisma.user.findMany({
             where: {
                 oauthAccounts: {
