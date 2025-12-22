@@ -8,18 +8,24 @@ export class OAuthAccount {
         private readonly _id: string,
         private readonly _lastUsedAt: Date,
         readonly identity: OAuthIdentity,
-        private _tokens: OAuthTokens
+        private _tokens: OAuthTokens,
+        private readonly _emailAddress?: string,
+        private _emailVerified?: boolean
     ) {}
 
     static create(
         identity: OAuthIdentity,
         tokens: OAuthTokens,
+        emailAddress?: string,
+        emailVerified?: boolean
     ): OAuthAccount {
         return new OAuthAccount(
             IdGenerator.new(),
             new Date(),
             identity,
-            tokens
+            tokens,
+            emailAddress,
+            emailVerified
         );
     }
 
@@ -60,17 +66,29 @@ export class OAuthAccount {
         return this.tokens.expiresAt;
     }
 
+    get emailAddress(): string | undefined {
+        return this._emailAddress;
+    }
+
+    get emailVerified(): boolean | undefined {
+        return this._emailVerified;
+    }
+
     static rehydrate(
         id: string,
         lastUsedAt: Date,
         identity: OAuthIdentity,
-        tokens: OAuthTokens
+        tokens: OAuthTokens,
+        emailAddress?: string,
+        emailVerified?: boolean
     ): OAuthAccount {
         return new OAuthAccount(
             id,
             lastUsedAt,
             identity,
-            tokens
+            tokens,
+            emailAddress,
+            emailVerified
         );
     }
 }

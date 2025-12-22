@@ -5,7 +5,6 @@ import { CredentialsAccount } from "./auth/credentials-account.entity";
 import { OAuthAccount } from "./auth/oauth-account.entity";
 
 type CreateUserOptions = {
-    emailAddress?: string;
     biography?: Biography;
     profilePictureKey?: string;
     credentialsAccount?: CredentialsAccount;
@@ -18,7 +17,6 @@ export class User {
         private _createdAt: Date,
         private _username: Username,
         private _oauthAccounts: OAuthAccount[],
-        private _emailAddress?: string,
         private _biography?: Biography,
         private _profilePictureKey?: string,
         private _credentialsAccount?: CredentialsAccount,
@@ -33,7 +31,6 @@ export class User {
             new Date(),
             username,
             options.oauthAccounts ?? [],
-            options.emailAddress,
             options.biography,
             options.profilePictureKey,
             options.credentialsAccount,
@@ -61,10 +58,6 @@ export class User {
         return this._username;
     }
 
-    get emailAddress(): string | undefined {
-        return this._emailAddress;
-    }
-
     get biography(): Biography | undefined {
         return this._biography;
     }
@@ -86,7 +79,6 @@ export class User {
         createdAt: Date,
         username: Username,
         oauthAccounts: OAuthAccount[],
-        emailAddress?: string,
         biography?: Biography,
         profilePictureKey?: string,
         credentialsAccount?: CredentialsAccount,
@@ -97,7 +89,6 @@ export class User {
             createdAt,
             username,
             oauthAccounts,
-            emailAddress,
             biography,
             profilePictureKey,
             credentialsAccount

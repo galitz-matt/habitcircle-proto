@@ -2,7 +2,6 @@ import { IdGenerator } from "@/lib/utils";
 
 const VERSION_ZERO = 0;
 const NO_ATTEMPTS = 0;
-const NOT_VERIFIED = false;
 
 export class CredentialsAccount {
 
@@ -11,18 +10,22 @@ export class CredentialsAccount {
         private _password: string,
         private _passwordVersion: number,
         private _failedAttempts: number,
+        private _emailAddress: string,
         private _emailVerified: boolean
     ) {}
 
     static create(
-        password: string
+        password: string,
+        emailAddress: string,
+        emailVerified: boolean
     ): CredentialsAccount {
         return new CredentialsAccount(
             IdGenerator.new(),
             password,
             VERSION_ZERO,
             NO_ATTEMPTS,
-            NOT_VERIFIED
+            emailAddress,
+            emailVerified
         );
     }
 
@@ -63,6 +66,10 @@ export class CredentialsAccount {
         return this._failedAttempts;
     }
 
+    get emailAddress(): string {
+        return this._emailAddress;
+    }
+
     get emailVerified(): boolean {
         return this._emailVerified;
     }
@@ -72,6 +79,7 @@ export class CredentialsAccount {
         password: string,
         passwordVersion: number,
         failedAttempts: number,
+        emailAddress: string,
         emailVerified: boolean
     ): CredentialsAccount {
         return new CredentialsAccount(
@@ -79,6 +87,7 @@ export class CredentialsAccount {
             password,
             passwordVersion,
             failedAttempts,
+            emailAddress,
             emailVerified
         );
     }
