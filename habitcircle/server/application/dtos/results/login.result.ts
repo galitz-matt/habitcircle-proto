@@ -1,4 +1,18 @@
 export type LoginResult =
-    | { type: "Success"; sessionToken: string }
-    | { type: "InvalidCredentials"}
-    | { type: "UserLocked" };
+    | { 
+        type: "SUCCESS"; 
+        userId: string; 
+    }
+    | { 
+        type: "PENDING_LINK";
+        allowedProviders: string[];
+        linkToken: string;
+        expiresAt: string;
+    }
+    | { 
+        type: "INVALID_CREDENTIALS";
+    }
+    | { 
+        type: "USER_LOCKED";
+    };
+
