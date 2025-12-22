@@ -19,7 +19,6 @@ model User {
   createdAt             DateTime      @default(now())
   updatedAt             DateTime      @updatedAt
   username              String        @unique @db.Citext
-  emailAddress          String?       @unique @db.Citext
   biography             String?
   profilePictureKey     String?
 
@@ -53,6 +52,8 @@ model CredentialsAccount {
   hashedPassword    String
   passwordVersion   Int
   failedAttempts    Int           @default(0)
+
+  emailAddress      String        @unique @db.Citext
   emailVerified     Boolean       @default(false)       
 }
 
@@ -71,6 +72,9 @@ model OAuthAccount {
   accessToken       String?
   refreshToken      String?
   expiresAt         DateTime?
+
+  emailAddress      String?
+  emailVerified     Boolean?
 
   @@unique([provider, providerAccountId])
 }
