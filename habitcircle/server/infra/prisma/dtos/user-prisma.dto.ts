@@ -5,7 +5,6 @@ export type UserPrismaDto = {
     scalars: {
         id: string;
         username: string;
-        emailAddress?: string;
         biography?: string;
         profilePictureKey?: string;
     }

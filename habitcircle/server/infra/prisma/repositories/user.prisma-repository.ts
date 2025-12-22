@@ -54,7 +54,6 @@ export class UserPrismaRepository implements UserRepository {
                 where: { id: dto.scalars.id },
                 data: {
                     username: dto.scalars.username,
-                    emailAddress: dto.scalars.emailAddress,
                     biography: dto.scalars.biography,
                     profilePictureKey: dto.scalars.profilePictureKey
                 }
@@ -70,6 +69,7 @@ export class UserPrismaRepository implements UserRepository {
                     update: {
                         hashedPassword: dto.credentialsAccount.hashedPassword,
                         passwordVersion: dto.credentialsAccount.passwordVersion,
+                        emailAddress: dto.credentialsAccount.emailAddress,
                         emailVerified: dto.credentialsAccount.emailVerified,
                         failedAttempts: dto.credentialsAccount.failedAttempts
                     }
@@ -86,7 +86,9 @@ export class UserPrismaRepository implements UserRepository {
                     update: {
                         accessToken: oa.accessToken,
                         refreshToken: oa.refreshToken,
-                        expiresAt: oa.expiresAt
+                        expiresAt: oa.expiresAt,
+                        emailAddress: oa.emailAddress,
+                        emailVerified: oa.emailVerified
                     }
                 })
             }

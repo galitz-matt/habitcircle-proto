@@ -3,5 +3,6 @@ export type CredentialsAccountPrismaDto = {
     hashedPassword: string;
     passwordVersion: number;
     failedAttempts: number;
+    emailAddress: string;
     emailVerified: boolean;
 }

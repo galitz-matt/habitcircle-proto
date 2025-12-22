@@ -6,4 +6,6 @@ export type OAuthAccountPrismaDto = {
     accessToken?: string;
     refreshToken?: string;
     expiresAt?: Date;
+    emailAddress?: string;
+    emailVerified?: boolean;
 }

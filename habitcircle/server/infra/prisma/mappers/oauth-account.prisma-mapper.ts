@@ -17,7 +17,9 @@ export class OAuthAccountPrismaMapper {
                 record.accessToken ?? undefined,
                 record.refreshToken ?? undefined,
                 record.expiresAt ?? undefined
-            )
+            ),
+            record.emailAddress ?? undefined,
+            record.emailVerified ?? undefined
         )
     }
 
@@ -29,7 +31,9 @@ export class OAuthAccountPrismaMapper {
             providerAccountId: oauthAccount.providerAccountId,
             accessToken: oauthAccount.accessToken,
             refreshToken: oauthAccount.refreshToken,
-            expiresAt: oauthAccount.expiresAt
+            expiresAt: oauthAccount.expiresAt,
+            emailAddress: oauthAccount.emailAddress,
+            emailVerified: oauthAccount.emailVerified
         }
     }
 }

@@ -32,7 +32,6 @@ export class UserPrismaMapper {
             record.createdAt,
             Username.rehydrate(record.username),
             oauthAccounts,
-            record.emailAddress ?? undefined,
             record.biography ? Biography.rehydrate(record.biography) : undefined,
             record.profilePictureKey ?? undefined,
             credentialsAccount
@@ -44,7 +43,6 @@ export class UserPrismaMapper {
             scalars: {
                 id: user.id,
                 username: user.username.toString(),
-                emailAddress: user.emailAddress,
                 biography: user.biography?.toString(),
                 profilePictureKey: user.profilePictureKey,
             },

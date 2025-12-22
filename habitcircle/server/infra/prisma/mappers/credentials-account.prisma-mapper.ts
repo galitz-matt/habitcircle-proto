@@ -9,6 +9,7 @@ export class CredentialsAccountPrismaMapper {
             record.hashedPassword,
             record.passwordVersion,
             record.failedAttempts,
+            record.emailAddress,
             record.emailVerified
         );
     } 
@@ -19,6 +20,7 @@ export class CredentialsAccountPrismaMapper {
             hashedPassword: account.passwordHash,
             passwordVersion: account.passwordVersion,
             failedAttempts: account.failedAttempts,
+            emailAddress: account.emailAddress,
             emailVerified: account.emailVerified
         };
     }
