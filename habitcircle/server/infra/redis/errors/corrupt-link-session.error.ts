@@ -1,6 +1,6 @@
 export class CorruptLinkSessionError extends Error {
     constructor(token: string, raw: string) {
-        super(`Invalid sessiond data for token ${token}`);
+        super(`Invalid session data for token ${token}\ndata: ${raw}`);
         this.name = "CorruptLinkSessionError";
     }
 }
