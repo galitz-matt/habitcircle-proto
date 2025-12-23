@@ -1,23 +1,44 @@
 import { SessionRepository } from "@/server/application/repositories/session.repository";
 import { Session } from "@/server/application/models/session.model"
 import { redisClient } from "../redis.client";
+import { CreateResult } from "../models/results/create.result";
+import { DeleteResult } from "../models/results/delete.result";
+import { CorruptSessionError } from "../errors/corrupt-session.error";
+import { FindByTokenResult } from "../models/results/find-by-token.result";
 
 export class SessionRedisRepository implements SessionRepository {
-    async create(session: Session, ttlSeconds: number): Promise<void> {
-        await redisClient.set(
+    async create(session: Session, ttl: number): Promise<CreateResult> {
+        const result = await redisClient.set(
             this.key(session.token),
             JSON.stringify(session),
-            { EX: ttlSeconds }
-        );
+            { EX: ttl }
+        )
+
+        if (!result) {
+            return { type: "ALREADY_EXISTS" };
+        }
+        return { type: "CREATED" }
     }
 
-    async findByToken(sessionToken: string): Promise<Session | null> {
-        const raw = await redisClient.get(this.key(sessionToken));
-        return raw ? JSON.parse(raw) as Session : null;
+    async findByToken(token: string): Promise<FindByTokenResult> {
+        const raw = await redisClient.get(this.key(token));
+        if (!raw) {
+            return { type: "NOT_FOUND" };
+        }
+        try {
+            const session = JSON.parse(raw) as Session;
+            return { type: "FOUND", session: session };
+        } catch {
+            throw new CorruptSessionError(token, raw);
+        }
     }
 
-    async delete(sessionToken: string): Promise<boolean> {
-        return await redisClient.del(this.key(sessionToken)) > 0;
+    async delete(sessionToken: string): Promise<DeleteResult> {
+        const result = await redisClient.del(this.key(sessionToken));
+        if (result <= 0) {
+            return { type: "NOT_FOUND" };
+        }
+        return { type: "DELETED" };
     }
 
     private key(token: string) {
