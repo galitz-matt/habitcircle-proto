@@ -4,7 +4,7 @@ import { LinkSession } from "@/server/application/models/link-session.model";
 import { CreateResult } from "../models/results/create.result";
 import { CorruptLinkSessionError } from "../errors/corrupt-link-session.error";
 import { DeleteResult } from "../models/results/delete.result";
-import { FindByTokenResult } from "../models/results/find-by-token.result";
+import { FindLinkSessionByTokenResult } from "../models/results/find-by-token.result";
 
 export class LinkSessionRedisRepository implements LinkSessionRepository {
     async create(linkSession: LinkSession, ttl: number): Promise<CreateResult> {
@@ -19,14 +19,14 @@ export class LinkSessionRedisRepository implements LinkSessionRepository {
         return { type: "CREATED" };
     }
 
-    async findByToken(token: string): Promise<FindByTokenResult> {
+    async findByToken(token: string): Promise<FindLinkSessionByTokenResult> {
         const raw = await redisClient.get(this.key(token));
         if (!raw) {
             return { type: "NOT_FOUND" };
         }
         try {
             const linkSession = JSON.parse(raw) as LinkSession;
-            return { type: "FOUND", session: linkSession }
+            return { type: "FOUND", linkSession: linkSession }
         } catch {
             throw new CorruptLinkSessionError(token, raw);
         }

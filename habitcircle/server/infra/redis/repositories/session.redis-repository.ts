@@ -4,7 +4,7 @@ import { redisClient } from "../redis.client";
 import { CreateResult } from "../models/results/create.result";
 import { DeleteResult } from "../models/results/delete.result";
 import { CorruptSessionError } from "../errors/corrupt-session.error";
-import { FindByTokenResult } from "../models/results/find-by-token.result";
+import { FindSessionByTokenResult } from "../models/results/find-by-token.result";
 
 export class SessionRedisRepository implements SessionRepository {
     async create(session: Session, ttl: number): Promise<CreateResult> {
@@ -20,7 +20,7 @@ export class SessionRedisRepository implements SessionRepository {
         return { type: "CREATED" }
     }
 
-    async findByToken(token: string): Promise<FindByTokenResult> {
+    async findByToken(token: string): Promise<FindSessionByTokenResult> {
         const raw = await redisClient.get(this.key(token));
         if (!raw) {
             return { type: "NOT_FOUND" };
