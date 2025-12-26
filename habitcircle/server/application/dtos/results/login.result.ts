@@ -1,3 +1,5 @@
+import type { LinkSession } from "../../models/link-session.model";
+
 export type LoginResult =
     | { 
         type: "SUCCESS"; 
@@ -5,9 +7,7 @@ export type LoginResult =
     }
     | { 
         type: "PENDING_LINK";
-        allowedProviders: string[];
-        linkToken: string;
-        expiresAt: string;
+        linkSession: LinkSession
     }
     | { 
         type: "INVALID_CREDENTIALS";
