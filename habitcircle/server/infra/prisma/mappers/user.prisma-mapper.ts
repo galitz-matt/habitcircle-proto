@@ -10,6 +10,7 @@ import { Biography } from "@/server/domain/value-objects/biography.value-object"
 import { OAuthAccountPrismaMapper } from "./oauth-account.prisma-mapper";
 import { CredentialsAccountPrismaMapper } from "./credentials-account.prisma-mapper";
 import { CircleMember } from "@/server/domain/value-objects/circle/circle-member.value-object";
+import { OAuthAccountManager } from "@/server/domain/value-objects/auth/oauth-account-manager.value-object";
 
 
 type UserPrismaRecord = UserRecord & {
@@ -31,7 +32,7 @@ export class UserPrismaMapper {
             record.id,
             record.createdAt,
             Username.rehydrate(record.username),
-            oauthAccounts,
+            OAuthAccountManager.rehydrate(oauthAccounts),
             record.biography ? Biography.rehydrate(record.biography) : undefined,
             record.profilePictureKey ?? undefined,
             credentialsAccount
