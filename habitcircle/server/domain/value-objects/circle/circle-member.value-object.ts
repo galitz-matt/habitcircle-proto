@@ -1,4 +1,4 @@
-import { Username } from "@/server/domain/value-objects/username.value-object";
+import { Username } from "../user/username.value-object";
 import { User } from "@/server/domain/entities/user.entity";
 
 export class CircleMember {
