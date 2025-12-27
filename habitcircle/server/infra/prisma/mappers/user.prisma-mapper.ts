@@ -10,6 +10,8 @@ import { Biography } from "@/server/domain/value-objects/user/biography.value-ob
 import { OAuthAccountPrismaMapper } from "./oauth-account.prisma-mapper";
 import { CredentialsAccountPrismaMapper } from "./credentials-account.prisma-mapper";
 import { CircleMember } from "@/server/domain/value-objects/circle/circle-member.value-object";
+import { UserProfile } from "@/server/domain/value-objects/user/user-profile.value-object";
+import { UserAuthentication } from "@/server/domain/entities/auth/user-authentication.entity";
 import { OAuthAccountManager } from "@/server/domain/value-objects/auth/oauth-account-manager.value-object";
 
 
@@ -20,22 +22,28 @@ type UserPrismaRecord = UserRecord & {
 
 export class UserPrismaMapper {
     static toDomain(record: UserPrismaRecord): User {
-        const oauthAccounts = record.oauthAccounts.map(
-            oa => OAuthAccountPrismaMapper.toDomain(oa)
+        const profile = UserProfile.rehydrate(
+            Username.rehydrate(record.username),
+            record.biography
+                ? Biography.rehydrate(record.biography)
+                : undefined,
+            record.profilePictureKey ?? undefined
         );
 
-        const credentialsAccount = record.credentialsAccount 
-            ? CredentialsAccountPrismaMapper.toDomain(record.credentialsAccount)
-            : undefined;
+        const auth = UserAuthentication.rehydrate(
+            record.credentialsAccount
+                ? CredentialsAccountPrismaMapper.toDomain(record.credentialsAccount)
+                : undefined,
+            OAuthAccountManager.rehydrate(
+                record.oauthAccounts.map(oa => OAuthAccountPrismaMapper.toDomain(oa))
+            )
+        );
 
         return User.rehydrate(
             record.id,
             record.createdAt,
-            Username.rehydrate(record.username),
-            OAuthAccountManager.rehydrate(oauthAccounts),
-            record.biography ? Biography.rehydrate(record.biography) : undefined,
-            record.profilePictureKey ?? undefined,
-            credentialsAccount
+            profile,
+            auth
         );
     }
 
