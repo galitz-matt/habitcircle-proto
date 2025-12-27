@@ -11,7 +11,7 @@ export class Biography {
     static create(value: string): Biography {
         const normalized = StringUtils.normalize(value);
         BiographyInvariants.enforce(normalized);
-        return new Biography(value);
+        return new Biography(normalized);
     }
 
     equals(other: Biography): boolean {
