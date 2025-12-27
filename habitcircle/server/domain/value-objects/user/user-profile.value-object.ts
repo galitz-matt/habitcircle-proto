@@ -28,8 +28,8 @@ export class UserProfile {
 
     static rehydrate(
         username: Username,
-        biography: Biography,
-        profilePictureKey: string
+        biography?: Biography,
+        profilePictureKey?: string
     ) {
         return new UserProfile(
             username,
