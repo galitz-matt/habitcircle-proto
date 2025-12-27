@@ -5,8 +5,8 @@ import {
     CredentialsAccount as CredentialsAccountRecord,
 } from "@/prisma/generated";
 import { UserPrismaDto } from "../dtos/user-prisma.dto";
-import { Username } from "@/server/domain/value-objects/username.value-object";
-import { Biography } from "@/server/domain/value-objects/biography.value-object";
+import { Username } from "@/server/domain/value-objects/user/username.value-object";
+import { Biography } from "@/server/domain/value-objects/user/biography.value-object";
 import { OAuthAccountPrismaMapper } from "./oauth-account.prisma-mapper";
 import { CredentialsAccountPrismaMapper } from "./credentials-account.prisma-mapper";
 import { CircleMember } from "@/server/domain/value-objects/circle/circle-member.value-object";

@@ -2,7 +2,7 @@ import type { PrismaClient } from "@/prisma/generated";
 import { UserRepository } from "@/server/application/repositories/user.repository";
 import { UserPrismaMapper } from "@/server/infra/prisma/mappers/user.prisma-mapper";
 import type { User } from "@/server/domain/entities/user.entity";
-import type { Username } from "@/server/domain/value-objects/username.value-object";
+import type { Username } from "@/server/domain/value-objects/user/username.value-object";
 import { DuplicateError, NotFoundError } from "@/lib/errors";
 
 export class UserPrismaRepository implements UserRepository {
