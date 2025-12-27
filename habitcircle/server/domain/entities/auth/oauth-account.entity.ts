@@ -2,6 +2,18 @@ import { IdGenerator } from "@/lib/utils";
 import { OAuthIdentity } from "../../value-objects/auth/oauth-identity.value-object";
 import { OAuthTokens } from "../../value-objects/auth/oauth-tokens.value-object";
 
+export type OAuthAccountProps = {
+    provider: string,
+    providerAccountId: string,
+    tokens?: {
+        accessToken?: string,
+        refreshToken?: string,
+        expiresAt?: Date,
+    },
+    emailAddress?: string,
+    emailVerified?: boolean
+}
+
 type CreateOAuthAccountOptions = {
     tokens?: {
         accessToken?: string,

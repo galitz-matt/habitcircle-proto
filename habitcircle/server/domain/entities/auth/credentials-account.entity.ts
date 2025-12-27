@@ -3,6 +3,12 @@ import { IdGenerator } from "@/lib/utils";
 const VERSION_ZERO = 0;
 const NO_ATTEMPTS = 0;
 
+export type CredentialsAccountProps = {
+    password: string,
+    emailAddress: string,
+    emailVerified: boolean
+}
+
 export class CredentialsAccount {
 
     private constructor(
