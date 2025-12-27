@@ -1,5 +1,5 @@
 import { StringUtils } from "@/lib/utils";
-import { UsernameInvariants } from "../invariants/username.invariant";
+import { UsernameInvariants } from "../../invariants/username.invariant";
 
 export class Username {
     private constructor(

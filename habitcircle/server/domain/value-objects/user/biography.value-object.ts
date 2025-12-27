@@ -1,5 +1,5 @@
 import { StringUtils } from "@/lib/utils";
-import { BiographyInvariants } from "../invariants/biography.invariant";
+import { BiographyInvariants } from "../../invariants/biography.invariant";
 
 export class Biography {
     private constructor(
