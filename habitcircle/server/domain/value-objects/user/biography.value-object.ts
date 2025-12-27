@@ -15,7 +15,7 @@ export class Biography {
     }
 
     equals(other: Biography): boolean {
-        return !!other && this.value == other.value;
+        return !!other && this.value === other.value;
     }
 
     static rehydrate(value: string): Biography {
