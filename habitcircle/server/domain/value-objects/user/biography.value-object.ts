@@ -14,10 +14,6 @@ export class Biography {
         return new Biography(normalized);
     }
 
-    equals(other: Biography): boolean {
-        return !!other && this.value === other.value;
-    }
-
     static rehydrate(value: string): Biography {
         BiographyInvariants.enforce(value);
         return new Biography(value);
