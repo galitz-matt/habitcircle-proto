@@ -3,7 +3,7 @@ import { IdGenerator } from "@/lib/utils";
 const VERSION_ZERO = 0;
 const NO_ATTEMPTS = 0;
 
-export type CredentialsAccountProps = {
+export type CreateCredentialsAccountProps = {
     password: string,
     emailAddress: string,
     emailVerified: boolean
@@ -20,18 +20,14 @@ export class CredentialsAccount {
         private _emailVerified: boolean
     ) {}
 
-    static create(
-        password: string,
-        emailAddress: string,
-        emailVerified: boolean
-    ): CredentialsAccount {
+    static create(props: CreateCredentialsAccountProps): CredentialsAccount {
         return new CredentialsAccount(
             IdGenerator.new(),
-            password,
+            props.password,
             VERSION_ZERO,
             NO_ATTEMPTS,
-            emailAddress,
-            emailVerified
+            props.emailAddress,
+            props.emailVerified
         );
     }
 
