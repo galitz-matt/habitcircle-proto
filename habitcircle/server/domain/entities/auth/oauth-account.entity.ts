@@ -1,27 +1,12 @@
 import { IdGenerator } from "@/lib/utils";
-import { OAuthIdentity } from "../../value-objects/auth/oauth-identity.value-object";
-import { OAuthTokens } from "../../value-objects/auth/oauth-tokens.value-object";
+import { CreateOAuthIdentityProps, OAuthIdentity } from "../../value-objects/auth/oauth-identity.value-object";
+import { CreateOAuthTokensProps, OAuthTokens } from "../../value-objects/auth/oauth-tokens.value-object";
 
-export type OAuthAccountProps = {
-    provider: string,
-    providerAccountId: string,
-    tokens?: {
-        accessToken?: string,
-        refreshToken?: string,
-        expiresAt?: Date,
-    },
-    emailAddress?: string,
-    emailVerified?: boolean
-}
-
-type CreateOAuthAccountOptions = {
-    tokens?: {
-        accessToken?: string,
-        refreshToken?: string,
-        expiresAt?: Date
-    };
-    emailAddress?: string,
-    emailVerified?: boolean
+export type CreateOAuthAccountProps = {
+    identity: CreateOAuthIdentityProps;
+    tokens?: CreateOAuthTokensProps;
+    emailAddress?: string;
+    emailVerified?: boolean;
 }
 
 export class OAuthAccount {
@@ -35,28 +20,19 @@ export class OAuthAccount {
         private _emailVerified?: boolean
     ) {}
 
-    static create(
-        provider: string, 
-        providerAccountId: string, 
-        options: CreateOAuthAccountOptions
-    ): OAuthAccount {
-        const identity = OAuthIdentity.create(
-            provider,
-            providerAccountId
-        );
-        const tokens = OAuthTokens.create(
-            options.tokens?.accessToken,
-            options.tokens?.refreshToken,
-            options.tokens?.expiresAt
-        );
+    static create(props: CreateOAuthAccountProps): OAuthAccount {
+        const identity = OAuthIdentity.create(props.identity);
+        const tokens = props.tokens
+            ? OAuthTokens.create(props.tokens)
+            : OAuthTokens.empty()
 
         return new OAuthAccount(
             IdGenerator.new(),
             new Date(),
             identity,
             tokens,
-            options.emailAddress,
-            options.emailVerified
+            props.emailAddress,
+            props.emailVerified
         );
     }
 
