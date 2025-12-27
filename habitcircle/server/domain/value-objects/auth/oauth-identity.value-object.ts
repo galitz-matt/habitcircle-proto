@@ -1,5 +1,10 @@
 import { StringUtils } from "@/lib/utils";
 
+export type CreateOAuthIdentityProps = {
+    provider: string,
+    providerAccountId: string
+}
+
 export class OAuthIdentity {
     private constructor(
         readonly provider: string,
@@ -8,9 +13,9 @@ export class OAuthIdentity {
         Object.freeze(this);
     }
 
-    static create(provider: string, providerAccountId: string): OAuthIdentity {
-        const normalizedProvider = StringUtils.normalize(provider).toLowerCase();
-        return new OAuthIdentity(normalizedProvider, providerAccountId);
+    static create(props: CreateOAuthIdentityProps): OAuthIdentity {
+        const normalizedProvider = StringUtils.normalize(props.provider).toLowerCase();
+        return new OAuthIdentity(normalizedProvider, props.providerAccountId);
     }
 
     equals(other: OAuthIdentity): boolean {
