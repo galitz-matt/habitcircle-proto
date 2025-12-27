@@ -2,6 +2,16 @@ import { IdGenerator } from "@/lib/utils";
 import { OAuthIdentity } from "../../value-objects/auth/oauth-identity.value-object";
 import { OAuthTokens } from "../../value-objects/auth/oauth-tokens.value-object";
 
+type CreateOAuthAccountOptions = {
+    tokens?: {
+        accessToken?: string,
+        refreshToken?: string,
+        expiresAt?: Date
+    };
+    emailAddress?: string,
+    emailVerified?: boolean
+}
+
 export class OAuthAccount {
 
     private constructor(
@@ -14,18 +24,27 @@ export class OAuthAccount {
     ) {}
 
     static create(
-        identity: OAuthIdentity,
-        tokens: OAuthTokens,
-        emailAddress?: string,
-        emailVerified?: boolean
+        provider: string, 
+        providerAccountId: string, 
+        options: CreateOAuthAccountOptions
     ): OAuthAccount {
+        const identity = OAuthIdentity.create(
+            provider,
+            providerAccountId
+        );
+        const tokens = OAuthTokens.create(
+            options.tokens?.accessToken,
+            options.tokens?.refreshToken,
+            options.tokens?.expiresAt
+        );
+
         return new OAuthAccount(
             IdGenerator.new(),
             new Date(),
             identity,
             tokens,
-            emailAddress,
-            emailVerified
+            options.emailAddress,
+            options.emailVerified
         );
     }
 
