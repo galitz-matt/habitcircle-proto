@@ -6,6 +6,7 @@ import { UserReadModel } from "../read-models/user.read-model";
 import { UserRepository } from "../repositories/user.repository";
 import { User } from "@/server/domain/entities/user.entity";
 import { LinkSessionService } from "./link-session.service";
+import { SessionService } from "./session.service";
 
 
 export class AuthenticationService {
@@ -14,6 +15,7 @@ export class AuthenticationService {
         private readonly authReadModel: AuthenticationReadModel,
         private readonly hashingService: HashingService,
         private readonly linkSessionService: LinkSessionService,
+        private readonly sessionService: SessionService,
         private readonly userReadModel: UserReadModel,
         private readonly userRepository: UserRepository
     ) {}
@@ -28,8 +30,7 @@ export class AuthenticationService {
         if (!verified) {
             return { type: "INVALID_CREDENTIALS" };
         }
-
-        return { type: "SUCCESS", userId: credentials.userId }
+        return await this.finalizeLogin(credentials.userId)
     }
 
     async loginWithOAuth(
@@ -40,10 +41,10 @@ export class AuthenticationService {
     ): Promise<LoginResult> {
         const user = await this.userReadModel.findUserByOAuthIdentity(provider, providerAccountId);
         // Does user exist w/ identity?
-        if (user) return { type: "SUCCESS", userId: user.id }
+        if (user) return await this.finalizeLogin(user.id);
         // Does user exist w/ email?
-        const candidates = await this.resolveByVerifiedEmailAddress(emailAddress);
-        // More than one users use this email, prompt end-user to resolve
+        const candidates = await this.resolveByVerifiedEmailAddress(emailAddress, emailVerified);
+        // More than one users use this email, prompt client to resolve
         if (candidates.length > 1) return this.handleAmbiguousLinking(candidates);
         // Only one user uses this email, auto-link
         if (candidates.length === 1) return this.linkToOAuthUser(
@@ -62,8 +63,8 @@ export class AuthenticationService {
         )
     }
 
-    private async resolveByVerifiedEmailAddress(emailAddress?: string): Promise<User[]> {
-        return emailAddress
+    private async resolveByVerifiedEmailAddress(emailAddress?: string, emailVerified?: boolean): Promise<User[]> {
+        return emailAddress && emailVerified
             ? await this.userReadModel.findUsersByVerifiedOAuthEmailAddress(emailAddress)
             : [];
     }
@@ -90,7 +91,7 @@ export class AuthenticationService {
             emailVerified
         });
         await this.userRepository.update(user);
-        return { type: "SUCCESS", userId: user.id };
+        return await this.finalizeLogin(user.id);
     }
 
     private async createUserWithOAuth(
@@ -116,7 +117,7 @@ export class AuthenticationService {
             }
         })
         await this.userRepository.create(user);
-        return { type: "SUCCESS", userId: user.id };
+        return await this.finalizeLogin(user.id);
     }
 
     private extractAllowedProviders(users: User[]): string[] {
@@ -126,6 +127,14 @@ export class AuthenticationService {
                 providers.add(oa.provider);
             }
         }
-        return providers.values().toArray();
+        return [ ...providers ]
+    }
+
+    private async finalizeLogin(userId: string): Promise<LoginResult> {
+        return {
+            type: "SUCCESS",
+            userId,
+            session: await this.sessionService.createSession(userId)
+        };
     }
 }
