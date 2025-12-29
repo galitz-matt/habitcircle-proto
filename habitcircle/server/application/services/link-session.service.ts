@@ -3,7 +3,7 @@ import { LinkSession } from "../models/link-session.model";
 import { LinkSessionRepository } from "../repositories/link-session.repository";
 import { TokenService } from "./token.service";
 
-const LINKING_TTL = 60 * 60 * 0.25 * 1000
+const LINKING_TTL_SECONDS = 60 * 60 * 0.25
 
 export class LinkSessionService {
     constructor(
@@ -13,7 +13,7 @@ export class LinkSessionService {
     async createLinkSession(allowedProviders: string[]): Promise<LinkSession> {
         for (let i = 0; i < 5; i++) {
             const linkSession = this.buildLinkSession(allowedProviders);
-            const result = await this.linkSessionRepo.create(linkSession, LINKING_TTL);
+            const result = await this.linkSessionRepo.create(linkSession, LINKING_TTL_SECONDS);
             switch (result.type) {
                 case "CREATED": return linkSession;
                 case "ALREADY_EXISTS": continue;
@@ -34,7 +34,6 @@ export class LinkSessionService {
             token: TokenService.generateToken(),
             allowedProviders,
             issuedAt: now.toISOString(),
-            expiresAt: new Date(now.getTime() + LINKING_TTL).toISOString()
         };
     }
 }
