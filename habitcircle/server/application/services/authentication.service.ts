@@ -8,9 +8,7 @@ import { User } from "@/server/domain/entities/user.entity";
 import { LinkSessionService } from "./link-session.service";
 import { SessionService } from "./session.service";
 
-
 export class AuthenticationService {
-
     constructor(
         private readonly authReadModel: AuthenticationReadModel,
         private readonly hashingService: HashingService,
