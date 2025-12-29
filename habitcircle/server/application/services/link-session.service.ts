@@ -4,7 +4,7 @@ import { LinkSession } from "../models/link-session.model";
 import { LinkSessionRepository } from "../repositories/link-session.repository";
 import { TokenService } from "./token.service";
 
-const LINKING_TTL_SECONDS = 60 * 60 * 0.25
+const LINKING_TTL_SECONDS = 15 * 60
 
 export class LinkSessionService {
     constructor(
