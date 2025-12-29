@@ -11,7 +11,10 @@ export class LinkSessionRedisRepository implements LinkSessionRepository {
         const result = await redisClient.set(
             this.key(linkSession.token),
             JSON.stringify(linkSession),
-            { EX: ttl }
+            { 
+                expiration: { type: "EX", value: ttl }, 
+                condition: "NX" 
+            }
         )
         if (!result) {
             return { type: "ALREADY_EXISTS" };
