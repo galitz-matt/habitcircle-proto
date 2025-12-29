@@ -1,67 +1,131 @@
-import { IdGenerator } from "@/lib/utils";
+import { UsernameGenerator } from "@/lib/utils";
 import { AuthenticationReadModel } from "../read-models/authentication.read-model";
 import { HashingService } from "./hashing.service";
-import { LoginWithCredentialsResult } from "../dtos/results/login-with-credentials.result";
-import { Session } from "../models/session.model"
-import { SessionRepository } from "../repositories/session.repository";
-import { ResolveSessionResult } from "../dtos/results/resolve-session.result";
-import { InvalidateSessionTokenResult } from "../dtos/results/invalidate-session-token.result";
+import { LoginResult } from "../dtos/results/login.result";
+import { UserReadModel } from "../read-models/user.read-model";
+import { UserRepository } from "../repositories/user.repository";
+import { User } from "@/server/domain/entities/user.entity";
+import { LinkSessionService } from "./link-session.service";
 
-const TTL = 60 * 60 * 24
 
 export class AuthenticationService {
 
     constructor(
         private readonly authReadModel: AuthenticationReadModel,
         private readonly hashingService: HashingService,
-        private readonly sessionRepo: SessionRepository
+        private readonly linkSessionService: LinkSessionService,
+        private readonly userReadModel: UserReadModel,
+        private readonly userRepository: UserRepository
     ) {}
 
-    async loginWithCredentials(username: string, password: string): Promise<LoginWithCredentialsResult> {
+    async loginWithCredentials(username: string, password: string): Promise<LoginResult> {
         const credentials = await this.authReadModel.findAuthenticationCredentialsByUsername(username);
         if (!credentials) {
-            return { type: "InvalidCredentials" };
+            return { type: "INVALID_CREDENTIALS" };
         }
 
         const verified = await this.hashingService.compare(password, credentials.hashedPassword);
         if (!verified) {
-            return { type: "InvalidCredentials" };
+            return { type: "INVALID_CREDENTIALS" };
         }
 
-        const session = this.generateSession(credentials.userId);
-        await this.sessionRepo.create(session, TTL)
-
-        return {
-            type: "Success",
-            sessionToken: session.token
-        }
+        return { type: "SUCCESS", userId: credentials.userId }
     }
 
-    async resolveSession(token: string): Promise<ResolveSessionResult> {
-        const session = await this.sessionRepo.findByToken(token);
-        if (!session) {
-            return { type: "InvalidToken" };
-        }
-
-        return { type: "Success", userId: session.userId };
+    async loginWithOAuth(
+        provider: string, 
+        providerAccountId: string, 
+        emailAddress?: string,
+        emailVerified?: boolean
+    ): Promise<LoginResult> {
+        const user = await this.userReadModel.findUserByOAuthIdentity(provider, providerAccountId);
+        // Does user exist w/ identity?
+        if (user) return { type: "SUCCESS", userId: user.id }
+        // Does user exist w/ email?
+        const candidates = await this.resolveByVerifiedEmailAddress(emailAddress);
+        // More than one users use this email, prompt end-user to resolve
+        if (candidates.length > 1) return this.handleAmbiguousLinking(candidates);
+        // Only one user uses this email, auto-link
+        if (candidates.length === 1) return this.linkToOAuthUser(
+            candidates[0],
+            provider,
+            providerAccountId,
+            emailAddress,
+            emailVerified
+        );
+        // User DNE, create one
+        return this.createUserWithOAuth(
+            provider,
+            providerAccountId,
+            emailAddress,
+            emailVerified
+        )
     }
 
-    async invalidateSessionToken(token: string): Promise<InvalidateSessionTokenResult> {
-        const invalidated = await this.sessionRepo.delete(token);
-        return invalidated
-            ? { type: "Success" }
-            : { type: "InvalidToken" };
+    private async resolveByVerifiedEmailAddress(emailAddress?: string): Promise<User[]> {
+        return emailAddress
+            ? await this.userReadModel.findUsersByVerifiedOAuthEmailAddress(emailAddress)
+            : [];
     }
 
-    private generateSession(userId: string): Session {
-        const issuedAt = new Date();
-        const expiresAt = new Date(issuedAt.getTime() + TTL * 1000)
+    private async handleAmbiguousLinking(users: User[]): Promise<LoginResult> {
+        const allowedProviders = this.extractAllowedProviders(users);
+        const linkSession = await this.linkSessionService.createLinkSession(allowedProviders);
+        return { type: "PENDING_LINK", linkSession }
+    }
 
-        return {
-            token: IdGenerator.new(),
-            userId: userId,
-            issuedAt: issuedAt.toISOString(),
-            expiresAt: expiresAt.toISOString(),
+    private async linkToOAuthUser(
+        user: User,
+        provider: string,
+        providerAccountId: string,
+        emailAddress?: string,
+        emailVerified?: boolean
+    ): Promise<LoginResult> {
+        user.addOAuthAccount({
+            identity: {
+                provider,
+                providerAccountId
+            },
+            emailAddress,
+            emailVerified
+        });
+        await this.userRepository.update(user);
+        return { type: "SUCCESS", userId: user.id };
+    }
+
+    private async createUserWithOAuth(
+        provider: string,
+        providerAccountId: string,
+        emailAddress?: string,
+        emailVerified?: boolean
+    ): Promise<LoginResult> {
+        const user = User.create({
+            profile: {
+                username: UsernameGenerator.new(),
+            },
+            auth: {
+                type: "oauth",
+                accounts: [{
+                    identity: {
+                        provider,
+                        providerAccountId
+                    },
+                    emailAddress,
+                    emailVerified
+                }]
+            }
+        })
+        await this.userRepository.create(user);
+        return { type: "SUCCESS", userId: user.id };
+    }
+
+    private extractAllowedProviders(users: User[]): string[] {
+        const providers = new Set<string>();
+        for (const u of users) {
+            for (const oa of u.oauthAccounts) {
+                providers.add(oa.provider);
+            }
         }
+        return providers.values().toArray();
     }
 }
