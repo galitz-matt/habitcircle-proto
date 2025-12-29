@@ -6,7 +6,7 @@ import { UserPrismaMapper } from "../mappers/user.prisma-mapper";
 export class UserPrismaReadModel implements UserReadModel {
     constructor(private readonly prisma: PrismaClient) {}
 
-    async findUsersByOAuthEmailAddress(emailAddress: string): Promise<User[]> {
+    async findUsersByVerifiedOAuthEmailAddress(emailAddress: string): Promise<User[]> {
         const users = await this.prisma.user.findMany({
             where: {
                 oauthAccounts: {
