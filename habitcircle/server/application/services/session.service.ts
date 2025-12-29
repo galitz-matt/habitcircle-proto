@@ -19,7 +19,7 @@ export class SessionService {
             switch(result.type) {
                 case "CREATED": return session;
                 case "ALREADY_EXISTS": continue;
-                default: throw new Error(`Unexpected create result: ${result}`);
+                default: throw new Error(`Unexpected create result: ${JSON.stringify(result)}`);
             }
         }
         throw new RngError("Token collision persisted after 5 iterations, check RNG");
