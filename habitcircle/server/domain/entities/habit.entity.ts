@@ -1,6 +1,11 @@
 import { IdGenerator } from "@/lib/utils";
 import { HabitName } from "@/server/domain/value-objects/habit-name.value-object";
 
+export type CreateHabitProps = {
+    name: string,
+    circleId: string
+}
+
 export class Habit {
     private constructor(
         private readonly _id: string,
@@ -9,12 +14,12 @@ export class Habit {
         private readonly _circleId: string
     ) {}
 
-    static create(name: HabitName, circleId: string): Habit {
+    static create(props: CreateHabitProps): Habit {
         return new Habit(
             IdGenerator.new(),
             new Date(),
-            name,
-            circleId
+            HabitName.create(props.name),
+            props.circleId
         );
     }
 

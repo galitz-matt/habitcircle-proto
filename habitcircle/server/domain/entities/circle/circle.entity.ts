@@ -1,10 +1,19 @@
 import { IdGenerator } from "@/lib/utils";
-import { Habit } from "@/server/domain/entities/habit.entity";
+import { CreateHabitProps, Habit } from "@/server/domain/entities/habit.entity";
 import { CircleName } from "@/server/domain/value-objects/circle/circle-name.value-object";
 import { CircleMembers } from "@/server/domain/value-objects/circle/circle-members.value-object";
 import { CircleHabits } from "@/server/domain/value-objects/circle/circle-habits.value-object";
 import { DomainError } from "@/lib/errors";
 import { CircleMember } from "../../value-objects/circle/circle-member.value-object";
+import type { User } from "../user.entity";
+
+export type CreateCircleProps = {
+    name: string;
+    owner: User;
+    members: User[];
+    habits: CreateHabitProps[];
+    photoKey?: string;
+}
 
 export class Circle {
 
@@ -18,21 +27,15 @@ export class Circle {
         private _photoKey?: string
     ) {}
 
-    static create(
-        name: CircleName,
-        owner: CircleMember,
-        members: CircleMembers,
-        habits: CircleHabits,
-        photoKey?: string
-    ): Circle {
+    static create(props: CreateCircleProps): Circle {
         return new Circle(
             IdGenerator.new(),
             new Date(),
-            name,
-            owner,
-            members,
-            habits,
-            photoKey
+            CircleName.create(props.name),
+            CircleMember.fromUser(props.owner),
+            CircleMembers.create(props.members.map(u => CircleMember.fromUser(u))),
+            CircleHabits.create(props.habits.map(h => Habit.create(h))),
+            props.photoKey
         );
     }
 
