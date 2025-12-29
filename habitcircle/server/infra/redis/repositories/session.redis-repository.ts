@@ -11,7 +11,10 @@ export class SessionRedisRepository implements SessionRepository {
         const result = await redisClient.set(
             this.key(session.token),
             JSON.stringify(session),
-            { EX: ttl, NX: true }
+            { 
+                expiration: { type: "EX", value: ttl },
+                condition: "NX"
+            }
         )
         if (!result) {
             return { type: "ALREADY_EXISTS" };
