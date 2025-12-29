@@ -38,7 +38,7 @@ export class LinkSessionService {
         const now = new Date();
         return {
             token: TokenService.generateToken(),
-            allowedProviders,
+            allowedProviders: [ ...new Set(allowedProviders) ],
             issuedAt: now.toISOString(),
         };
     }
