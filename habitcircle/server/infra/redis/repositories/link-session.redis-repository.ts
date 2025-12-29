@@ -38,9 +38,9 @@ export class LinkSessionRedisRepository implements LinkSessionRepository {
     async delete(token: string): Promise<DeleteResult> {
         const result = await redisClient.del(this.key(token));
         if (result <= 0) {
-            return { type: "DELETED" };
+            return { type: "NOT_FOUND" };
         }
-        return { type: "NOT_FOUND" };
+        return { type: "DELETED" };
     }
 
     private key(token: string) {
