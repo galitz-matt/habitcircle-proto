@@ -1,3 +1,4 @@
+import { ResolveLinkSessionResult } from "../dtos/results/resolve-link-session.result";
 import { RngError } from "../errors/rng.error";
 import { LinkSession } from "../models/link-session.model";
 import { LinkSessionRepository } from "../repositories/link-session.repository";
@@ -17,15 +18,20 @@ export class LinkSessionService {
             switch (result.type) {
                 case "CREATED": return linkSession;
                 case "ALREADY_EXISTS": continue;
-                default: throw new Error(`Unexpected create result: ${result}`);
+                default: throw new Error(`Unexpected create result: ${JSON.stringify(result)}`);
             }
         }
         throw new RngError(`Token collision persisted after 5 iterations, check RNG`);
     }
 
-    async linkSessionExists(token: string): Promise<boolean> {
+    async resolveLinkSession(token: string): Promise<ResolveLinkSessionResult> {
         const result = await this.linkSessionRepo.findByToken(token);
         return result.type === "FOUND"
+            ? {
+                type: "SUCCESS",
+                allowedProviders: result.linkSession.allowedProviders
+            }
+            : { type: "NOT_FOUND" };
     }
 
     private buildLinkSession(allowedProviders: string[]): LinkSession {
