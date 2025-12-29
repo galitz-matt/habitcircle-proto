@@ -5,7 +5,7 @@ import { Session } from "../models/session.model"
 import { SessionRepository } from "../repositories/session.repository";
 import { TokenService } from "./token.service";
 
-const SESSION_TTL = 60 * 60 * 24 * 1000
+const SESSION_TTL_SECONDS = 60 * 60 * 24
 
 export class SessionService {
     constructor(
@@ -15,7 +15,7 @@ export class SessionService {
     async createSession(userId: string): Promise<Session> {
         for (let i = 0; i < 5; i++) {
             const session = this.buildSession(userId);
-            const result = await this.sessionRepo.create(session, SESSION_TTL);
+            const result = await this.sessionRepo.create(session, SESSION_TTL_SECONDS);
             switch(result.type) {
                 case "CREATED": return session;
                 case "ALREADY_EXISTS": continue;
@@ -46,7 +46,6 @@ export class SessionService {
             token: TokenService.generateToken(),
             userId,
             issuedAt: now.toISOString(),
-            expiresAt: new Date(now.getTime() + SESSION_TTL).toISOString()
         };
     }
 }
