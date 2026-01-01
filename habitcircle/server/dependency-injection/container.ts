@@ -1,7 +1,5 @@
 import { container } from "tsyringe";
-import { CircleRepository } from "@/server/application/repositories/circle.repository";
 import { UserRepository } from "@/server/application/repositories/user.repository";
-import { CirclePrismaRepository } from "@/server/infra/prisma/repositories/circle.prisma-repository";
 import { UserPrismaRepository } from "@/server/infra/prisma/repositories/user.prisma-repository";
 import { PrismaClient } from "@/prisma/generated";
 import { AuthenticationReadModel } from "../application/read-models/authentication.read-model";
@@ -10,11 +8,12 @@ import { HashingService } from "@/server/application/services/hashing.service";
 import { BcryptHashingService } from "@/server/infra/services/bcrypt-hashing.service";
 import { SessionRepository } from "../application/repositories/session.repository";
 import { SessionRedisRepository } from "../infra/redis/repositories/session.redis-repository";
-import { AuthenticationService } from "../application/services/authentication.service";
 import { UserReadModel } from "../application/read-models/user.read-model";
 import { UserPrismaReadModel } from "../infra/prisma/read-models/user.prisma-read-model";
 import { LinkSessionRepository } from "../application/repositories/link-session.repository";
 import { LinkSessionRedisRepository } from "../infra/redis/repositories/link-session.redis-repository";
+import { RedisConnection } from "../infra/redis/redis.connection";
+import { createRedisClient } from "../infra/redis/redis.client";
 
 const saltRounds = Number(process.env.SALT_ROUNDS);
 
