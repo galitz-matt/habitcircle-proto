@@ -1,16 +1,20 @@
 import { SessionRepository } from "@/server/application/repositories/session.repository";
 import { Session } from "@/server/application/models/session.model"
-import { redisClient } from "../redis.client";
 import { CreateResult } from "../models/results/create.result";
 import { DeleteResult } from "../models/results/delete.result";
 import { CorruptSessionError } from "../errors/corrupt-session.error";
 import { FindSessionByTokenResult } from "../models/results/find-by-token.result";
-import { injectable } from "tsyringe";
+import { inject, injectable } from "tsyringe";
+import { RedisConnection } from "../redis.connection";
 
 @injectable()
 export class SessionRedisRepository implements SessionRepository {
+    constructor(
+        @inject(RedisConnection)
+        private readonly redis: RedisConnection
+    ) {}
     async create(session: Session, ttl: number): Promise<CreateResult> {
-        const result = await redisClient.set(
+        const result = await this.redis.set(
             this.key(session.token),
             JSON.stringify(session),
             { 
@@ -25,7 +29,7 @@ export class SessionRedisRepository implements SessionRepository {
     }
 
     async findByToken(token: string): Promise<FindSessionByTokenResult> {
-        const raw = await redisClient.get(this.key(token));
+        const raw = await this.redis.get(this.key(token));
         if (!raw) {
             return { type: "NOT_FOUND" };
         }
@@ -38,7 +42,7 @@ export class SessionRedisRepository implements SessionRepository {
     }
 
     async delete(sessionToken: string): Promise<DeleteResult> {
-        const result = await redisClient.del(this.key(sessionToken));
+        const result = await this.redis.del(this.key(sessionToken));
         if (result <= 0) {
             return { type: "NOT_FOUND" };
         }
