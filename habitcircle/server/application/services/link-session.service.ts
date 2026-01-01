@@ -1,13 +1,16 @@
+import { inject, injectable } from "tsyringe";
 import { ResolveLinkSessionResult } from "../dtos/results/resolve-link-session.result";
 import { RngError } from "../errors/rng.error";
 import { LinkSession } from "../models/link-session.model";
-import { LinkSessionRepository } from "../repositories/link-session.repository";
+import type { LinkSessionRepository } from "../repositories/link-session.repository";
 import { TokenService } from "./token.service";
 
 const LINKING_TTL_SECONDS = 15 * 60
 
+@injectable()
 export class LinkSessionService {
     constructor(
+        @inject("LinkSessionRepository")
         private readonly linkSessionRepo: LinkSessionRepository,
     ) {}
 

@@ -1,20 +1,28 @@
 import { UsernameGenerator } from "@/lib/utils";
-import { AuthenticationReadModel } from "../read-models/authentication.read-model";
-import { HashingService } from "./hashing.service";
+import type { AuthenticationReadModel } from "../read-models/authentication.read-model";
+import type { HashingService } from "./hashing.service";
 import { LoginResult } from "../dtos/results/login.result";
-import { UserReadModel } from "../read-models/user.read-model";
-import { UserRepository } from "../repositories/user.repository";
+import type { UserReadModel } from "../read-models/user.read-model";
+import type { UserRepository } from "../repositories/user.repository";
 import { User } from "@/server/domain/entities/user.entity";
-import { LinkSessionService } from "./link-session.service";
-import { SessionService } from "./session.service";
+import type { LinkSessionService } from "./link-session.service";
+import type { SessionService } from "./session.service";
+import { inject, injectable } from "tsyringe";
 
+@injectable()
 export class AuthenticationService {
     constructor(
+        @inject("AuthenticationReadModel")
         private readonly authReadModel: AuthenticationReadModel,
+        @inject("HashingService")
         private readonly hashingService: HashingService,
+        @inject("LinkSessionService")
         private readonly linkSessionService: LinkSessionService,
+        @inject("SessionService")
         private readonly sessionService: SessionService,
+        @inject("UserReadModel")
         private readonly userReadModel: UserReadModel,
+        @inject("UserRepository")
         private readonly userRepository: UserRepository
     ) {}
 

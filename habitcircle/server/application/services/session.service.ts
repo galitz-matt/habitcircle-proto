@@ -1,14 +1,17 @@
+import { inject, injectable } from "tsyringe";
 import { InvalidateSessionTokenResult } from "../dtos/results/invalidate-session-token.result";
 import { ResolveSessionResult } from "../dtos/results/resolve-session.result";
 import { RngError } from "../errors/rng.error";
 import { Session } from "../models/session.model"
-import { SessionRepository } from "../repositories/session.repository";
+import type { SessionRepository } from "../repositories/session.repository";
 import { TokenService } from "./token.service";
 
 const SESSION_TTL_SECONDS = 60 * 60 * 24
 
+@injectable()
 export class SessionService {
     constructor(
+        @inject("SessionRepository")
         private readonly sessionRepo: SessionRepository
     ) {}
 
