@@ -34,6 +34,9 @@ container.register<SessionRepository>("SessionRepository", { useClass: SessionRe
 
 
 // EXTERNALS
+const redisClient = createRedisClient();
+await redisClient.connect();
+container.registerInstance(RedisConnection, new RedisConnection(redisClient))
 container.registerInstance(PrismaClient, new PrismaClient());
 
 export { container };
