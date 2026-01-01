@@ -5,7 +5,9 @@ import { CreateResult } from "../models/results/create.result";
 import { DeleteResult } from "../models/results/delete.result";
 import { CorruptSessionError } from "../errors/corrupt-session.error";
 import { FindSessionByTokenResult } from "../models/results/find-by-token.result";
+import { injectable } from "tsyringe";
 
+@injectable()
 export class SessionRedisRepository implements SessionRepository {
     async create(session: Session, ttl: number): Promise<CreateResult> {
         const result = await redisClient.set(

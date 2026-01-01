@@ -3,9 +3,14 @@ import { PrismaClient } from "../generated";
 import { Friendship } from "@/server/domain/entities/friendship.entity";
 import { FriendshipPrismaMapper } from "../mappers/friendship.prisma-mapper";
 import { DuplicateError, NotFoundError } from "@/lib/errors";
+import { inject, injectable } from "tsyringe";
 
+@injectable()
 export class FriendshipPrismaRepository implements FriendshipRepository {
-    constructor(private readonly prisma: PrismaClient) {}
+    constructor(
+        @inject(PrismaClient)
+        private readonly prisma: PrismaClient
+    ) {}
 
     async findById(id: string): Promise<Friendship | null> {
         const friendshipRecord = await this.prisma.friendship.findUnique({

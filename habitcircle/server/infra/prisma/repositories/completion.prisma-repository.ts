@@ -1,11 +1,16 @@
-import type { PrismaClient } from "@/prisma/generated";
+import { PrismaClient } from "@/prisma/generated";
 import { DuplicateError, NotFoundError } from "@/lib/errors";
 import type { Completion } from "@/server/domain/entities/completion.entity";
 import { CompletionRepository } from "@/server/application/repositories/completion.repository";
 import { CompletionPrismaMapper } from "@/server/infra/prisma/mappers/completion.prisma-mapper";
+import { injectable, inject } from "tsyringe";
 
+@injectable()
 export class CompletionPrismaRepository implements CompletionRepository {
-    constructor(private readonly prisma: PrismaClient) {}
+    constructor(
+        @inject(PrismaClient)
+        private readonly prisma: PrismaClient
+    ) {}
 
     async findByUserHabitAndDate(userId: string, habitId: string, completedAt: Date): Promise<Completion | null> {
         const completionRecord = await this.prisma.completion.findUnique({

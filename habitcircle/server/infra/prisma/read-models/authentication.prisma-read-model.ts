@@ -1,9 +1,14 @@
 import { AuthenticationCredentialsView } from "@/server/application/dtos/views/auth-credentials.view";
 import { AuthenticationReadModel } from "@/server/application/read-models/authentication.read-model";
 import { PrismaClient } from "@/prisma/generated";
+import { injectable, inject } from "tsyringe";
 
+@injectable()
 export class AuthenticationPrismaReadModel implements AuthenticationReadModel {
-    constructor(private readonly prisma: PrismaClient) {}
+    constructor(
+        @inject(PrismaClient)
+        private readonly prisma: PrismaClient
+    ) {}
 
     async findAuthenticationCredentialsByUsername(username: string): Promise<AuthenticationCredentialsView | null> {
         const queryResults = await this.prisma.user.findUnique({

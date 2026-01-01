@@ -1,9 +1,14 @@
 import { NotFoundError } from "@/lib/errors";
 import { Prisma, PrismaClient } from "../generated";
 import { AuthenticationWriteModel } from "@/server/application/write-models/authentication.write-model";
+import { inject, injectable } from "tsyringe";
 
+@injectable()
 export class AuthenticationPrismaWriteModel implements AuthenticationWriteModel {
-    constructor(private readonly prisma: PrismaClient) {}
+    constructor(
+        @inject(PrismaClient)
+        private readonly prisma: PrismaClient
+    ) {}
     
     async updateOAuthLastUsed(provider: string, providerAccountId: string): Promise<void> {
         try {

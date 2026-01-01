@@ -1,12 +1,17 @@
-import type { PrismaClient } from "@/prisma/generated";
+import { PrismaClient } from "@/prisma/generated";
 import { UserRepository } from "@/server/application/repositories/user.repository";
 import { UserPrismaMapper } from "@/server/infra/prisma/mappers/user.prisma-mapper";
 import type { User } from "@/server/domain/entities/user.entity";
 import type { Username } from "@/server/domain/value-objects/user/username.value-object";
 import { DuplicateError, NotFoundError } from "@/lib/errors";
+import { inject, injectable } from "tsyringe";
 
+@injectable()
 export class UserPrismaRepository implements UserRepository {
-    constructor(private readonly prisma: PrismaClient) {}
+    constructor(
+        @inject(PrismaClient)
+        private readonly prisma: PrismaClient
+    ) {}
 
     async findById(id: string): Promise<User | null> {
         const userRecord = await this.prisma.user.findUnique({

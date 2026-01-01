@@ -4,9 +4,14 @@ import { CirclePrismaMapper } from "@/server/infra/prisma/mappers/circle.prisma-
 import { PrismaClient } from "@/prisma/generated";
 import { DuplicateError, NotFoundError } from "@/lib/errors";
 import { CircleName } from "@/server/domain/value-objects/circle/circle-name.value-object";
+import { inject, injectable } from "tsyringe";
 
+@injectable()
 export class CirclePrismaRepository implements CircleRepository {
-    constructor(private readonly prisma: PrismaClient) {}
+    constructor(
+        @inject(PrismaClient)
+        private readonly prisma: PrismaClient
+    ) {}
 
     async findById(id: string): Promise<Circle | null> {
         const circleRecord = await this.prisma.circle.findUnique({

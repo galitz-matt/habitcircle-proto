@@ -3,9 +3,14 @@ import { PrismaClient } from "@/prisma/generated";
 import type { CircleInvite } from "@/server/domain/entities/circle/circle-invite.entity";
 import { CircleInvitePrismaMapper } from "../mappers/circle-invite.prisma-mapper";
 import { DuplicateError, NotFoundError } from "@/lib/errors";
+import { inject, injectable } from "tsyringe";
 
+@injectable()
 export class CircleInvitePrismaRepository implements CircleInviteRepository {
-    constructor(private readonly prisma: PrismaClient) {}
+    constructor(
+        @inject(PrismaClient)
+        private readonly prisma: PrismaClient
+    ) {}
 
     async findById(id: string): Promise<CircleInvite | null> {
         const circleInviteRecord = await this.prisma.circleInvite.findUnique({
