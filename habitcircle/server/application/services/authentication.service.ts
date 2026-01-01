@@ -37,11 +37,11 @@ export class AuthenticationService {
         emailAddress?: string,
         emailVerified?: boolean
     ): Promise<LoginResult> {
-        const user = await this.userReadModel.findUserByOAuthIdentity(provider, providerAccountId);
         // Does user exist w/ identity?
+        const user = await this.userReadModel.findUserByOAuthIdentity(provider, providerAccountId);
         if (user) return await this.finalizeLogin(user.id);
-        // Does user exist w/ email?
-        const candidates = await this.resolveByVerifiedEmailAddress(emailAddress, emailVerified);
+        // Does user exist w/ email?`
+        const candidates = await this.resolveUserByVerifiedEmailAddress(emailAddress, emailVerified);
         // More than one users use this email, prompt client to resolve
         if (candidates.length > 1) return this.handleAmbiguousLinking(candidates);
         // Only one user uses this email, auto-link
@@ -61,7 +61,7 @@ export class AuthenticationService {
         )
     }
 
-    private async resolveByVerifiedEmailAddress(emailAddress?: string, emailVerified?: boolean): Promise<User[]> {
+    private async resolveUserByVerifiedEmailAddress(emailAddress?: string, emailVerified?: boolean): Promise<User[]> {
         return emailAddress && emailVerified
             ? await this.userReadModel.findUsersByVerifiedOAuthEmailAddress(emailAddress)
             : [];
