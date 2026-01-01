@@ -13,6 +13,7 @@ export class SessionRedisRepository implements SessionRepository {
         @inject(RedisConnection)
         private readonly redis: RedisConnection
     ) {}
+    
     async create(session: Session, ttl: number): Promise<CreateResult> {
         const result = await this.redis.set(
             this.key(session.token),
