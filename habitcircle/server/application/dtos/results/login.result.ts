@@ -4,7 +4,6 @@ import type { Session } from "../../models/session.model"
 export type LoginResult =
     | { 
         type: "SUCCESS"; 
-        userId: string; 
         session: Session;
     }
     | { 

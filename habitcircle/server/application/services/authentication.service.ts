@@ -139,7 +139,6 @@ export class AuthenticationService {
     private async finalizeLogin(userId: string): Promise<LoginResult> {
         return {
             type: "SUCCESS",
-            userId,
             session: await this.sessionService.createSession(userId)
         };
     }
