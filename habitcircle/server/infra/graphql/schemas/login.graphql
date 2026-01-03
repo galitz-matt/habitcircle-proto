@@ -1,0 +1,44 @@
+""" Credentials-based login """
+input LoginWithCredentialsInput {
+    username: String!
+    password: String!
+}
+
+type Mutation {
+    loginWithCredentials(input: LoginWithCredentialsInput!): LoginResult!
+}
+
+""" OAuth-based login """
+
+
+""" Login Results """
+type LoginSuccess {
+    userId: String!
+}
+
+type InvalidCredentials {
+    reason: String!
+}
+
+type PendingLink {
+    linkSession: LinkSession!
+}
+
+union LoginResult = {
+      LoginSuccess
+    | InvalidCredentials
+    | PendingLink
+}
+
+""" Session & LinkSession """
+type Session {
+    token: String!
+    userId: String!
+    issuedAt: String!
+}
+
+type LinkSession {
+    token: String!
+    allowedProviders: [String!]!
+    issuedAt: String!
+}
