@@ -1,7 +1,6 @@
 import cookie from "cookie";
 import type { GraphQLContext } from "../context";
 import { AppToGqlMapper } from "../mappers/app-to-gql.mapper";
-import { GqlLoginResult } from "../types/login-result.graphql";
 
 export const loginResolvers = {
     Mutation: {
