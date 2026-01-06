@@ -1,3 +1,8 @@
+""" graphql-js invarint: must define Query type """
+type Query {
+    _empty: Boolean
+}
+
 """ Credentials-based login """
 input LoginWithCredentialsInput {
     username: String!
@@ -7,9 +12,6 @@ input LoginWithCredentialsInput {
 type Mutation {
     loginWithCredentials(input: LoginWithCredentialsInput!): LoginResult!
 }
-
-""" OAuth-based login """
-
 
 """ Login Results """
 type LoginSuccess {
@@ -24,11 +26,10 @@ type PendingLink {
     linkSession: LinkSession!
 }
 
-union LoginResult = {
-      LoginSuccess
+union LoginResult =
+    LoginSuccess
     | InvalidCredentials
     | PendingLink
-}
 
 """ Session & LinkSession """
 type Session {
