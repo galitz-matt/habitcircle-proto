@@ -7,6 +7,7 @@
     "build": "next build --turbopack",
     "start": "next start",
     "lint": "eslint",
+    "server:local": "tsx server/infra/graphql/app.ts",
     "test:unit": "dotenv -e .env.test -- jest --config jest.unit.config.ts",
     "test:integration": "bash scripts/test-with-db.sh",
     "test": "npm run test:unit && npm run test:integration"
@@ -44,7 +45,7 @@
     "prisma": "^6.16.3",
     "tailwindcss": "^4",
     "ts-jest": "^29.4.5",
-    "tsx": "^4.20.6",
+    "tsx": "^4.21.0",
     "typescript": "^5"
   }
 }
