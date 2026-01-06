@@ -3,6 +3,14 @@ import { RedisClient } from "./redis.client";
 export class RedisConnection {
     constructor(private readonly client: RedisClient) {}
 
+    async connect(): Promise<void> {
+        await this.client.connect();
+    }
+
+    destroy(): void {
+        this.client.destroy();
+    }
+
     async set(...args: Parameters<RedisClient["set"]>): Promise<ReturnType<typeof this.client.set>> {
         return await this.client.set(...args);
     }
