@@ -14,6 +14,9 @@ export class AppToGqlMapper {
                     __typename: "InvalidCredentials",
                     reason: "Invalid username or password",
                 };
+            // TODO: review this, should token be set in cookies, return allowedProviders?
+            // - check w/ Chat
+            // - update resolver & schema
             case "PENDING_LINK":
                 return {
                     __typename: "PendingLink",
