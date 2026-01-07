@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "lint": "eslint",
-    "server:local": "tsx server/infra/graphql/app.ts",
+    "server:local": "tsx infra/graphql/app.ts",
     "test:unit": "dotenv -e tests/.env.test -- jest --config jest.unit.config.ts",
     "test:integration": "bash tests/scripts/test-with-db.sh",
     "test": "npm run test:unit && npm run test:integration"
