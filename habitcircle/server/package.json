@@ -24,6 +24,7 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
+    "@jest/globals": "^30.2.0",
     "@types/express": "^5.0.6",
     "@types/jest": "^30.0.0",
     "@types/node": "^20",
@@ -35,7 +36,7 @@
     "jest": "^30.2.0",
     "jest-environment-node": "^30.2.0",
     "prisma": "^6.16.3",
-    "ts-jest": "^29.4.5",
+    "ts-jest": "^29.4.6",
     "tsx": "^4.21.0",
     "typescript": "^5"
   }
