@@ -23,23 +23,10 @@ type InvalidCredentials {
 }
 
 type PendingLink {
-    linkSession: LinkSession!
+    allowedProviders: [String!]!
 }
 
 union LoginResult =
     LoginSuccess
     | InvalidCredentials
     | PendingLink
-
-""" Session & LinkSession """
-type Session {
-    token: String!
-    userId: String!
-    issuedAt: String!
-}
-
-type LinkSession {
-    token: String!
-    allowedProviders: [String!]!
-    issuedAt: String!
-}

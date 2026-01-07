@@ -10,11 +10,7 @@ export type GqlInvalidCredentials = {
 
 export type GqlPendingLink = {
     __typename: "PendingLink";
-    linkSession: {
-        token: string;
-        allowedProviders: string[];
-        issuedAt: string;
-    };
+    allowedProviders: string[];
 };
 
 export type GqlLoginResult =
