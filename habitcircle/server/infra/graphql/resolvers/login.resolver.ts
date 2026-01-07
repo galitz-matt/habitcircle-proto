@@ -20,19 +20,25 @@ export const loginResolvers = {
             );
 
             if (result.type === "SUCCESS") {
-                ctx.res.setHeader(
-                    "Set-Cookie",
-                    cookie.serialize("session", result.session.token, {
-                        httpOnly: true,
-                        secure: process.env.NODE_ENV === "production",
-                        sameSite: "lax",
-                        path: "/",
-                        maxAge: 60 * 60 * 24
-                    })
-                );
+                setCookie(ctx, "session", result.session.token);
+            } else if (result.type === "PENDING_LINK") {
+                setCookie(ctx, "linkSession", result.linkSession.token);
             }
 
             return AppToGqlMapper.toGqlLoginResult(result);
         },
     }
+}
+
+function setCookie(ctx: GraphQLContext, key: string, value: string): void {
+    ctx.res.setHeader(
+        "Set-Cookie",
+        cookie.serialize(key, value, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            sameSite: "lax",
+            path: "/",
+            maxAge: 60 * 60 * 24
+        })
+    );
 }
