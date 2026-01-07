@@ -2,6 +2,7 @@ import { execSync } from "child_process";
 import { PrismaClient } from "@/prisma/generated";
 import dotenv from "dotenv";
 import { afterAll, beforeAll, beforeEach } from "@jest/globals"
+import "reflect-metadata"
 
 dotenv.config({ path: ".env.test" });
 
@@ -18,7 +19,7 @@ beforeAll(async () => {
   if (!migrated) {
     console.log("Running migrations...");
     try {
-      execSync("npx prisma migrate deploy --schema=server/infra/db/prisma/schema.prisma", {
+      execSync("npx prisma migrate deploy --schema=infra/prisma/schema.prisma", {
         stdio: "inherit",
       });
       migrated = true;
