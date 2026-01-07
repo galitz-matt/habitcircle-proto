@@ -11,9 +11,9 @@ const config = {
     ...tsJestTransformCfg,
   },
   moduleNameMapper: {
-    "^@/server/(.*)$": "<rootDir>/server/$1",
+    "^@/server/(.*)$": "<rootDir>/$1",
     "^@/lib/(.*)$": "<rootDir>/lib/$1",
-    "^@/prisma/generated(.*)$": "<rootDir>/server/infra/prisma/generated/$1",
+    "^@/prisma/generated(.*)$": "<rootDir>/infra/prisma/generated/$1",
     "^@/tests/(.*)$": "<rootDir>/tests/$1"
   },
   roots: ["<rootDir>/tests/integration"],
