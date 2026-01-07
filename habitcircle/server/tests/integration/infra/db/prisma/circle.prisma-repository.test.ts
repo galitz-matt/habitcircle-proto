@@ -5,7 +5,7 @@ import { CircleName } from "@/server/domain/value-objects/circle/circle-name.val
 import { CircleMember } from "@/server/domain/value-objects/circle/circle-member.value-object";
 import { CircleMembers } from "@/server/domain/value-objects/circle/circle-members.value-object";
 import { CircleHabits } from "@/server/domain/value-objects/circle/circle-habits.value-object";
-import { Username } from "@/server/domain/value-objects/username.value-object";
+import { Username } from "@/server/domain/value-objects/user/username.value-object";
 import { User } from "@/server/domain/entities/user.entity";
 import { DuplicateError, NotFoundError } from "@/server/lib/errors";
 
