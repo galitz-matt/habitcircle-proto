@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euo pipefail
 
-COMPOSE_FILE="docker-compose.test.yml"
+COMPOSE_FILE="../docker-compose.test-db.yml"
 SERVICE_NAME="postgres-test"
 CONTAINER_NAME="hc_test_postgres"
 STARTED_CONTAINER=false
@@ -31,7 +31,7 @@ else
 fi
 
 echo "Waiting for Postgres to be ready..."
-bash ./wait-for-db.sh
+bash tests/scripts/wait-for-db.sh
 
 echo "Running Jest integration tests..."
-dotenv -e .env.test -- jest --config jest.integration.config.ts --runInBand
+dotenv -e tests/.env.test -- jest --config jest.integration.config.ts --runInBand
