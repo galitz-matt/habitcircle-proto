@@ -43,7 +43,7 @@ describe("CirclePrismaRepository (integration)", () => {
 
     // ── Domain entity ──────────────────────────────────────────
     circle = Circle.create({
-      name: "test",
+      name: "Focus Circle",
       owner,
       members: [],
       habits: [],
