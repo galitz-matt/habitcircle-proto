@@ -4,6 +4,7 @@ import { CircleInvite } from "@/server/domain/entities/circle/circle-invite.enti
 import { DomainInviteStatus } from "@/server/domain/types/invite-status";
 import { InviteStatus } from "@/server/infra/prisma/generated";
 import { DuplicateError, NotFoundError } from "@/server/lib/errors";
+import { describe, it, beforeEach, expect } from "@jest/globals"
 
 describe("CircleInvitePrismaRepository (integration)", () => {
   let repo: CircleInvitePrismaRepository;
