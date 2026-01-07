@@ -8,6 +8,7 @@ import { CircleHabits } from "@/server/domain/value-objects/circle/circle-habits
 import { Username } from "@/server/domain/value-objects/user/username.value-object";
 import { User } from "@/server/domain/entities/user.entity";
 import { DuplicateError, NotFoundError } from "@/server/lib/errors";
+import { describe, beforeEach, it, expect } from "@jest/globals";
 
 describe("CirclePrismaRepository (integration)", () => {
   let repo: CirclePrismaRepository;
@@ -19,8 +20,19 @@ describe("CirclePrismaRepository (integration)", () => {
     repo = new CirclePrismaRepository(prisma);
 
     // ── Seed owner ─────────────────────────────────────────────
-    const username = Username.create("test_owner");
-    owner = User.create(username);
+    owner = User.create({
+      auth: {
+        type: "credentials",
+        account: {
+          password: "test",
+          emailAddress: "test",
+          emailVerified: false
+        }
+      },
+      profile: {
+        username: "test_owner"
+      }
+    });
 
     await prisma.user.create({
       data: {
@@ -29,14 +41,13 @@ describe("CirclePrismaRepository (integration)", () => {
       },
     });
 
-    // ── Build VO hierarchy ─────────────────────────────────────
-    ownerMember = CircleMember.fromUser(owner);
-    const members = CircleMembers.create([]); // ⬅️ owner NOT included
-    const habits = CircleHabits.create([]);
-    const circleName = CircleName.create("Focus Circle");
-
     // ── Domain entity ──────────────────────────────────────────
-    circle = Circle.create(circleName, ownerMember, members, habits);
+    circle = Circle.create({
+      name: "test",
+      owner,
+      members: [],
+      habits: [],
+    });
 
     // Persist in DB
     await repo.create(circle);
@@ -68,17 +79,29 @@ describe("CirclePrismaRepository (integration)", () => {
   });
 
   it("findByCircleName() returns all circles with that name", async () => {
-    const anotherOwner = User.create(Username.create("another_owner"));
+    const anotherOwner = User.create({
+      auth: {
+        type: "credentials",
+        account: {
+          password: "test",
+          emailAddress: "test",
+          emailVerified: false
+        }
+      },
+      profile: {
+        username: "another_owner"
+      }
+    });
     await prisma.user.create({
       data: { id: anotherOwner.id, username: anotherOwner.username.toString() },
     });
 
-    const another = Circle.create(
-      CircleName.create("Focus Circle"),
-      CircleMember.fromUser(anotherOwner),
-      CircleMembers.create([]),
-      CircleHabits.create([])
-    );
+    const another = Circle.create({
+      name: "Focus Circle",
+      owner: anotherOwner,
+      members: [],
+      habits: []
+    });
 
     await repo.create(another);
 
@@ -96,7 +119,7 @@ describe("CirclePrismaRepository (integration)", () => {
       circle.id,
       circle.createdAt,
       CircleName.create("Deep Work Circle"),
-      ownerMember,
+      circle.owner,
       CircleMembers.create([]),
       CircleHabits.create([])
     );
@@ -112,7 +135,7 @@ describe("CirclePrismaRepository (integration)", () => {
       "missing_circle",
       new Date(),
       CircleName.create("Ghost Circle"),
-      ownerMember,
+      circle.owner,
       CircleMembers.create([]),
       CircleHabits.create([])
     );
@@ -129,7 +152,7 @@ describe("CirclePrismaRepository (integration)", () => {
       circle.id,
       new Date(),
       CircleName.create("Duplicate Circle"),
-      ownerMember,
+      circle.owner,
       CircleMembers.create([]),
       CircleHabits.create([])
     );
