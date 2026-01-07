@@ -1,6 +1,6 @@
-import { StringUtils } from "@/lib/utils";
-import { RESERVED_USERNAMES, USERNAME_PATTERN } from "@/lib/constants"
-import { DomainError } from "@/lib/errors";
+import { StringUtils } from "@/server/lib/utils";
+import { RESERVED_USERNAMES, USERNAME_PATTERN } from "@/server/lib/constants"
+import { DomainError } from "@/server/lib/errors";
 
 export class UsernameInvariants {
     static enforce(usernameValue: string): void {

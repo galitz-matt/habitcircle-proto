@@ -2,7 +2,7 @@ import type { Circle } from "@/server/domain/entities/circle/circle.entity";
 import { CircleRepository } from "@/server/application/repositories/circle.repository";
 import { CirclePrismaMapper } from "@/server/infra/prisma/mappers/circle.prisma-mapper";
 import { PrismaClient } from "@/prisma/generated";
-import { DuplicateError, NotFoundError } from "@/lib/errors";
+import { DuplicateError, NotFoundError } from "@/server/lib/errors";
 import { CircleName } from "@/server/domain/value-objects/circle/circle-name.value-object";
 import { inject, injectable } from "tsyringe";
 

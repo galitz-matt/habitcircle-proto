@@ -1,4 +1,4 @@
-import { DomainError } from "@/lib/errors";
+import { DomainError } from "@/server/lib/errors";
 import { OAuthAccountManager } from "../../value-objects/auth/oauth-account-manager.value-object";
 import { CredentialsAccount, CreateCredentialsAccountProps } from "./credentials-account.entity";
 import { OAuthAccount, CreateOAuthAccountProps } from "./oauth-account.entity";

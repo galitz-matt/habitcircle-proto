@@ -1,4 +1,4 @@
-import { StringUtils } from "@/lib/utils";
+import { StringUtils } from "@/server/lib/utils";
 import { BiographyInvariants } from "../../invariants/biography.invariant";
 
 export class Biography {

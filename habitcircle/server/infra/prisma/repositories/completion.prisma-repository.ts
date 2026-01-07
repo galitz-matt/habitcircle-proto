@@ -1,5 +1,5 @@
 import { PrismaClient } from "@/prisma/generated";
-import { DuplicateError, NotFoundError } from "@/lib/errors";
+import { DuplicateError, NotFoundError } from "@/server/lib/errors";
 import type { Completion } from "@/server/domain/entities/completion.entity";
 import { CompletionRepository } from "@/server/application/repositories/completion.repository";
 import { CompletionPrismaMapper } from "@/server/infra/prisma/mappers/completion.prisma-mapper";

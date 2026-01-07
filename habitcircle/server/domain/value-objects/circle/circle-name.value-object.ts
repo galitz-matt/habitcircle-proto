@@ -1,4 +1,4 @@
-import { StringUtils } from "@/lib/utils";
+import { StringUtils } from "@/server/lib/utils";
 import { CircleNameInvariants } from "@/server/domain/invariants/circle-name.invariant";
 
 export class CircleName {

@@ -2,7 +2,7 @@ import { CircleInviteRepository } from "@/server/application/repositories/circle
 import { PrismaClient } from "@/prisma/generated";
 import type { CircleInvite } from "@/server/domain/entities/circle/circle-invite.entity";
 import { CircleInvitePrismaMapper } from "../mappers/circle-invite.prisma-mapper";
-import { DuplicateError, NotFoundError } from "@/lib/errors";
+import { DuplicateError, NotFoundError } from "@/server/lib/errors";
 import { inject, injectable } from "tsyringe";
 
 @injectable()

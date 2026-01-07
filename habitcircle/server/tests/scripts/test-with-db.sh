@@ -31,7 +31,7 @@ else
 fi
 
 echo "Waiting for Postgres to be ready..."
-bash scripts/wait-for-db.sh
+bash ./wait-for-db.sh
 
 echo "Running Jest integration tests..."
 dotenv -e .env.test -- jest --config jest.integration.config.ts --runInBand

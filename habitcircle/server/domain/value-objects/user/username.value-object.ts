@@ -1,4 +1,4 @@
-import { StringUtils } from "@/lib/utils";
+import { StringUtils } from "@/server/lib/utils";
 import { UsernameInvariants } from "../../invariants/username.invariant";
 
 export class Username {

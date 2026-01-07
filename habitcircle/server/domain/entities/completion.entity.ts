@@ -1,6 +1,6 @@
-import { IdGenerator } from "@/lib/utils";
+import { IdGenerator } from "@/server/lib/utils";
 import { Post } from "./post.entity";
-import { DomainError } from "@/lib/errors";
+import { DomainError } from "@/server/lib/errors";
 
 export type CreateCompletionInput = {
     userId: string,

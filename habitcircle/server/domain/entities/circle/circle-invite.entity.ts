@@ -1,6 +1,6 @@
 import { DomainInviteStatus } from "@/server/domain/types/invite-status"
-import { IdGenerator } from "@/lib/utils"
-import { DomainError } from "@/lib/errors";
+import { IdGenerator } from "@/server/lib/utils"
+import { DomainError } from "@/server/lib/errors";
 
 export class CircleInvite {
 

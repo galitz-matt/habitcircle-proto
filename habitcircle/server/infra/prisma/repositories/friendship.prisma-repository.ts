@@ -2,7 +2,7 @@ import { FriendshipRepository } from "@/server/application/repositories/friendsh
 import { PrismaClient } from "../generated";
 import { Friendship } from "@/server/domain/entities/friendship.entity";
 import { FriendshipPrismaMapper } from "../mappers/friendship.prisma-mapper";
-import { DuplicateError, NotFoundError } from "@/lib/errors";
+import { DuplicateError, NotFoundError } from "@/server/lib/errors";
 import { inject, injectable } from "tsyringe";
 
 @injectable()

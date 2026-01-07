@@ -1,4 +1,4 @@
-import { UsernameGenerator } from "@/lib/utils";
+import { UsernameGenerator } from "@/server/lib/utils";
 import type { AuthenticationReadModel } from "../read-models/authentication.read-model";
 import type { HashingService } from "./hashing.service";
 import { LoginResult } from "../dtos/results/login.result";

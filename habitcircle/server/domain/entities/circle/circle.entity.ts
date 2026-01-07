@@ -1,9 +1,9 @@
-import { IdGenerator } from "@/lib/utils";
+import { IdGenerator } from "@/server/lib/utils";
 import { CreateHabitProps, Habit } from "@/server/domain/entities/habit.entity";
 import { CircleName } from "@/server/domain/value-objects/circle/circle-name.value-object";
 import { CircleMembers } from "@/server/domain/value-objects/circle/circle-members.value-object";
 import { CircleHabits } from "@/server/domain/value-objects/circle/circle-habits.value-object";
-import { DomainError } from "@/lib/errors";
+import { DomainError } from "@/server/lib/errors";
 import { CircleMember } from "../../value-objects/circle/circle-member.value-object";
 import type { User } from "../user.entity";
 

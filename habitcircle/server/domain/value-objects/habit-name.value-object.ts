@@ -1,4 +1,4 @@
-import { StringUtils } from "@/lib/utils";
+import { StringUtils } from "@/server/lib/utils";
 import { HabitNameInvariants } from "../invariants/habit-name.invariant";
 
 export class HabitName {

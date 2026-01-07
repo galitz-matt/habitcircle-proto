@@ -1,4 +1,4 @@
-import { IdGenerator } from "@/lib/utils";
+import { IdGenerator } from "@/server/lib/utils";
 import { CreateOAuthIdentityProps, OAuthIdentity } from "../../value-objects/auth/oauth-identity.value-object";
 import { CreateOAuthTokensProps, OAuthTokens } from "../../value-objects/auth/oauth-tokens.value-object";
 

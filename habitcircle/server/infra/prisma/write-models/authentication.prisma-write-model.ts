@@ -1,4 +1,4 @@
-import { NotFoundError } from "@/lib/errors";
+import { NotFoundError } from "@/server/lib/errors";
 import { Prisma, PrismaClient } from "../generated";
 import { AuthenticationWriteModel } from "@/server/application/write-models/authentication.write-model";
 import { inject, injectable } from "tsyringe";

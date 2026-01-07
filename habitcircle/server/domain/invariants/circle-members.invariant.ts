@@ -1,4 +1,4 @@
-import { DomainError } from "@/lib/errors";
+import { DomainError } from "@/server/lib/errors";
 import { CircleMember } from "@/server/domain/value-objects/circle/circle-member.value-object";
 
 export class CircleMembersInvariants {

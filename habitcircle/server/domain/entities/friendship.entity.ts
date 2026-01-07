@@ -1,5 +1,5 @@
-import { DomainError } from "@/lib/errors";
-import { IdGenerator } from "@/lib/utils";
+import { DomainError } from "@/server/lib/errors";
+import { IdGenerator } from "@/server/lib/utils";
 import { DomainFriendshipStatus } from "@/server/domain/types/friendship-status";
 
 export class Friendship {

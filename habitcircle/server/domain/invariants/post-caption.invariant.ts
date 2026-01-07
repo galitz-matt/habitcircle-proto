@@ -1,5 +1,5 @@
-import { CAPTION_PATTERN } from "@/lib/constants";
-import { DomainError } from "@/lib/errors";
+import { CAPTION_PATTERN } from "@/server/lib/constants";
+import { DomainError } from "@/server/lib/errors";
 
 export class PostCaptionInvariants {
     static enforce(value: string) {

@@ -1,4 +1,4 @@
-import { IdGenerator } from "@/lib/utils";
+import { IdGenerator } from "@/server/lib/utils";
 import { HabitName } from "@/server/domain/value-objects/habit-name.value-object";
 
 export type CreateHabitProps = {

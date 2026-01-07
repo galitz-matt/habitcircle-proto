@@ -7,7 +7,7 @@ import { CircleMembers } from "@/server/domain/value-objects/circle/circle-membe
 import { CircleHabits } from "@/server/domain/value-objects/circle/circle-habits.value-object";
 import { Username } from "@/server/domain/value-objects/username.value-object";
 import { User } from "@/server/domain/entities/user.entity";
-import { DuplicateError, NotFoundError } from "@/lib/errors";
+import { DuplicateError, NotFoundError } from "@/server/lib/errors";
 
 describe("CirclePrismaRepository (integration)", () => {
   let repo: CirclePrismaRepository;

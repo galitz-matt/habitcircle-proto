@@ -1,5 +1,5 @@
 import { Habit } from "@/server/domain/entities/habit.entity";
-import { DomainError } from "@/lib/errors";
+import { DomainError } from "@/server/lib/errors";
 
 export class CircleHabitsInvariants {
     static enforce(habits: Habit[]): void {

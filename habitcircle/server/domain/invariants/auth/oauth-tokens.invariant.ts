@@ -1,4 +1,4 @@
-import { DomainError } from "@/lib/errors";
+import { DomainError } from "@/server/lib/errors";
 
 export class OAuthTokensInvariants {
     static enforce(

@@ -1,4 +1,4 @@
-import { IdGenerator } from "@/lib/utils";
+import { IdGenerator } from "@/server/lib/utils";
 import { PostCaption } from "../value-objects/post-caption.value-object";
 
 export class Post {

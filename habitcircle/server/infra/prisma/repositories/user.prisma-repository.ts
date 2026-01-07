@@ -3,7 +3,7 @@ import { UserRepository } from "@/server/application/repositories/user.repositor
 import { UserPrismaMapper } from "@/server/infra/prisma/mappers/user.prisma-mapper";
 import type { User } from "@/server/domain/entities/user.entity";
 import type { Username } from "@/server/domain/value-objects/user/username.value-object";
-import { DuplicateError, NotFoundError } from "@/lib/errors";
+import { DuplicateError, NotFoundError } from "@/server/lib/errors";
 import { inject, injectable } from "tsyringe";
 
 @injectable()

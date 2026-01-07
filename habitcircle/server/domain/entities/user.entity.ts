@@ -1,4 +1,4 @@
-import { IdGenerator } from "@/lib/utils";
+import { IdGenerator } from "@/server/lib/utils";
 import { Username } from "../value-objects/user/username.value-object";
 import { Biography } from "../value-objects/user/biography.value-object";
 import { CredentialsAccount, CreateCredentialsAccountProps } from "./auth/credentials-account.entity";

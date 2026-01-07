@@ -3,7 +3,7 @@ import { CircleInvitePrismaRepository } from "@/server/infra/prisma/repositories
 import { CircleInvite } from "@/server/domain/entities/circle/circle-invite.entity";
 import { DomainInviteStatus } from "@/server/domain/types/invite-status";
 import { InviteStatus } from "@/server/infra/prisma/generated";
-import { DuplicateError, NotFoundError } from "@/lib/errors";
+import { DuplicateError, NotFoundError } from "@/server/lib/errors";
 
 describe("CircleInvitePrismaRepository (integration)", () => {
   let repo: CircleInvitePrismaRepository;

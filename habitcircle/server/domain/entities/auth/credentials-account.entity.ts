@@ -1,4 +1,4 @@
-import { IdGenerator } from "@/lib/utils";
+import { IdGenerator } from "@/server/lib/utils";
 
 const VERSION_ZERO = 0;
 const NO_ATTEMPTS = 0;

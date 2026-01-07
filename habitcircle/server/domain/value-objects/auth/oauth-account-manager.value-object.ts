@@ -1,4 +1,4 @@
-import { DomainError } from "@/lib/errors";
+import { DomainError } from "@/server/lib/errors";
 import { OAuthAccount } from "../../entities/auth/oauth-account.entity";
 
 export class OAuthAccountManager {
