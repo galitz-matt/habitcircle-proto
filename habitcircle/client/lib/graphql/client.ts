@@ -7,10 +7,10 @@ type GraphQLResponse<T> = {
   errors?: GraphQLError[];
 };
 
-export async function graphqlFetch<T>(
-  query: string,
-  variables?: Record<string, unknown>
-): Promise<T> {
+export async function graphqlFetch<TData, TVariables>(
+    document: unknown,
+    variables: TVariables
+): Promise<TData> {
   const res = await fetch(
     process.env.NEXT_PUBLIC_GRAPHQL_URL!,
     {
@@ -20,13 +20,13 @@ export async function graphqlFetch<T>(
       },
       credentials: "include",
       body: JSON.stringify({
-        query,
+        query: document,
         variables,
       }),
     }
   );
 
-  const json: GraphQLResponse<T> = await res.json();
+  const json: GraphQLResponse<TData> = await res.json();
 
   if (json.errors && json.errors.length > 0) {
     throw new Error(json.errors[0].message);
