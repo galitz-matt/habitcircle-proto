@@ -15,8 +15,8 @@
 /coverage
 
 # next.js
-/.next/
-/out/
+client/.next/
+client/out/
 
 # production
 /build
@@ -42,3 +42,4 @@ yarn-error.log*
 next-env.d.ts
 
 /server/infra/prisma/generated
+/client/generated
