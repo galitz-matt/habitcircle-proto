@@ -21,7 +21,8 @@ export async function createContext(
     req: Request,
     res: Response
 ): Promise<GraphQLContext> {
-    const cookies = cookie.parse(req.headers.cookie ?? "");
+    const rawCookie = req.headers.cookie;
+    const cookies = rawCookie ? cookie.parse(rawCookie) : {};
     const sessionToken = cookies.session ?? null;
 
     const sessionService = container.resolve(SessionService);
