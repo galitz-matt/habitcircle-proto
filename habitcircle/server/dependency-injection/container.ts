@@ -14,11 +14,15 @@ import { LinkSessionRepository } from "../application/repositories/link-session.
 import { LinkSessionRedisRepository } from "../infra/redis/repositories/link-session.redis-repository";
 import { RedisConnection } from "../infra/redis/redis.connection";
 import { createRedisClient } from "../infra/redis/redis.client";
+import { LinkSessionService } from "../application/services/link-session.service";
+import { SessionService } from "../application/services/session.service";
 
 const saltRounds = Number(process.env.SALT_ROUNDS);
 
 // SERVICES
 container.register<HashingService>("HashingService", { useValue: new BcryptHashingService(saltRounds) });
+container.register<LinkSessionService>("LinkSessionService", { useClass: LinkSessionService });
+container.register<SessionService>("SessionService", { useClass: SessionService });
 
 // READ MODELS
 container.register<AuthenticationReadModel>("AuthenticationReadModel", { useClass: AuthenticationPrismaReadModel })
