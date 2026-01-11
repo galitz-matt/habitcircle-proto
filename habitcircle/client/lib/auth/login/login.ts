@@ -1,5 +1,6 @@
 import { LoginResult, LoginWithCredentialsDocument, LoginWithCredentialsMutation, LoginWithCredentialsMutationVariables } from "@/generated/graphql";
 import { graphqlFetch } from "../../graphql/client";
+import { AuthGqlToDomainMapper } from "../auth.mapper";
 
 export async function loginWithCredentials(
     username: string,
@@ -14,5 +15,5 @@ export async function loginWithCredentials(
             password
         },
     });
-    return res.loginWithCredentials;
+    return AuthGqlToDomainMapper.toLoginResult(res.loginWithCredentials);
 }
