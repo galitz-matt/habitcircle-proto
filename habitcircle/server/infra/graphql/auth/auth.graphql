@@ -27,23 +27,20 @@ union LoginResult =
     | PendingLink
 
 
-
-
 """ Me Query """
 type Query {
-    me(): MeResult
+    me: MeResult
 }
 
 """ Me Results """
-
 type Authenticated {
-    userId: String!;
+    userId: String!
 }
 
 type Unauthenticated {
-    reason: String!;
+    reason: String!
 }
 
-type MeResult =
+union MeResult =
     Authenticated
     | Unauthenticated
