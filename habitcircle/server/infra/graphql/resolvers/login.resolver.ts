@@ -1,6 +1,7 @@
 import cookie from "cookie";
 import type { GraphQLContext } from "../context";
 import { AppToGqlMapper } from "../mappers/app-to-gql.mapper";
+import { GqlLoginResult } from "../types/login-result.graphql";
 
 export const loginResolvers = {
     Mutation: {
@@ -13,7 +14,7 @@ export const loginResolvers = {
                 };
             },
             ctx: GraphQLContext
-        ) => {
+        ): Promise<GqlLoginResult> => {
             const result = await ctx.authService.loginWithCredentials(
                 args.input.username,
                 args.input.password
