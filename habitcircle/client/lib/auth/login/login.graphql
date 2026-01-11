@@ -6,7 +6,7 @@ mutation LoginWithCredentials($input: LoginWithCredentialsInput!) {
             userId
         }
 
-        ... on InvalidCredentials {
+        ... on LoginFailure {
             reason
         }
 
