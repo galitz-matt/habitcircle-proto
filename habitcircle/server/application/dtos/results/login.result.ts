@@ -11,7 +11,8 @@ export type LoginResult =
         linkSession: LinkSession
     }
     | { 
-        type: "INVALID_CREDENTIALS";
+        type: "FAILURE";
+        reason: string;
     }
     | { 
         type: "USER_LOCKED";

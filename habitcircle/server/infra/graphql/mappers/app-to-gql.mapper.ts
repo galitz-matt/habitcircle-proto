@@ -11,10 +11,10 @@ export class AppToGqlMapper {
                     __typename: "LoginSuccess",
                     userId: result.session.userId
                 };
-            case "INVALID_CREDENTIALS":
+            case "FAILURE":
                 return {
-                    __typename: "InvalidCredentials",
-                    reason: "Invalid username or password",
+                    __typename: "LoginFailure",
+                    reason: result.reason,
                 };
             case "PENDING_LINK":
                 return {

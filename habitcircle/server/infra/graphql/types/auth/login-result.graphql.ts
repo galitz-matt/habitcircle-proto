@@ -3,8 +3,8 @@ export type GqlLoginSuccess = {
     userId: string;
 };
 
-export type GqlInvalidCredentials = {
-    __typename: "InvalidCredentials";
+export type GqlLoginFailure = {
+    __typename: "LoginFailure";
     reason: string;
 };
 
@@ -15,5 +15,5 @@ export type GqlPendingLink = {
 
 export type GqlLoginResult =
     | GqlLoginSuccess
-    | GqlInvalidCredentials
+    | GqlLoginFailure
     | GqlPendingLink

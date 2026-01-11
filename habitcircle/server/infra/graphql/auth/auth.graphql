@@ -13,7 +13,7 @@ type LoginSuccess {
     userId: String!
 }
 
-type InvalidCredentials {
+type LoginFailure {
     reason: String!
 }
 
@@ -23,7 +23,7 @@ type PendingLink {
 
 union LoginResult =
     LoginSuccess
-    | InvalidCredentials
+    | LoginFailure
     | PendingLink
 
 

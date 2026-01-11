@@ -29,12 +29,18 @@ export class AuthenticationService {
     async loginWithCredentials(username: string, password: string): Promise<LoginResult> {
         const credentials = await this.authReadModel.findAuthenticationCredentialsByUsername(username);
         if (!credentials) {
-            return { type: "INVALID_CREDENTIALS" };
+            return { 
+                type: "FAILURE",
+                reason: "Invalid username or password"
+            };
         }
 
         const verified = await this.hashingService.compare(password, credentials.hashedPassword);
         if (!verified) {
-            return { type: "INVALID_CREDENTIALS" };
+            return { 
+                type: "FAILURE",
+                reason: "Invalid username or password"
+             };
         }
         return await this.finalizeLogin(credentials.userId)
     }
