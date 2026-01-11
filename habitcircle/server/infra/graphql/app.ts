@@ -3,16 +3,14 @@ import "reflect-metadata"
 import { ApolloServer } from "@apollo/server";
 import { expressMiddleware } from "@as-integrations/express5"
 import { createContext } from "./context";
-import { container } from "tsyringe";
-import { RedisConnection } from "../redis/redis.connection";
 import { resolvers, typeDefs } from "./index"
+import { initInfra } from "../init";
 
 async function start() {
     const app = express();
     app.use(express.json());
 
-    const redisConnection = container.resolve(RedisConnection);
-    redisConnection.connect();
+    await initInfra();
 
     const server = new ApolloServer({
         typeDefs,
