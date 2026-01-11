@@ -1,0 +1,17 @@
+mutation LoginWithCredentials($input: LoginWithCredentialsInput!) {
+    loginWithCredentials(input: $input) {
+        __typename
+
+        ... on LoginSuccess {
+            userId
+        }
+
+        ... on InvalidCredentials {
+            reason
+        }
+
+        ... on PendingLink {
+            allowedProviders
+        }
+    }
+}

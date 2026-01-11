@@ -1,0 +1,13 @@
+query Me {
+    me {
+        __typename
+
+        ... on Authenticated {
+            userId
+        }
+
+        ... on Unauthenticated {
+            reason
+        }
+    }
+}

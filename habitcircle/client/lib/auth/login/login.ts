@@ -1,5 +1,5 @@
 import { LoginResult, LoginWithCredentialsDocument, LoginWithCredentialsMutation, LoginWithCredentialsMutationVariables } from "@/generated/graphql";
-import { graphqlFetch } from "../graphql/client";
+import { graphqlFetch } from "../../graphql/client";
 
 export async function loginWithCredentials(
     username: string,
