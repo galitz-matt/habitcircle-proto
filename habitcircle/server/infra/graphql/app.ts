@@ -2,12 +2,10 @@ import express from "express";
 import "reflect-metadata"
 import { ApolloServer } from "@apollo/server";
 import { expressMiddleware } from "@as-integrations/express5"
-import { readFileSync } from "fs";
-import path from "path";
-import { resolvers } from "./resolvers/index";
 import { createContext } from "./context";
 import { container } from "tsyringe";
 import { RedisConnection } from "../redis/redis.connection";
+import { resolvers, typeDefs } from "./index"
 
 async function start() {
     const app = express();
@@ -15,11 +13,6 @@ async function start() {
 
     const redisConnection = container.resolve(RedisConnection);
     redisConnection.connect();
-
-    const typeDefs = readFileSync(
-        path.join(__dirname, "schemas/login.graphql"),
-        "utf8"
-    )
 
     const server = new ApolloServer({
         typeDefs,

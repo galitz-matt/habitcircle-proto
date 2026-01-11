@@ -1,9 +1,10 @@
-import cookie from "cookie";
-import type { GraphQLContext } from "../context";
+import { GraphQLContext } from "../context";
 import { AppToGqlMapper } from "../mappers/app-to-gql.mapper";
-import { GqlLoginResult } from "../types/login-result.graphql";
+import { GqlLoginResult } from "../types/auth/login-result.graphql";
+import cookie from "cookie"
+import { GqlMeResult } from "../types/auth/me-result.graphql";
 
-export const loginResolvers = {
+export const authResolvers = {
     Mutation: {
         loginWithCredentials: async (
             _: unknown,
@@ -15,7 +16,7 @@ export const loginResolvers = {
             },
             ctx: GraphQLContext
         ): Promise<GqlLoginResult> => {
-            const result = await ctx.authService.loginWithCredentials(
+            const result = await ctx.services.authentication.loginWithCredentials(
                 args.input.username,
                 args.input.password
             );
@@ -28,7 +29,24 @@ export const loginResolvers = {
 
             return AppToGqlMapper.toGqlLoginResult(result);
         },
-    }
+    },
+    Query: {
+            me: async (
+                _: unknown,
+                args: {},
+                ctx: GraphQLContext
+            ): Promise<GqlMeResult> => {
+                if (!ctx.auth.sessionToken) {
+                    return { reason: "No session token provided" };
+                }
+    
+                const result = await ctx.services.session.resolveSession(ctx.auth.sessionToken);
+                if (result.type === "SUCCESS") {
+                    return { userId: result.userId };
+                }
+                return { reason: "Invalid token" };
+            }
+        }
 }
 
 function setCookie(ctx: GraphQLContext, key: string, value: string): void {

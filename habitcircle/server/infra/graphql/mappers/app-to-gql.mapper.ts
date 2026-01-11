@@ -1,5 +1,5 @@
 import type { LoginResult } from "@/server/application/dtos/results/login.result";
-import { GqlLoginResult } from "../types/login-result.graphql";
+import { GqlLoginResult } from "../types/auth/login-result.graphql";
 
 export class AppToGqlMapper {
     static toGqlLoginResult(result: LoginResult): GqlLoginResult {
