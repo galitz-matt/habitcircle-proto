@@ -2,7 +2,7 @@ import { GraphQLContext } from "../context";
 import { AppToGqlMapper } from "../mappers/app-to-gql.mapper";
 import { GqlLoginResult } from "../types/auth/login-result.graphql";
 import cookie from "cookie"
-import { GqlMeResult } from "../types/auth/me-result.graphql";
+import { GqlMeResult, GqlUnauthenticatedNoTokenProvided } from "../types/auth/me-result.graphql";
 
 export const authResolvers = {
     Mutation: {
@@ -33,18 +33,12 @@ export const authResolvers = {
     Query: {
             me: async (
                 _: unknown,
-                args: {},
+                __: unknown,
                 ctx: GraphQLContext
             ): Promise<GqlMeResult> => {
-                if (!ctx.auth.sessionToken) {
-                    return { reason: "No session token provided" };
-                }
-    
+                if (!ctx.auth.sessionToken) return GqlUnauthenticatedNoTokenProvided
                 const result = await ctx.services.session.resolveSession(ctx.auth.sessionToken);
-                if (result.type === "SUCCESS") {
-                    return { userId: result.userId };
-                }
-                return { reason: "Invalid token" };
+                return AppToGqlMapper.toGqlMeResult(result);
             }
         }
 }
