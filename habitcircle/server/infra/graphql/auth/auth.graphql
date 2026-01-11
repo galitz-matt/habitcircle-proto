@@ -29,7 +29,7 @@ union LoginResult =
 
 """ Me Query """
 type Query {
-    me: MeResult
+    me: MeResult!
 }
 
 """ Me Results """
