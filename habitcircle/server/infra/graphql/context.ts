@@ -14,7 +14,6 @@ export interface GraphQLContext {
     req: Request;
     res: Response;
     auth: AuthContext;
-    authService: AuthenticationService
 }
 
 export async function createContext(
@@ -50,6 +49,5 @@ export async function createContext(
                 return userId;
             }
         },
-        authService: authenticationService
     };
 }
